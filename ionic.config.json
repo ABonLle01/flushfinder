@@ -1,0 +1,7 @@
+{
+  "name": "flusfinder",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
