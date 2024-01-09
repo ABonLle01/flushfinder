@@ -17,8 +17,8 @@
       </ion-header>
 
       <div id="container">
-        mapa
-        lista
+        <MapViewer /> <!-- Aquí se muestra el componente MapViewer.vue -->
+        <FlushList /> <!-- Aquí se muestra el componente FlushList.vue -->
       </div>
     </ion-content>
   </ion-page>
@@ -26,6 +26,8 @@
 
 <script setup lang="ts">
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import FlushList from '@/components/FlushList.vue';
+import MapViewer from '@/components/MapViewer.vue';
 </script>
 
 <style scoped>
