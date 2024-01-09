@@ -15,10 +15,15 @@
           <ion-title size="large">{{ $route.params.id }}</ion-title>
         </ion-toolbar>
       </ion-header>
+      <div class="map">
+          <MapViewer />
+        </div>
+      <div class="container">
+        
+        <div class="list">
+          <FlushList />
+        </div>
 
-      <div id="container">
-        <MapViewer /> <!-- Aquí se muestra el componente MapViewer.vue -->
-        <FlushList /> <!-- Aquí se muestra el componente FlushList.vue -->
       </div>
     </ion-content>
   </ion-page>
@@ -31,13 +36,27 @@ import MapViewer from '@/components/MapViewer.vue';
 </script>
 
 <style scoped>
-#container {
+.map{
+  position: sticky;
+  position: relative;
+  border: solid;
+  border-color: red;
+}
+.list{
+  border: solid;
+  border-color: blue;
+}
+.container {
   text-align: center;
   position: absolute;
   left: 0;
   right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  /*top: 34%;*/  
+  /* transform: translateY(-50%); */
+
+
+  border: solid;
+  border-color: green;
 }
 
 #container strong {
