@@ -21,7 +21,7 @@
       <div class="container">
         
         <div class="list">
-          <FlushList />
+          <FlushList :flushList="flushList" />
         </div>
 
       </div>
@@ -33,6 +33,15 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
+import { getFlushList } from '@/services'
+import { onMounted, ref } from 'vue';
+
+const flushList = ref([]);
+
+
+onMounted(async () => {
+  flushList.value = await getFlushList();
+})
 </script>
 
 <style scoped>
