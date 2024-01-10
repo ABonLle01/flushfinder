@@ -1,38 +1,21 @@
 <template>
   <ion-list>
     <ion-card v-for="(flush, index) in flushList" :key="index">
-      <ion-row class="item">
-        <ion-col size="2">
-          <ion-thumbnail>
-            <div class="bath">
-              <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+      <div class="item">
+            <img alt="Imagen 3" src="https://picsum.photos/1500/700" />
+            <div class="data">
+              <span>5.0</span>
+              <span>Excelente</span>
+              <span>500M</span>
+              <span>Bruj</span>
             </div>
-          </ion-thumbnail>
-
-        </ion-col>
-        <ion-col size="6">
-          <div class="properties">
+            <p class="title">Cesur Baño Este</p>
             <div class="details">
-              <p>{{ flush.score }} | </p>
-              <p>Excelente | </p>
-              <p>{{ getFlushDistance(flush.lat, flush.long) }} | </p>
-              <p>Bruj</p>
+              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
+              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
+              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
             </div>
-            <ion-title>Cesur Baño Este</ion-title>
-            <div class="details">
-              <ion-thumbnail>
-                <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-              </ion-thumbnail>
-              <ion-thumbnail>
-                <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-              </ion-thumbnail>
-              <ion-thumbnail>
-                <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
-              </ion-thumbnail>
-            </div>
-          </div>
-        </ion-col>
-      </ion-row>
+      </div>
     </ion-card>
   </ion-list>
 </template>
@@ -63,44 +46,71 @@ const getFlushDistance = (lat, long) => {
 </script>
   
 <style scoped>
-div {
-  border: solid;
-  border-color: red;
+ 
+.item{
+  display:grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 25vw  1fr;
+  grid-template-areas: "imagen cabecera" 
+                       "imagen titulo" 
+                       "imagen detalles";
+  gap:10px;
+  justify-items: center;
+  align-items: center;
+  margin-top: 3px;
+  width: 100vw;
 }
 
-.item {
+
+.item img:hover{
+  border: solid 3px red;
+}
+
+.item img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  grid-area: imagen;
+  border-radius:20px;
+}
+
+.item > .data{
+  grid-area: cabecera;
   display: flex;
-  /*    align-items: center; */
-  /* //falla, se pega al culo */
+  gap:20px;
+}
+ 
+.item > *{
+  margin:0;
+}
+
+.item > .title{
+  grid-area: titulo;
+  margin:0;
+  font-size: 1.5rem;
+}
+ 
+.item > .details{
+  grid-area: detalles;  display:flex;
   justify-content: center;
-  width: 80vh;
-  border: solid;
-  border-color: chartreuse;
+  gap:20px;
+}
+ 
+.item > .properties {
+  align-self: center;
 }
 
-.bath {
-  border: solid;
-  border-color: blueviolet;
-  overflow: hidden;
-  width: fit-content;
-
+.details img{
+  height:5vw;
+  width: 5vw;
 }
-
-.item img {
-  height: 100px;
-  width: 100px;
-  max-width: inherit;
-
-}
-
-.details {
-  display: flex;
+ 
+.item{
+  height:25vw;
   justify-content: center;
+  justify-items: start;
+  padding:5px;
 }
 
-.details img {
-  height: 25px;
-  width: 25px;
-}
 </style>
   
