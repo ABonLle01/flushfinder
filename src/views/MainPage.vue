@@ -16,8 +16,8 @@
         </ion-toolbar>
       </ion-header>
       <div class="map">
-          <MapViewer />
-        </div>
+        <MapViewer />
+      </div>
       <div class="container">
         
         <div class="list">

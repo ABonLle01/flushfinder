@@ -9,3 +9,17 @@
     name: 'MapViewer'
   }
   </script>  
+
+
+<style scoped>
+
+.mapa{
+  position: sticky;
+}
+
+.mapa iframe{
+  width: 100%;
+  
+}
+
+</style>
