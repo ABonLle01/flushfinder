@@ -9,5 +9,9 @@
 
 
 ### Recursos
-> APIs / Geolocation API y Google Maps Distance Matrix API. 
-> * Mapa custom: Leaflet.<br/>
+> APIs
+> + Geolocation API
+> + Google Maps Distance Matrix API.
+
+> Mapa custom
+> + Leaflet.js
