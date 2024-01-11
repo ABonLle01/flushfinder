@@ -8,7 +8,7 @@
       </ion-header>
       
       <div class="container" >
-        
+        <ion-button @click="getCurrentLocation">Obtener Ubicación</ion-button>
         <div class="map">
           <MapViewer />
         </div>
@@ -28,15 +28,13 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
+import {Geolocation } from '@ionic-native/geolocation';
 import { getFlushList } from '@/services'
 import { onMounted, ref, watchEffect } from 'vue';
 
 const flushList = ref([]);
 const isHorizontal = ref(false);
-
-onMounted(async () => {
-  flushList.value = await getFlushList();
-});
+const currentLocation = ref({ latitude: 0, longitude: 0 });
 
 watchEffect(() => {
   console.log('isHorizontal:', !isHorizontal.value);
@@ -46,6 +44,28 @@ watchEffect(() => {
 window.addEventListener('orientationchange', () => {
   isHorizontal.value = window.matchMedia('(orientation: landscape)').matches;
 });
+ 
+onMounted(async () => {
+  flushList.value = await getFlushList();
+ getCurrentLocation();  // Llama a la función al cargar la página */
+})
+
+const getCurrentLocation = () => {
+  Geolocation.getCurrentPosition().then((resp) => {
+    // Respuesta de tipo Position
+    currentLocation.value = {
+      latitude: resp.coords.latitude,
+      longitude: resp.coords.longitude
+    };
+ 
+  // También puedes imprimir las coordenadas en la consola
+  console.log('Latitude:', resp.coords.latitude);
+    console.log('Longitude:', resp.coords.longitude);
+  }).catch((error) => {
+    console.error('Error getting location', error);
+  });
+};
+
 
 </script>
 
