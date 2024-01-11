@@ -9,13 +9,9 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/folder/:id',
-    component: () => import ('../views/MainPage.vue'),
-  },
-  {
-    path: '/mapa',
-    component: defineAsyncComponent(() => import('@/components/MapViewer.vue')),
-  },
-];
+    component: () => import ('../App.vue')
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
