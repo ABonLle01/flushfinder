@@ -15,11 +15,13 @@
           <ion-title size="large">{{ $route.params.id }}</ion-title>
         </ion-toolbar>
       </ion-header>
-      <div class="map">
-        <MapViewer />
-      </div>
+      
       <div class="container">
         
+        <div class="map">
+          <MapViewer />
+        </div>
+
         <div class="list">
           <FlushList :flushList="flushList" />
         </div>
@@ -46,24 +48,24 @@ onMounted(async () => {
 
 <style scoped>
 .map{
+  height: 44vh;
+/*   border: solid;
+  border-color: red; */
   position: sticky;
-  position: relative;
-  border: solid;
-  border-color: red;
+  top: 0;
+  z-index: 9;
 }
-.list{
+
+/* .list{
   border: solid;
   border-color: blue;
-}
+} */
+
 .container {
   text-align: center;
   position: absolute;
   left: 0;
   right: 0;
-  /*top: 34%;*/  
-  /* transform: translateY(-50%); */
-
-
   border: solid;
   border-color: green;
 }
