@@ -8,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/folder/:id',
-    component: () => import ('../views/MainPage.vue')
+    component: () => import ('../App.vue')
   }
 ]
 

@@ -1,17 +1,54 @@
+<!-- <template>
+    <ion-app>
+      <ion-split-pane content-id="main-content">
+        <ion-menu content-id="main-content" type="overlay">
+          <ion-content>
+            <Menu />
+          </ion-content>
+        </ion-menu>
+        <ion-router-outlet id="main-content"></ion-router-outlet>
+      </ion-split-pane>
+    </ion-app>
+</template> -->
+
 <template>
   <ion-app>
-    <ion-split-pane content-id="main-content">
-      <ion-menu content-id="main-content" type="overlay">
-        <ion-content>
-          menu
-        </ion-content>
-      </ion-menu>
-      <ion-router-outlet id="main-content"></ion-router-outlet>
-    </ion-split-pane>
+    <ion-menu content-id="main-content">
+      <ion-header>
+        <ion-toolbar color="tertiary">
+          <div class="header">
+            <img class="logo" alt="Imagen 3" src="favicon.png" />
+            <ion-title>FlushFinder</ion-title>
+          </div>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <Filters />
+      </ion-content>
+    </ion-menu>
+    <ion-page id="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+          <!-- <ion-title>Menu</ion-title> -->
+          <p>barra de busqueda + añadir</p>
+        </ion-toolbar>
+      </ion-header>
+    </ion-page>
+    <ion-content class="ion-padding"> 
+      <MainPage />
+    </ion-content>
   </ion-app>
+  
 </template>
 
+
+
 <script setup lang="ts">
+import Filters from './components/Filters.vue';
+import MainPage from './components/MainPage.vue';
 import {
   IonApp,
   IonContent,
@@ -25,6 +62,7 @@ import {
   IonNote,
   IonRouterOutlet,
   IonSplitPane,
+  IonCheckbox
 } from '@ionic/vue';
 import { ref } from 'vue';
 import {
@@ -43,6 +81,7 @@ import {
   warningOutline,
   warningSharp,
 } from 'ionicons/icons';
+
 
 const selectedIndex = ref(0);
 const appPages = [
@@ -92,6 +131,33 @@ if (path !== undefined) {
 </script>
 
 <style scoped>
+
+/* Darle color a la parte principal cuando se despliega el menu 
+  ion-menu::part(backdrop) {
+    background-color: rgba(255, 0, 255, 0.5);
+  }
+
+ion-menu::part(container) {
+  border-radius: 0 20px 20px 0;
+
+  box-shadow: 4px 0px 16px rgba(255, 0, 255, 0.18);
+} */
+
+
+.header{
+  display: flex;
+  flex-direction: row;
+  margin-left: 4.5px;
+}
+
+.logo{
+  width: 2.7rem;
+  height: 3rem;
+  padding: 5px;
+  padding-right: 0;
+}
+
+
 ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #fff));
 }

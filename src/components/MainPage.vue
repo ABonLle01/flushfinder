@@ -1,14 +1,5 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button color="primary"></ion-menu-button>
-        </ion-buttons>
-        <ion-title>{{ $route.params.id }}</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
@@ -16,7 +7,7 @@
         </ion-toolbar>
       </ion-header>
       
-      <div class="container">
+      <div class="container" >
         
         <div class="map">
           <MapViewer />
@@ -31,26 +22,38 @@
   </ion-page>
 </template>
 
+
+
 <script setup lang="ts">
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
 import { getFlushList } from '@/services'
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 
 const flushList = ref([]);
-
+const isHorizontal = ref(false);
 
 onMounted(async () => {
   flushList.value = await getFlushList();
-})
+});
+
+watchEffect(() => {
+  console.log('isHorizontal:', !isHorizontal.value);
+});
+
+
+window.addEventListener('orientationchange', () => {
+  isHorizontal.value = window.matchMedia('(orientation: landscape)').matches;
+});
+
 </script>
 
+
 <style scoped>
+
 .map{
   height: 44vh;
-/*   border: solid;
-  border-color: red; */
   position: sticky;
   top: 0;
   z-index: 9;
@@ -58,7 +61,7 @@ onMounted(async () => {
 
 /* .list{
   border: solid;
-  border-color: blue;
+  border-color: blue; 
 } */
 
 .container {
@@ -66,23 +69,7 @@ onMounted(async () => {
   position: absolute;
   left: 0;
   right: 0;
-  border: solid;
-  border-color: green;
+  border: solid 3px green;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  color: #8c8c8c;
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}
 </style>
