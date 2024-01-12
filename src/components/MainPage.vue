@@ -8,7 +8,7 @@
       </ion-header>
       
       <div class="container" >
-        <ion-button @click="getCurrentLocation">Obtener Ubicación</ion-button>
+        <!-- <ion-button @click="getCurrentLocation">Obtener Ubicación</ion-button> -->
         <div class="map">
           <MapViewer />
         </div>
@@ -58,8 +58,8 @@ const getCurrentLocation = () => {
       longitude: resp.coords.longitude
     };
  
-  // También puedes imprimir las coordenadas en la consola
-  console.log('Latitude:', resp.coords.latitude);
+    // También puedes imprimir las coordenadas en la consola
+    console.log('Latitude:', resp.coords.latitude);
     console.log('Longitude:', resp.coords.longitude);
   }).catch((error) => {
     console.error('Error getting location', error);
@@ -89,7 +89,24 @@ const getCurrentLocation = () => {
   position: absolute;
   left: 0;
   right: 0;
-  border: solid 3px green;
+  /* border: solid 3px green; */
+}
+
+@media screen and (min-width: 700px){
+  /*   *:hover{
+    border: solid 10px red;
+  } */
+
+  .container{
+    display: -webkit-box;
+    flex-direction: row;
+  }
+
+  .map{
+    width: 50%;
+    height: 100vh;
+  }
+
 }
 
 </style>
