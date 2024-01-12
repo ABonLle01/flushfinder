@@ -1,24 +1,12 @@
-<!-- <template>
-    <ion-app>
-      <ion-split-pane content-id="main-content">
-        <ion-menu content-id="main-content" type="overlay">
-          <ion-content>
-            <Menu />
-          </ion-content>
-        </ion-menu>
-        <ion-router-outlet id="main-content"></ion-router-outlet>
-      </ion-split-pane>
-    </ion-app>
-</template> -->
-
 <template>
   <ion-app>
+    <!-- Menu de filtros -->
     <ion-menu content-id="main-content">
       <ion-header>
-        <ion-toolbar color="tertiary">
+        <ion-toolbar color="undefined">
           <div class="header">
             <img class="logo" alt="Imagen 3" src="favicon.png" />
-            <ion-title>FlushFinder</ion-title>
+            <ion-title color="dark">FlushFinder</ion-title>
           </div>
         </ion-toolbar>
       </ion-header>
@@ -26,6 +14,7 @@
         <Filters />
       </ion-content>
     </ion-menu>
+    <!-- "Menu" de navegacion -->
     <ion-page id="main-content">
       <ion-header>
         <ion-toolbar>
@@ -33,10 +22,12 @@
             <ion-menu-button></ion-menu-button>
           </ion-buttons>
           <!-- <ion-title>Menu</ion-title> -->
+          <!-- todo: barra de busqueda + boton de añadir-->
           <p>barra de busqueda + añadir</p>
         </ion-toolbar>
       </ion-header>
     </ion-page>
+    <!-- mapa + lista -->
     <ion-content class="ion-padding"> 
       <MainPage />
     </ion-content>
@@ -155,6 +146,7 @@ ion-menu::part(container) {
   height: 3rem;
   padding: 5px;
   padding-right: 0;
+  border-radius: 20px;
 }
 
 

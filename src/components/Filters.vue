@@ -1,16 +1,17 @@
 <template>
     <ion-list>
         <ion-item>
-            <img alt="Imagen 3" src="https://picsum.photos/100/50" />
-            <ion-checkbox label-placement="end">Discapacitados</ion-checkbox>
+            <!-- label-placement="end" -->
+            <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
+            <ion-checkbox v-model="discapacitados">Discapacitados</ion-checkbox>
         </ion-item>
         <ion-item>
-            <img alt="Imagen 3" src="https://picsum.photos/100/50" />
-            <ion-checkbox label-placement="end">Sala de lactancia</ion-checkbox>
+            <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
+            <ion-checkbox v-model="salaLactancia">Sala de lactancia</ion-checkbox>
         </ion-item>
         <ion-item>
-            <img alt="Imagen 3" src="https://picsum.photos/100/50" />
-            <ion-checkbox label-placement="end">De pago</ion-checkbox>
+            <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
+            <ion-checkbox v-model="dePago">De pago</ion-checkbox>
         </ion-item>
     </ion-list>
 </template>
@@ -19,9 +20,36 @@
 import { IonCheckbox } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
-export default defineComponent({
-  components: { IonCheckbox },
-});
+export default {
+  data() {
+    return {
+      discapacitados: false,
+      salaLactancia: false,
+      dePago: false,
+    };
+  },
+  watch: {
+    discapacitados() {
+      this.actualizarContenido();
+    },
+    salaLactancia() {
+      this.actualizarContenido();
+    },
+    dePago() {
+      this.actualizarContenido();
+    },
+  },
+  methods: {
+    actualizarContenido() {
+      // Aquí puedes realizar acciones basadas en los checkboxes seleccionados
+      console.log('Discapacitados:', this.discapacitados);
+      console.log('Sala de lactancia:', this.salaLactancia);
+      console.log('De pago:', this.dePago);
+
+      // Puedes mostrar u ocultar contenido según las selecciones
+    },
+  },
+};
 </script>
 
 <style scoped>

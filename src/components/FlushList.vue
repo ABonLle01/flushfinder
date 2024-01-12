@@ -2,19 +2,19 @@
   <ion-list>
     <ion-card v-for="(flush, index) in flushList" :key="index">
       <div class="item">
-            <img alt="Imagen 3" src="https://picsum.photos/1500/700" />
-            <div class="data">
-              <span>5.0</span>
-              <span>Excelente</span>
-              <span>500M</span>
-              <span>Bruj</span>
-            </div>
-            <p class="title">Cesur Baño Este</p>
-            <div class="details">
-              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
-              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
-              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
-            </div>
+        <img alt="Imagen 3" src="https://picsum.photos/1500/700" />
+        <div class="data">
+          <span>5.0</span>
+          <span>Excelente</span>
+          <span>500M</span>
+          <span>Bruj</span>
+        </div>
+        <p class="title">Cesur Baño Este</p>
+        <div class="details">
+          <img alt="Imagen 3" src="https://picsum.photos/100/50" />
+          <img alt="Imagen 3" src="https://picsum.photos/100/50" />
+          <img alt="Imagen 3" src="https://picsum.photos/100/50" />
+        </div>
       </div>
     </ion-card>
   </ion-list>
@@ -33,37 +33,22 @@ const getFlushDistance = (lat, long) => {
 // hacer cosas
 }
 
-/*   export default {
-    components: {
-      IonList,
-      IonCard,
-      IonRow,
-      IonCol,
-      IonThumbnail,
-      IonTitle,
-    },
-  }; */
 </script>
   
 <style scoped>
  
 .item{
   display:grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 0fr auto;
   grid-template-columns: 25vw  1fr;
   grid-template-areas: "imagen cabecera" 
                        "imagen titulo" 
                        "imagen detalles";
-  gap:10px;
+  gap:5px;
   justify-items: center;
   align-items: center;
-  margin-top: 3px;
+  margin-top: 0px;
   width: 100vw;
-}
-
-
-.item img:hover{
-  border: solid 3px red;
 }
 
 .item img{
@@ -111,6 +96,15 @@ const getFlushDistance = (lat, long) => {
   justify-items: start;
   padding:5px;
 }
+@media screen and (min-width: 700px){
+
+  .item{
+    height: 100px;
+  }
+
+
+}
+
 
 </style>
   
