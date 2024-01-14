@@ -1,7 +1,7 @@
 
 
-const getFlushList = async () =>{
-    const response = await fetch("https://api.flushfinder.es/flushes");
+const getFlushList = async (handicaped: boolean) =>{
+    const response = await fetch(`https://api.flushfinder.es/flushes?handicaped=${handicaped}`);
     const flushList = await response.json();
     console.log(flushList);
 
