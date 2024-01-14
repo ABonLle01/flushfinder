@@ -13,7 +13,7 @@
         <ion-col size="6">
           <div class="properties">
             <div class="details">
-              <p>{{ flush.score }} | </p>
+              <p>{{ flush.nombre }} | </p>
               <p>Excelente | </p>
               <p>{{ getFlushDistance(flush.lat, flush.long) }} | </p>
               <p>Bruj</p>
