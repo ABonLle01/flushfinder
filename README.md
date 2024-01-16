@@ -11,6 +11,10 @@
 > npm install @ionic-native/geolocation
 > - Descarga plugin geolocation
 
+> npm install leaflet
+> npm install --save-dev @types/leaflet
+> - Descarga plugin Leaflet
+
 
 ### Recursos
 > APIs
