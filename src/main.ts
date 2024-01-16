@@ -21,6 +21,9 @@ import '@ionic/vue/css/text-alignment.css';
 import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
 
 
 /* Theme variables */
@@ -29,6 +32,7 @@ import './theme/variables.css';
 const app = createApp(App)
   .use(IonicVue)
   .use(router);
+
 
 // Agrega el servicio de Geolocation al objeto global
  app.config.globalProperties.$geolocation = Geolocation; 
