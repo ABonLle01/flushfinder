@@ -25,6 +25,8 @@ import {
   IonNote,
   IonRouterOutlet,
   IonSplitPane,
+  IonButton,
+  IonPage
 } from '@ionic/vue';
 import { ref } from 'vue';
 import {

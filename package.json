@@ -23,11 +23,13 @@
     "@ionic/vue-router": "^7.0.0",
     "cordova-plugin-geolocation": "^5.0.0",
     "ionicons": "^7.0.0",
+    "leaflet": "^1.9.4",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@capacitor/cli": "5.5.1",
+    "@types/leaflet": "^1.9.8",
     "@vitejs/plugin-legacy": "^4.0.2",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^11.0.2",

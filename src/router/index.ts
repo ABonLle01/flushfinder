@@ -1,20 +1,25 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
+import { defineAsyncComponent } from 'vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '',
-    redirect: '/folder/Inbox'
+    redirect: '/folder/Inbox',
   },
   {
     path: '/folder/:id',
-    component: () => import ('../views/MainPage.vue')
-  }
-]
+    component: () => import ('../views/MainPage.vue'),
+  },
+  {
+    path: '/mapa',
+    component: defineAsyncComponent(() => import('@/components/MapViewer.vue')),
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
