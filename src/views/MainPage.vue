@@ -26,11 +26,7 @@
         <div class="list">
           <FlushList :flushList="flushList" />
         </div>
-        
-
       </div>
-
-      
     </ion-content>
   </ion-page>
 </template>
@@ -38,36 +34,34 @@
 <script setup lang="ts">
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
-import MapViewer from '@/components/MapViewer.vue';
-import { getFlushList } from '@/services'
+import MapViewer from '@/components/MapViewer.vue'; 
+import { getFlushList } from '@/services';
 import { onMounted, ref } from 'vue';
-import { Geolocation } from '@ionic-native/geolocation'; 
-
+import { Geolocation } from '@ionic-native/geolocation';
 
 const flushList = ref([]);
 const currentLocation = ref({ latitude: 0, longitude: 0 });
 
 onMounted(async () => {
   flushList.value = await getFlushList();
- getCurrentLocation();  // Llama a la función al cargar la página */
-})
+  getCurrentLocation();
+});
+
 const getCurrentLocation = () => {
   Geolocation.getCurrentPosition().then((resp) => {
-    // Respuesta de tipo Position
     currentLocation.value = {
       latitude: resp.coords.latitude,
-      longitude: resp.coords.longitude
+      longitude: resp.coords.longitude,
     };
 
-  // También puedes imprimir las coordenadas en la consola
-  console.log('Latitude:', resp.coords.latitude);
+    console.log('Latitude:', resp.coords.latitude);
     console.log('Longitude:', resp.coords.longitude);
   }).catch((error) => {
     console.error('Error getting location', error);
   });
-}; 
-
+};
 </script>
+
 
 <style scoped>
 .map{
