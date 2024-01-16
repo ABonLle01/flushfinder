@@ -12,7 +12,7 @@
 > - Descarga plugin geolocation
 
 > npm install leaflet
-> | npm install --save-dev @types/leaflet
+> | npm install --save-dev @types/leaflet | ionic generate component Mapa
 > - Descarga plugin Leaflet
 
 
