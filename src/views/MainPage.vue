@@ -40,7 +40,7 @@ const flushList = ref([]);
 
 
 onMounted(async () => {
-  flushList.value = await getFlushList();
+  flushList.value = await getFlushList(false);
 })
 </script>
 

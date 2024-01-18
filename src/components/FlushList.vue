@@ -13,21 +13,20 @@
         <ion-col size="6">
           <div class="properties">
             <div class="details">
-              <p>{{ flush.nombre }} | </p>
-              <p>Excelente | </p>
-              <p>{{ getFlushDistance(flush.lat, flush.long) }} | </p>
-              <p>Bruj</p>
+              <p>{{ flush.score }} | </p>
+              <p>{{ flush.condition }} | </p>
+              <p>{{ flush.latitude, flush.longitude }}</p>
             </div>
-            <ion-title>Cesur Baño Este</ion-title>
+            <ion-title>{{ flush.name }}</ion-title>
             <div class="details">
-              <ion-thumbnail>
-                <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              <ion-thumbnail v-if="flush.handicapped">
+                <img alt="handicapped" src="../images/handicapped.png" />
               </ion-thumbnail>
-              <ion-thumbnail>
-                <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              <ion-thumbnail v-if="flush.changingstation">
+                <img alt="changingstation" src="../images/babychanger.png" />
               </ion-thumbnail>
-              <ion-thumbnail>
-                <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              <ion-thumbnail v-if="!flush.free">
+                <img alt="Free" src="../images/free.png" />
               </ion-thumbnail>
             </div>
           </div>
@@ -38,6 +37,7 @@
 </template>
   
 <script setup lang="ts">
+import { getFlushList } from '@/services';
 import { IonList, IonCard, IonRow, IonCol, IonThumbnail, IonTitle } from '@ionic/vue';
 
 defineProps({
