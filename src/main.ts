@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
+import store from './store';
 
 import { IonicVue } from '@ionic/vue';
 import { Geolocation } from '@ionic-native/geolocation';
@@ -31,7 +32,8 @@ import './theme/variables.css';
 
 const app = createApp(App)
   .use(IonicVue)
-  .use(router);
+  .use(router)
+  .use(store);
 
 
 // Agrega el servicio de Geolocation al objeto global

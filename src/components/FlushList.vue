@@ -1,37 +1,20 @@
 <template>
   <ion-list>
-    <ion-card v-for="(flush, index) in flushList" :key="index">
-      <ion-row class="item">
-        <ion-col size="2">
+    <ion-card v-for="(flush, index) in flushList" :key="index" class="card">
+      <ion-row>
+
+        <ion-col size="3" class="col">
           <ion-thumbnail>
             <div class="bath">
-              <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              <img alt="BathLogo" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
             </div>
-          </ion-thumbnail>
- 
-        </ion-col>
-        <ion-col size="6">
-          <div class="properties">
+            <p class="title">Cesur Baño Este</p>
             <div class="details">
-              <p>{{ flush.score }} | </p>
-              <p>{{ flush.condition }} | </p>
-              <p>{{ flush.latitude + flush.longitude }}</p>
+              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
+              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
+              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
             </div>
-            <ion-title>{{ flush.name }}</ion-title>
-            <div class="details">
-              <ion-thumbnail v-if="flush.handicapped">
-                <img alt="handicapped" src="../images/handicapped.png" />
-              </ion-thumbnail>
-              <ion-thumbnail v-if="flush.changingstation">
-                <img alt="changingstation" src="../images/babychanger.png" />
-              </ion-thumbnail>
-              <ion-thumbnail v-if="!flush.free">
-                <img alt="Free" src="../images/free.png" />
-              </ion-thumbnail>
-            </div>
-          </div>
-        </ion-col>
-      </ion-row>
+      </div>
     </ion-card>
   </ion-list>
 </template>
@@ -45,87 +28,109 @@ defineProps({
   }
 })
 
-const getFlushDistance = (lat, long) => {
+const getFlushDistance = (lat:number, long:number) => {
 // hacer cosas
 }
 
-/*   export default {
-    components: {
-      IonList,
-      IonCard,
-      IonRow,
-      IonCol,
-      IonThumbnail,
-      IonTitle,
-    },
-  }; */
+
 </script>
   
 <style scoped>
- 
-.item{
-  display:grid;
-  grid-template-rows: auto 1fr auto;
-  grid-template-columns: 25vw  1fr;
-  grid-template-areas: "imagen cabecera" 
-                       "imagen titulo" 
-                       "imagen detalles";
-  gap:10px;
-  justify-items: center;
-  align-items: center;
-  margin-top: 3px;
-  width: 100vw;
-}
 
 
-.item img:hover{
-  border: solid 3px red;
-}
-
-.item img{
-  width:100%;
-  height:100%;
-  object-fit: cover;
-  grid-area: imagen;
-  border-radius:20px;
-}
-
-.item > .data{
-  grid-area: cabecera;
-  display: flex;
-  gap:20px;
-}
- 
-.item > *{
-  margin:0;
-}
-
-.item > .title{
-  grid-area: titulo;
-  margin:0;
-  font-size: 1.5rem;
-}
- 
-.item > .details{
-  grid-area: detalles;  display:flex;
+.card{
   justify-content: center;
-  gap:20px;
+  align-items: center;
+
+  margin-top: 0;
 }
- 
-.item > .properties {
+
+.col{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.filters{
+  display: flex;
+  flex-direction: row;
+}
+
+.filters img {
+  height: 6vw;
+  width: 6vw;
+}
+ /* 
+ .item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 0px;
+  width: 100%;
+
+  height: fit-content;
+  justify-content: center;
+  justify-items: start;
+  padding: 5px;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.item .data {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-left: 20px;
+}
+
+.item .title {
+  margin: 0;
+  font-size: 1.2rem;
+  width: 100%;
+}
+
+.item .filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.item .properties {
   align-self: center;
 }
 
-.details img{
-  height:5vw;
-  width: 5vw;
+.filters img {
+  height: 6vw;
+  width: 6vw;
 }
- 
-.item{
-  height:25vw;
+.filters{
+  display: flex;
+  flex-direction: row;
+}
+
+.icon{
   justify-content: center;
-  justify-items: start;
-  padding:5px;
+  align-items: center;
+}
+ */
+
+@media screen and (min-width: 696px) {
+  .card {
+    height: 25vh;
+    gap: 5px;
+    grid-template-columns: 15vw 1fr;
+  }
+
+  .card img {
+    width: 100%; 
+    height: auto;
+  }
 }
 
 </style>

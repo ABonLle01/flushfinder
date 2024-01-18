@@ -1,50 +1,69 @@
 <template>
   <ion-app>
-    <ion-split-pane content-id="main-content">
-      <ion-menu content-id="main-content" type="overlay">
-        <ion-content>
-          menu
-        </ion-content>
-      </ion-menu>
-      <ion-router-outlet id="main-content"></ion-router-outlet>
-    </ion-split-pane>
+    <!-- Menu de filtros -->
+    <ion-menu content-id="main-content">
+      <ion-header>
+        <ion-toolbar color="undefined">
+          <div class="header">
+            <img class="logo" alt="Imagen 3" src="/favicon.png" />
+            <ion-title color="dark">FlushFinder</ion-title>
+          </div>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <Filters />
+      </ion-content>
+    </ion-menu>
+
+    <!-- "Menu" de navegacion -->
+    <ion-page id="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <!-- boton de añadir -->
+          <ion-fab horizontal="end" vertical="center">
+            <ion-fab-button size="small" color="undefined" @click="toggleShowList()">
+              <ion-icon :icon="add"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+
+          <!-- boton de filtros -->
+          <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+          
+          <!-- barra de navegacion -->
+          <div class="bar">
+            <ion-searchbar class="searchBar" v-model="searchTerm" @ionChange="onSearchChange"></ion-searchbar>
+          </div>
+          
+
+        </ion-toolbar>
+      </ion-header>
+    </ion-page>
+    
+    <!-- mapa + lista -->
+    <ion-content class="ion-padding"> 
+      <MainPage />
+    </ion-content>
   </ion-app>
+
+
+
 </template>
 
+
+
 <script setup lang="ts">
-import {
-  IonApp,
-  IonContent,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonMenu,
-  IonMenuToggle,
-  IonNote,
-  IonRouterOutlet,
-  IonSplitPane,
-  IonButton,
-  IonPage
-} from '@ionic/vue';
+import Filters from './components/Filters.vue';
+import MainPage from '@/components/MainPage.vue';
+import { add } from 'ionicons/icons';
+import {IonApp, IonHeader, IonContent, IonIcon, IonMenu, IonFab, IonFabButton, IonToolbar, IonButtons, IonMenuButton, IonSearchbar} from '@ionic/vue';
 import { ref } from 'vue';
-import {
-  archiveOutline,
-  archiveSharp,
-  bookmarkOutline,
-  bookmarkSharp,
-  heartOutline,
-  heartSharp,
-  mailOutline,
-  mailSharp,
-  paperPlaneOutline,
-  paperPlaneSharp,
-  trashOutline,
-  trashSharp,
-  warningOutline,
-  warningSharp,
-} from 'ionicons/icons';
+import {archiveOutline, archiveSharp, heartOutline, heartSharp, mailOutline, mailSharp,
+   paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, 
+   warningOutline, warningSharp} from 'ionicons/icons';
+
+import { useStore } from 'vuex';
 
 const selectedIndex = ref(0);
 const appPages = [
@@ -91,9 +110,72 @@ const path = window.location.pathname.split('folder/')[1];
 if (path !== undefined) {
   selectedIndex.value = appPages.findIndex((page) => page.title.toLowerCase() === path.toLowerCase());
 }
+
+const store = useStore();
+
+const toggleShowList = () => {
+  store.dispatch('toggleShowList');
+};
+
+const searchTerm = ref('');
+
+const onSearchChange = (event: CustomEvent) => {
+  console.log('Search term:', event.detail.value);
+  // Puedes realizar acciones adicionales aquí, como filtrar los resultados.
+
+  return {
+    searchTerm,
+    onSearchChange,
+  };
+};
+
+
 </script>
 
 <style scoped>
+
+/* Darle color a la parte principal cuando se despliega el menu */
+/*   ion-menu::part(backdrop) {
+    background-color: rgba(47, 253, 20, 0.5);
+  }
+
+ion-menu::part(container) {
+  border-radius: 0 20px 20px 0;
+
+  box-shadow: 4px 0px 16px rgba(157, 255, 0, 0.397);
+}  */
+
+
+.header{
+  display: flex;
+  flex-direction: row;
+  margin-left: 4.5px;
+}
+
+.logo{
+  width: 2.7rem;
+  height: 3rem;
+  padding: 5px;
+  padding-right: 0;
+}
+
+.bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: -70px;
+}
+
+.searchBar {
+  width: 68vw;
+  /* max-width: 300px; */ 
+}
+
+
+ion-fab-button{
+  --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+}
+
 ion-menu ion-content {
   --background: var(--ion-item-background, var(--ion-background-color, #fff));
 }

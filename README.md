@@ -7,6 +7,14 @@
 > ionic capacitor build android <br/>
 > - compila la app y la ejecuta en android studio
 
+> npm i cordova-plugin-geolocation
+> | npm install @ionic-native/geolocation
+> - Descarga plugin geolocation
+
+> npm install leaflet
+> | npm install --save-dev @types/leaflet | ionic generate component Mapa
+> - Descarga plugin Leaflet
+
 
 ### Recursos
 > APIs
