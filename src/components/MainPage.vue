@@ -1,21 +1,16 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">{{ $route.params.id }}</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      
       <div class="container" >
-        <!-- <ion-button @click="getCurrentLocation">Obtener Ubicación</ion-button> -->
         <div class="map">
           <MapViewer />
         </div>
 
-        <div class="list">
+        <div class="list" v-if="showList">
           <FlushList :flushList="flushList" />
         </div>
+        
+        <router-view v-else></router-view>
 
       </div>
     </ion-content>
@@ -28,37 +23,68 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
-import {Geolocation } from '@ionic-native/geolocation';
-import { getFlushList } from '@/services'
-import { onMounted, ref, watchEffect } from 'vue';
+import { Geolocation } from '@ionic-native/geolocation';
+import { getFlushList } from '@/services';
+import { onMounted, ref, watchEffect, computed } from 'vue';
+import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
+import { useStore } from 'vuex';
 
+const store = useStore();
+const showList = ref(store.state.showList);
+const router = useRouter();
 const flushList = ref([]);
+
 const isHorizontal = ref(false);
 const currentLocation = ref({ latitude: 0, longitude: 0 });
+
+onMounted(() => {
+  store.watch(() => store.state.showList, (newValue) => {
+    showList.value = newValue;
+    actualizarRuta();
+  });
+});
+
+
+const actualizarRuta = () => {
+  const currentRoute: RouteLocationNormalizedLoaded | undefined = router.currentRoute.value;
+
+  if (currentRoute) {
+    const folderId = currentRoute.params.id ? `/${currentRoute.params.id}` : '/MainPage';
+    const newPath = showList.value ? folderId : '/registro';
+    router.push({ path: newPath });
+  }
+};
+
+onMounted(() => {
+  actualizarRuta();
+}); 
+
+
+
+onMounted(async () => {
+  flushList.value = await getFlushList();
+});
 
 watchEffect(() => {
   console.log('isHorizontal:', !isHorizontal.value);
 });
 
-
 window.addEventListener('orientationchange', () => {
   isHorizontal.value = window.matchMedia('(orientation: landscape)').matches;
 });
- 
+
 onMounted(async () => {
   flushList.value = await getFlushList();
- getCurrentLocation();  // Llama a la función al cargar la página */
-})
+  getCurrentLocation();
+});
 
 const getCurrentLocation = () => {
   Geolocation.getCurrentPosition().then((resp) => {
-    // Respuesta de tipo Position
     currentLocation.value = {
       latitude: resp.coords.latitude,
       longitude: resp.coords.longitude
     };
- 
-    // También puedes imprimir las coordenadas en la consola
+
     console.log('Latitude:', resp.coords.latitude);
     console.log('Longitude:', resp.coords.longitude);
   }).catch((error) => {
@@ -67,7 +93,20 @@ const getCurrentLocation = () => {
 };
 
 
+
+/* const cambiarContenido = () => {
+  try {
+    showList.value = !showList.value;
+    actualizarRuta();
+  } catch (error) {
+    console.error('Error en cambiarContenido:', error);
+  }
+};
+*/
+
 </script>
+
+
 
 
 <style scoped>
@@ -92,7 +131,7 @@ const getCurrentLocation = () => {
   /* border: solid 3px green; */
 }
 
-@media screen and (min-width: 700px){
+@media screen and (min-width: 696px){
   /*   *:hover{
     border: solid 10px red;
   } */
@@ -103,8 +142,12 @@ const getCurrentLocation = () => {
   }
 
   .map{
-    width: 50%;
-    height: 100vh;
+    width: 44vw;
+    height: 85vh;
+  }
+
+  .list{
+    width: 56vw;
   }
 
 }

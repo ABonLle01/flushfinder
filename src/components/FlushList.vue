@@ -36,7 +36,7 @@ const getFlushDistance = (lat, long) => {
 </script>
   
 <style scoped>
- 
+ /* 
 .item{
   display:grid;
   grid-template-rows: auto 0fr auto;
@@ -76,7 +76,8 @@ const getFlushDistance = (lat, long) => {
 }
  
 .item > .details{
-  grid-area: detalles;  display:flex;
+  grid-area: detalles;  
+  display:flex;
   justify-content: center;
   gap:20px;
 }
@@ -96,15 +97,94 @@ const getFlushDistance = (lat, long) => {
   justify-items: start;
   padding:5px;
 }
-@media screen and (min-width: 700px){
+@media screen and (min-width: 696px){
 
   .item{
-    height: 100px;
+    height: 25vh;
+    gap: 0;
+  }
+
+  .item > img{
+    width: 15vw;
+    height: 20vh;
   }
 
 
 }
 
+ */
+
+ .item {
+  display: grid;
+  grid-template-rows: auto 0fr auto;
+  grid-template-columns: 25vw 1fr;
+  grid-template-areas: "imagen cabecera" "imagen titulo" "imagen detalles";
+  gap: 5px;
+  justify-items: center;
+  align-items: center;
+  margin-top: 0px;
+  width: 100vw;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  grid-area: imagen;
+  border-radius: 20px;
+}
+
+.item>.data {
+  grid-area: cabecera;
+  display: flex;
+  gap: 20px;
+}
+
+.item>* {
+  margin: 0;
+}
+
+.item>.title {
+  grid-area: titulo;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.item>.details {
+  grid-area: detalles;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.item>.properties {
+  align-self: center;
+}
+
+.details img {
+  height: 5vw;
+  width: 5vw;
+}
+
+.item {
+  height: 25vw;
+  justify-content: center;
+  justify-items: start;
+  padding: 5px;
+}
+
+@media screen and (min-width: 696px) {
+  .item {
+    height: 25vh;
+    gap: 5px;
+    grid-template-columns: 15vw 1fr;
+  }
+
+  .item img {
+    width: 100%; 
+    height: auto;
+  }
+}
 
 </style>
   
