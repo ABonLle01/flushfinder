@@ -123,15 +123,14 @@ export default {
       initializeMap();
     });
 
-    return {
-      map,
-    };
-  },
-};
-</script> -->
 
 <style scoped>
-#map {
+
+.mapa{
+  position: sticky;
+}
+
+.mapa iframe{
   width: 100%;
   height: 100vh;
 }

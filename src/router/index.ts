@@ -3,10 +3,27 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Registro from '../components/Registro.vue';
 import MainPage from '../components/MainPage.vue';
 
+
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '',
-    redirect: '/folder/Inbox'
+    path: '/MainPage',
+    component: MainPage,
+    children: [
+      {
+        path: 'registro',
+        component: Registro,
+        meta: { showRegistro: true }
+      }
+    ]
+  },
+  {
+    path: '/',
+    redirect: '/MainPage'
+  },
+  {
+    path: '/registro',
+    component: Registro,
+    meta: { showRegistro: false }
   },
   {
     path: '/App',
@@ -15,8 +32,8 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes
-})
+});
 
 export default router;

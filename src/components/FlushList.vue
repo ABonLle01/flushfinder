@@ -6,46 +6,31 @@
         <ion-col size="3" class="col">
           <ion-thumbnail>
             <div class="bath">
-                  <img alt="BathLogo" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              <img alt="BathLogo" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
             </div>
           </ion-thumbnail>
-        </ion-col>
 
-        <ion-col size="7" class="col">
-          
+        </ion-col>
+        <ion-col size="6">
           <div class="properties">
-            <ion-row>
-                  <div class="data">
-                    <p>
-                      {{ flush.score }} | {{ flush.condition }} | 
-                      <!-- {{ flush.latitude + flush.longitude }} --> distancia
-                    </p>
-                  </div>
-                </ion-row>
-            <ion-row>
-              <ion-title class="name">{{ flush.name }}</ion-title>
-            </ion-row>
-            <ion-row>
-                  <div class="filters">
-                <ion-row>
-                  <ion-col>
-                    <ion-thumbnail v-if="flush.handicapped" class="icon">
-                          <img alt="handicapped" src="../images/handicapped.png" />
-                    </ion-thumbnail>
-                  </ion-col>
-                  <ion-col>
-                    <ion-thumbnail v-if="flush.changingstation" class="icon">
-                          <img alt="changingstation" src="../images/babychanger.png" />
-                    </ion-thumbnail>
-                  </ion-col>
-                  <ion-col>
-                    <ion-thumbnail v-if="!flush.free" class="icon">
-                          <img alt="Free" src="../images/free.png" />
-                    </ion-thumbnail>
-                  </ion-col>
-                </ion-row>
-                  </div>  
-            </ion-row>
+            <div class="details">
+              <p>{{ flush.score }} | </p>
+              <p>Excelente | </p>
+              <p>{{ getFlushDistance(flush.lat, flush.long) }} | </p>
+              <p>Bruj</p>
+            </div>
+            <ion-title>Cesur Baño Este</ion-title>
+            <div class="details">
+              <ion-thumbnail>
+                <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              </ion-thumbnail>
+              <ion-thumbnail>
+                <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              </ion-thumbnail>
+              <ion-thumbnail>
+                <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              </ion-thumbnail>
+            </div>
           </div>
         </ion-col>
       </ion-row>
