@@ -1,21 +1,22 @@
-import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
-import { defineAsyncComponent } from 'vue';
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+
+import Registro from '../components/Registro.vue';
+import MainPage from '../components/MainPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '',
-    redirect: '/folder/Inbox',
+    redirect: '/folder/Inbox'
   },
   {
-    path: '/folder/:id',
+    path: '/App',
     component: () => import ('../App.vue')
   }
-]
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
-});
+  routes
+})
 
 export default router;

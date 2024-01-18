@@ -6,7 +6,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -17,7 +17,7 @@ import L from 'leaflet';
 // Importa la imagen personalizada
 import markerIcon from '/favicon.png'; // Ajusta la ruta según la estructura de tu proyecto
 
-export default {
+/* export default {
   name: 'MapViewer',
   setup() {
     const map = ref(null);
@@ -63,7 +63,7 @@ export default {
       map,
     };
   },
-};
+}; */
 </script>
 
 <style scoped>

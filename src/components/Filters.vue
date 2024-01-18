@@ -1,23 +1,35 @@
 <template>
-    <ion-list>
-        <ion-item>
-            <!-- label-placement="end" -->
-            <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
-            <ion-checkbox v-model="discapacitados">Discapacitados</ion-checkbox>
-        </ion-item>
-        <ion-item>
-            <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
-            <ion-checkbox v-model="salaLactancia">Sala de lactancia</ion-checkbox>
-        </ion-item>
-        <ion-item>
-            <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
-            <ion-checkbox v-model="dePago">De pago</ion-checkbox>
-        </ion-item>
-    </ion-list>
+  <ion-list>
+    <ion-item :inset="true" id="ejemplo">
+      <!-- label-placement="end" -->
+      <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
+      <input type="checkbox" id="discapacitados" value="discapacitados" v-model="filtros" />
+      <label for="discapacitados">Discapacitados</label>
+    </ion-item>
+    <ion-item>
+      <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
+      <input type="checkbox" id="lactancia" value="lactancia" v-model="filtros" />
+      <label for="lactancia">Sala de lactancia</label>
+    </ion-item>
+    <ion-item lines="none">
+      <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
+      <input type="checkbox" id="dePago" value="dePago" v-model="filtros" />
+      <label for="dePago">De pago</label>
+    </ion-item>
+    <br />
+    <span>Checked names: {{ filtros }}</span>
+  </ion-list>
 </template>
 
-<script lang="ts">
-import { IonCheckbox } from '@ionic/vue';
+
+<script setup lang="ts">
+import { IonList, IonItem } from '@ionic/vue';
+import { ref } from 'vue';
+const filtros = ref([]); 
+
+
+
+/* import { IonCheckbox } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 export default {
@@ -25,7 +37,7 @@ export default {
     return {
       discapacitados: false,
       salaLactancia: false,
-      dePago: false,
+      dePago: '',
     };
   },
   watch: {
@@ -41,15 +53,31 @@ export default {
   },
   methods: {
     actualizarContenido() {
-      // Aquí puedes realizar acciones basadas en los checkboxes seleccionados
+      
       console.log('Discapacitados:', this.discapacitados);
       console.log('Sala de lactancia:', this.salaLactancia);
       console.log('De pago:', this.dePago);
 
-      // Puedes mostrar u ocultar contenido según las selecciones
     },
   },
-};
+}; */
+
+/* export default {
+    data() {
+        return {
+            filtros: {
+                discapacitados: false,
+                salaLactancia: false,
+                dePago: false
+            }
+        };
+    }
+}; */
+
+
+
+
+
 </script>
 
 <style scoped>
