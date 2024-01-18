@@ -60,11 +60,6 @@ onMounted(() => {
 }); 
 
 
-
-onMounted(async () => {
-  flushList.value = await getFlushList();
-});
-
 watchEffect(() => {
   console.log('isHorizontal:', !isHorizontal.value);
 });
@@ -74,7 +69,7 @@ window.addEventListener('orientationchange', () => {
 });
 
 onMounted(async () => {
-  flushList.value = await getFlushList();
+  flushList.value = await getFlushList(false);
   getCurrentLocation();
 });
 

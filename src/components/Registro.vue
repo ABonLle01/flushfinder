@@ -8,11 +8,9 @@
         </ul>
       </p>
 
-      <div class="data">
-        <label for="name">Nombre</label>
-        <input v-model="formData.nombre" type="text" name="nombre" placeholder="Nombre del baño">
-      </div>
-      
+      <!-- <ion-item>
+        <ion-input v-model="formData.name" placeholder="Nombre del baño" color="dark"></ion-input>
+      </ion-item>
       <div class="data">
         <label for="status">Estado del baño</label>
 
@@ -32,7 +30,7 @@
 
       </div>
 
-      <ion-toggle id="discapacitados" value="discapacitados" @ionChange="handleToggleChange('discapacitados')" label-placement="start" :checked="formData.filtros.includes('discapacitados')">Discapacitados</ion-toggle><br>
+      <ion-toggle id="handicaped" value="handicaped" @ionChange="handleToggleChange('handicaped')" label-placement="start" :checked="formData.filtros.includes('handicaped')">Discapacitados</ion-toggle><br>
       <ion-toggle id="lactancia" value="lactancia" @ionChange="handleToggleChange('lactancia')" label-placement="start" :checked="formData.filtros.includes('lactancia')">Sala de lactancia</ion-toggle><br>
       <ion-toggle id="dePago" value="dePago" @ionChange="handleToggleChange('dePago')" label-placement="start" :checked="formData.filtros.includes('dePago')">Acceso gratuito</ion-toggle>
 
@@ -41,19 +39,48 @@
         <button type="button" id="cancel" value="cancel">Cancelar</button>
       </div>
 
-      <span>Checked names: {{ formData.filtros }}</span>
+      <span>Checked names: {{ formData.filtros }}</span> -->
+      <ion-row>
+        <!-- First Column -->
+        <ion-col>
+          <ion-item>
+            <ion-input v-model="formData.name" placeholder="Nombre del baño" color="dark"></ion-input>
+          </ion-item>
+
+          <div class="data">
+            <label for="status">Estado del baño</label>
+
+            <!-- ... (existing code for rating) -->
+
+          </div>
+        </ion-col>
+
+        <!-- Second Column -->
+        <ion-col>
+          <ion-toggle id="handicaped" value="handicaped" @ionChange="handleToggleChange('handicaped')" label-placement="start" :checked="formData.filtros.includes('handicaped')">Discapacitados</ion-toggle><br>
+          <ion-toggle id="lactancia" value="lactancia" @ionChange="handleToggleChange('lactancia')" label-placement="start" :checked="formData.filtros.includes('lactancia')">Sala de lactancia</ion-toggle><br>
+          <ion-toggle id="dePago" value="dePago" @ionChange="handleToggleChange('dePago')" label-placement="start" :checked="formData.filtros.includes('dePago')">Acceso gratuito</ion-toggle>
+
+          <div class="data">
+            <button type="submit" id="add" value="addFlush">Añadir</button>
+            <button type="button" id="cancel" value="cancel">Cancelar</button>
+          </div>
+
+          <span>Checked names: {{ formData.filtros }}</span>
+        </ion-col>
+      </ion-row>
+
+
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { IonToggle } from '@ionic/vue';
+import { IonItem, IonToggle, IonInput } from '@ionic/vue';
 import { ref, nextTick } from 'vue';
 
-/* const filtros = ref([]); */
-
 const formData = ref({
-  nombre: '',
+  name: '',
   filtros: []
 });
 
@@ -96,8 +123,8 @@ const errors = ref<string[]>([]);
 
 const submitForm = () => {
   errors.value = [];
-
-  if (!formData.value.nombre) {
+  /* hacer que no se puedan meter nombres que sean espacios en blanco */
+  if (!formData.value.name) {
     errors.value.push('Todos los campos son obligatorios.');
   }
 
@@ -116,12 +143,21 @@ form {
   height: 48.5vh;
   align-items: center;
   justify-content: center;
+
+  margin-top: 20px;
 }
 
 .data{
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
+
+  gap: 18vw;
+}
+
+.rating{
+  padding-bottom: 6px;
 }
 
 .rating:not(:checked) > input {
