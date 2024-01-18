@@ -1,21 +1,37 @@
 <template>
   <ion-list>
     <ion-card v-for="(flush, index) in flushList" :key="index">
-      <div class="item">
-            <img alt="Imagen 3" src="https://picsum.photos/1500/700" />
-            <div class="data">
-              <span>5.0</span>
-              <span>Excelente</span>
-              <span>500M</span>
-              <span>Bruj</span>
+      <ion-row class="item">
+        <ion-col size="2">
+          <ion-thumbnail>
+            <div class="bath">
+              <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
             </div>
-            <p class="title">Cesur Baño Este</p>
+          </ion-thumbnail>
+ 
+        </ion-col>
+        <ion-col size="6">
+          <div class="properties">
             <div class="details">
-              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
-              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
-              <img alt="Imagen 3" src="https://picsum.photos/100/50" />
+              <p>{{ flush.score }} | </p>
+              <p>{{ flush.condition }} | </p>
+              <p>{{ flush.latitude + flush.longitude }}</p>
             </div>
-      </div>
+            <ion-title>{{ flush.name }}</ion-title>
+            <div class="details">
+              <ion-thumbnail v-if="flush.handicapped">
+                <img alt="handicapped" src="../images/handicapped.png" />
+              </ion-thumbnail>
+              <ion-thumbnail v-if="flush.changingstation">
+                <img alt="changingstation" src="../images/babychanger.png" />
+              </ion-thumbnail>
+              <ion-thumbnail v-if="!flush.free">
+                <img alt="Free" src="../images/free.png" />
+              </ion-thumbnail>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
     </ion-card>
   </ion-list>
 </template>

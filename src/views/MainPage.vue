@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
-import MapViewer from '@/components/MapViewer.vue'; 
+import MapViewer from '@/components/MapViewer.vue'; // Mantenido como MapViewer
 import { getFlushList } from '@/services';
 import { onMounted, ref } from 'vue';
 import { Geolocation } from '@ionic-native/geolocation';
@@ -43,7 +43,7 @@ const flushList = ref([]);
 const currentLocation = ref({ latitude: 0, longitude: 0 });
 
 onMounted(async () => {
-  flushList.value = await getFlushList();
+  flushList.value = await getFlushList(false);
   getCurrentLocation();
 });
 

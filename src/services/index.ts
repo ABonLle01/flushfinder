@@ -1,31 +1,12 @@
-
-
-const getFlushList = async () =>{
-    // const response = await fetch("http://example.com/movies.json");
-    // const flushList = await response.json();
-    // console.log(flushList);
-
-    // return flushList;
-    return [
-        {
-            score: 4
-        },
-        {
-            score: 3
-        },
-        {
-            score: 2
-        },
-        {
-            score: 1
-        },
-        {
-            score: 0
-        },
-    ]
+const getFlushList = async (handicaped: boolean) =>{
+    const response = await fetch(`https://api.flushfinder.es/flushes?handicaped=${handicaped}`);
+    const flushList = await response.json();
+    console.log(flushList);
+ 
+    return flushList;
 }
-
-
+ 
+ 
 export {
     getFlushList
 }
