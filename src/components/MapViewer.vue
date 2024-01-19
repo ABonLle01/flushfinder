@@ -6,53 +6,51 @@
   </ion-page>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import { ref, onMounted } from 'vue';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { getFlushList } from '@/services';
 
-
-
+/* defineProps({
+  flushList: {
+    type: Array<any>
+  }
+}); */
 
 // Importa la imagen personalizada
-import markerIcon from '/favicon.png'; // Ajusta la ruta según la estructura de tu proyecto
+import markerIcon from '../images/mapMarker.png';
 
-/* export default {
+export default {
   name: 'MapViewer',
   setup() {
     const map = ref(null);
 
-    const initializeMap = () => {
-      setTimeout(() => {
-        const initialCoordinates: L.LatLngTuple = [36.719585112950064, -4.365667652038817];
+    const initializeMap = async () => {
+      try {
+        const response = await fetch('https://api.flushfinder.es/flushes');
+        const flushList = await response.json();
 
+        const initialCoordinates: L.LatLngTuple = [36.719585112950064, -4.365667652038817];
         map.value = L.map('map').setView(initialCoordinates, 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map.value);
 
-        // Primer marcador
         const customIcon = L.icon({
-          iconUrl: markerIcon,
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
-          popupAnchor: [0, -32],
-        });
-      
-        const markerCoordinates: L.LatLngTuple = [36.719585112950064, -4.365667652038817];
-        const marker = L.marker(markerCoordinates, { icon: customIcon }).addTo(map.value);
-
-        // Segundo marcador (replícalo según sea necesario)
-        const customIcon2 = L.icon({
-          iconUrl: markerIcon,
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
-          popupAnchor: [0, -32],
+            iconUrl: markerIcon,
+            iconSize: [32, 51],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32],
         });
 
-        const markerCoordinates2: L.LatLngTuple = [36.721672, -4.363419];
-        const marker2 = L.marker(markerCoordinates2, { icon: customIcon2 }).addTo(map.value);
+        flushList.forEach((flush) => {
+          const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
+          const marker = L.marker(markerCoordinates, { icon: customIcon }).addTo(map.value);
+        });
 
         console.log('Map initialized with custom markers');
-      }, 100);
+      } catch (error) {
+        console.error('Error fetching flush list:', error);
+      }
     };
 
     onMounted(() => {
@@ -63,7 +61,7 @@ import markerIcon from '/favicon.png'; // Ajusta la ruta según la estructura de
       map,
     };
   },
-}; */
+};
 </script>
 
 <style scoped>
@@ -125,14 +123,8 @@ export default {
 
 
 <style scoped>
-
-.mapa{
-  position: sticky;
-}
-
-.mapa iframe{
+#map {
   width: 100%;
   height: 100vh;
 }
 </style>
-

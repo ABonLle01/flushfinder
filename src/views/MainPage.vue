@@ -34,50 +34,29 @@
 <script setup lang="ts">
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
-import MapViewer from '@/components/MapViewer.vue'; // Mantenido como MapViewer
-import { getFlushList } from '@/services';
+import MapViewer from '@/components/MapViewer.vue';
+import { getFlushList } from '@/services'
 import { onMounted, ref } from 'vue';
-import { Geolocation } from '@ionic-native/geolocation';
 
 const flushList = ref([]);
-const currentLocation = ref({ latitude: 0, longitude: 0 });
+
 
 onMounted(async () => {
   flushList.value = await getFlushList(false);
-  getCurrentLocation();
-});
-
-const getCurrentLocation = () => {
-  Geolocation.getCurrentPosition().then((resp) => {
-    currentLocation.value = {
-      latitude: resp.coords.latitude,
-      longitude: resp.coords.longitude,
-    };
-
-    console.log('Latitude:', resp.coords.latitude);
-    console.log('Longitude:', resp.coords.longitude);
-  }).catch((error) => {
-    console.error('Error getting location', error);
-  });
-};
+})
 </script>
-
 
 <style scoped>
 .map{
-  height: 44vh;
-/*   border: solid;
-  border-color: red; */
   position: sticky;
-  top: 0;
-  z-index: 9;
+  position: relative;
+  border: solid;
+  border-color: red;
 }
-
-/* .list{
+.list{
   border: solid;
   border-color: blue;
-} */
-
+}
 .container {
   text-align: center;
   position: absolute;
@@ -103,4 +82,3 @@ const getCurrentLocation = () => {
   text-decoration: none;
 }
 </style>
-
