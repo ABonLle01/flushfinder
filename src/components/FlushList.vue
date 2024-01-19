@@ -1,34 +1,54 @@
 <template>
   <ion-list>
-    <ion-card v-for="(flush, index) in flushList" :key="index">
-      <ion-row class="item">
-        <ion-col size="2">
+    <ion-card v-for="(flush, index) in flushList" :key="index" class="card">
+      <ion-row>
+
+        <ion-col size="3" class="col">
           <ion-thumbnail>
             <div class="bath">
-              <img alt="Imagen 3" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              <img alt="BathLogo" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
             </div>
           </ion-thumbnail>
-
         </ion-col>
-        <ion-col size="6">
+
+        <ion-col size="7" class="col">
+          
           <div class="properties">
-            <div class="details">
-              <p>{{ flush.score }} | </p>
-              <p>{{ flush.condition }} | </p>
-              <p>{{ flush.latitude, flush.longitude }}</p>
-            </div>
-            <ion-title>{{ flush.name }}</ion-title>
-            <div class="details">
-              <ion-thumbnail v-if="flush.handicapped">
-                <img alt="handicapped" src="../images/handicapped.png" />
-              </ion-thumbnail>
-              <ion-thumbnail v-if="flush.changingstation">
-                <img alt="changingstation" src="../images/babychanger.png" />
-              </ion-thumbnail>
-              <ion-thumbnail v-if="!flush.free">
-                <img alt="Free" src="../images/free.png" />
-              </ion-thumbnail>
-            </div>
+            <ion-row class="data">
+                <p>
+                  {{ flush.score }} | {{ flush.condition }} | 
+                  <!-- {{ flush.latitude + flush.longitude }} --> distancia
+                </p>
+            </ion-row>
+
+            <ion-row>
+              <ion-title class="name">{{ flush.name }}</ion-title>
+            </ion-row>
+
+            <ion-row class="filters">
+                <ion-row>
+                  
+                  <ion-col>
+                    <ion-thumbnail v-if="flush.handicapped" class="icon">
+                      <img alt="handicapped" src="../images/handicapped.png" />
+                    </ion-thumbnail>
+                  </ion-col>
+
+                  <ion-col>
+                    <ion-thumbnail v-if="flush.changingstation" class="icon">
+                      <img alt="changingstation" src="../images/babychanger.png" />
+                    </ion-thumbnail>
+                  </ion-col>
+
+                  <ion-col size="3">
+                    <ion-thumbnail v-if="!flush.free" class="icon">
+                      <img alt="Free" src="../images/free.png" />
+                    </ion-thumbnail>
+                  </ion-col>
+
+                </ion-row>  
+            </ion-row>
+
           </div>
         </ion-col>
       </ion-row>
@@ -46,61 +66,135 @@ defineProps({
   }
 })
 
-const getFlushDistance = (lat, long) => {
+const getFlushDistance = (lat:number, long:number) => {
 // hacer cosas
 }
 
-/*   export default {
-    components: {
-      IonList,
-      IonCard,
-      IonRow,
-      IonCol,
-      IonThumbnail,
-      IonTitle,
-    },
-  }; */
+
 </script>
   
 <style scoped>
-div {
-  border: solid;
-  border-color: red;
+
+.card {
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 0;
 }
 
-.item {
+.col {
   display: flex;
-  /*    align-items: center; */
-  /* //falla, se pega al culo */
-  justify-content: center;
-  width: 80vh;
-  border: solid;
-  border-color: chartreuse;
+  flex-direction: row;
+  align-items: center;
 }
 
-.bath {
-  border: solid;
-  border-color: blueviolet;
-  overflow: hidden;
-  width: fit-content;
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
 
+.filters img {
+  height: 8vw;
+  width: 8vw;
+}
+
+.name {
+  margin: 0;
+  font-size: 1.2rem;
+  width: 100%;
+}
+
+.data {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+@media screen and (min-width: 696px) {
+  .card {
+    height: 25vh;
+    gap: 5px;
+  }
+
+  .card img {
+    width: 100%; 
+    height: auto;
+  }
+}
+
+ /* 
+ .item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 0px;
+  width: 100%;
+
+  height: fit-content;
+  justify-content: center;
+  justify-items: start;
+  padding: 5px;
 }
 
 .item img {
-  height: 100px;
-  width: 100px;
-  max-width: inherit;
-
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
 }
 
-.details {
+.item .data {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-left: 20px;
+}
+
+.item .title {
+  margin: 0;
+  font-size: 1.2rem;
+  width: 100%;
+}
+
+.item .filters {
   display: flex;
   justify-content: center;
+  gap: 15px;
 }
 
-.details img {
-  height: 25px;
-  width: 25px;
+.item .properties {
+  align-self: center;
 }
+
+.filters img {
+  height: 6vw;
+  width: 6vw;
+}
+.filters{
+  display: flex;
+  flex-direction: row;
+}
+
+.icon{
+  justify-content: center;
+  align-items: center;
+}
+ */
+
+@media screen and (min-width: 696px) {
+  .card {
+    height: 25vh;
+    gap: 5px;
+    grid-template-columns: 15vw 1fr;
+  }
+
+  .card img {
+    width: 100%; 
+    height: auto;
+  }
+}
+
 </style>
   
