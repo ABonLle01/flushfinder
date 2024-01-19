@@ -6,7 +6,7 @@
         <ion-col size="3" class="col">
           <ion-thumbnail>
             <div class="bath">
-              <img alt="BathLogo" src="https://ionicframework.com/docs/img/demos/thumbnail.svg" />
+              <img alt="BathLogo" v-bind:src="flush.image" />
             </div>
           </ion-thumbnail>
         </ion-col>
