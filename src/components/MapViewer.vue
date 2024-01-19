@@ -30,7 +30,7 @@ export default {
       try {
         const response = await fetch('https://api.flushfinder.es/flushes');
         const flushList = await response.json();
- 
+
         const initialCoordinates: L.LatLngTuple = [36.690126, -4.397479];
         map.value = L.map('map').setView(initialCoordinates, 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map.value);

@@ -73,6 +73,13 @@ defineProps({
   align-items: center;
   margin-top: 0;
 }
+.bath img{
+  max-height: 100px;
+  max-width: 100px;
+  min-width: 100px;
+  min-height: 100px;
+  border-radius: 15px;
+}
 
 .col {
   display: flex;
@@ -103,8 +110,8 @@ defineProps({
 }
 
 .filters img {
-  height: 8vw;
-  width: 8vw;
+  height: 35px;
+  width: 35px;
 }
 
 .name {
@@ -131,7 +138,7 @@ defineProps({
     width: 100%; 
     height: auto;
   }
-}
+} */
 
 </style>
 
