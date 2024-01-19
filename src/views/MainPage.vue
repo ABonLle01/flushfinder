@@ -17,7 +17,7 @@
       </ion-header>
       
       <div class="container">
-        <ion-button @click="getCurrentLocation">Obtener Ubicación</ion-button>
+       <!--  <ion-button @click="getCurrentLocation">Obtener Ubicación</ion-button> -->
         
         <div class="map">
           <MapViewer />

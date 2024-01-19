@@ -2,22 +2,20 @@
   <ion-list>
     <ion-card v-for="(flush, index) in flushList" :key="index" class="card" v-bind:data-id="index">
       <ion-row>
-
         <ion-col size="3" class="col">
           <ion-thumbnail>
             <div class="bath">
               <img alt="BathLogo" v-bind:src="flush.image" />
             </div>
           </ion-thumbnail>
-
         </ion-col>
+
         <ion-col size="6">
           <div class="properties">
             <ion-row class="data">
-                <p>
-                  {{ flush.score }} | {{ flush.condition }} | 
-                  <!-- {{ flush.latitude + flush.longitude }} --> distancia
-                </p>
+              <p>
+                {{ flush.score }} | {{ flush.condition }} | distancia
+              </p>
             </ion-row>
 
             <ion-row>
@@ -25,31 +23,32 @@
             </ion-row>
 
             <ion-row class="filters">
-                <ion-row>
-                  
-                  <ion-col>
-                    <ion-thumbnail v-if="flush.handicapped" class="icon">
-                      <img alt="handicapped" src="../images/handicapped.png" />
-                    </ion-thumbnail>
-                  </ion-col>
+              <ion-row>
 
-                  <ion-col>
-                    <ion-thumbnail v-if="flush.changingstation" class="icon">
-                      <img alt="changingstation" src="../images/babychanger.png" />
-                    </ion-thumbnail>
-                  </ion-col>
+                <ion-col>
+                  <ion-thumbnail v-if="flush.handicapped" class="icon">
+                    <img alt="handicapped" src="../images/handicapped.png" />
+                  </ion-thumbnail>
+                </ion-col>
 
-                  <ion-col size="3">
-                    <ion-thumbnail v-if="!flush.free" class="icon">
-                      <img alt="Free" src="../images/free.png" />
-                    </ion-thumbnail>
-                  </ion-col>
+                <ion-col>
+                  <ion-thumbnail v-if="flush.changingstation" class="icon">
+                    <img alt="changingstation" src="../images/babychanger.png" />
+                  </ion-thumbnail>
+                </ion-col>
 
-                </ion-row>  
+                <ion-col size="3">
+                  <ion-thumbnail v-if="!flush.free" class="icon">
+                    <img alt="Free" src="../images/free.png" />
+                  </ion-thumbnail>
+                </ion-col>
+
+              </ion-row>
             </ion-row>
 
           </div>
         </ion-col>
+
       </ion-row>
     </ion-card>
   </ion-list>
@@ -70,7 +69,7 @@ defineProps({
 <style scoped>
 
 .card {
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   margin-top: 0;
 }
@@ -79,6 +78,22 @@ defineProps({
   display: flex;
   flex-direction: row;
   align-items: center;
+  height: 50px;
+  width: 50px;
+}
+
+.bath {
+  display: flex;
+  align-items: center;
+  height: 100px; /* Ajustar según sea necesario */
+  width: 100px;
+}
+
+.bath img {
+  display: flex;
+  height: 100px; /* Ajustar según sea necesario */
+  width: 100px;
+  margin: auto; /* Esto centra verticalmente la imagen */
 }
 
 .filters {
@@ -105,78 +120,6 @@ defineProps({
   gap: 10px;
 }
 
-
-@media screen and (min-width: 696px) {
-  .card {
-    height: 25vh;
-    gap: 5px;
-  }
-
-  .card img {
-    width: 100%; 
-    height: auto;
-  }
-}
-
- /* 
- .item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 0px;
-  width: 100%;
-
-  height: fit-content;
-  justify-content: center;
-  justify-items: start;
-  padding: 5px;
-}
-
-.item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 15px;
-}
-
-.item .data {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-left: 20px;
-}
-
-.item .title {
-  margin: 0;
-  font-size: 1.2rem;
-  width: 100%;
-}
-
-.item .filters {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.item .properties {
-  align-self: center;
-}
-
-.filters img {
-  height: 6vw;
-  width: 6vw;
-}
-.filters{
-  display: flex;
-  flex-direction: row;
-}
-
-.icon{
-  justify-content: center;
-  align-items: center;
-}
- */
-
 @media screen and (min-width: 696px) {
   .card {
     height: 25vh;
@@ -191,4 +134,5 @@ defineProps({
 }
 
 </style>
+
   
