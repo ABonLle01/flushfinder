@@ -31,14 +31,14 @@ export default {
         const response = await fetch('https://api.flushfinder.es/flushes');
         const flushList = await response.json();
 
-        const initialCoordinates: L.LatLngTuple = [36.719585112950064, -4.365667652038817];
+        const initialCoordinates: L.LatLngTuple = [36.690126, -4.397479];
         map.value = L.map('map').setView(initialCoordinates, 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map.value);
 
         const customIcon = L.icon({
             iconUrl: markerIcon,
             iconSize: [32, 51],
-            iconAnchor: [16, 32],
+            iconAnchor: [16, 51],
             popupAnchor: [0, -32],
         });
 

@@ -75,6 +75,13 @@ defineProps({
   align-items: center;
   margin-top: 0;
 }
+.bath img{
+  max-height: 100px;
+  max-width: 100px;
+  min-width: 100px;
+  min-height: 100px;
+  border-radius: 15px;
+}
 
 .col {
   display: flex;
@@ -89,8 +96,8 @@ defineProps({
 }
 
 .filters img {
-  height: 8vw;
-  width: 8vw;
+  height: 35px;
+  width: 35px;
 }
 
 .name {
@@ -107,7 +114,7 @@ defineProps({
 }
 
 
-@media screen and (min-width: 696px) {
+/* @media screen and (min-width: 696px) {
   .card {
     height: 25vh;
     gap: 5px;
@@ -118,65 +125,6 @@ defineProps({
     height: auto;
   }
 }
-
- /* 
- .item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 0px;
-  width: 100%;
-
-  height: fit-content;
-  justify-content: center;
-  justify-items: start;
-  padding: 5px;
-}
-
-.item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 15px;
-}
-
-.item .data {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-left: 20px;
-}
-
-.item .title {
-  margin: 0;
-  font-size: 1.2rem;
-  width: 100%;
-}
-
-.item .filters {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.item .properties {
-  align-self: center;
-}
-
-.filters img {
-  height: 6vw;
-  width: 6vw;
-}
-.filters{
-  display: flex;
-  flex-direction: row;
-}
-
-.icon{
-  justify-content: center;
-  align-items: center;
-}
- */
 
 @media screen and (min-width: 696px) {
   .card {
@@ -189,7 +137,7 @@ defineProps({
     width: 100%; 
     height: auto;
   }
-}
+} */
 
 </style>
   
