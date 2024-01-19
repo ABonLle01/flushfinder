@@ -30,19 +30,19 @@
                   
                   <ion-col>
                     <ion-thumbnail v-if="flush.handicapped" class="icon">
-                      <img alt="handicapped" src="../images/handicapped.png" />
+                      <img alt="handicapped" src="../images/filters/handicapped.png" />
                     </ion-thumbnail>
                   </ion-col>
 
                   <ion-col>
                     <ion-thumbnail v-if="flush.changingstation" class="icon">
-                      <img alt="changingstation" src="../images/babychanger.png" />
+                      <img alt="changingstation" src="../images/filters/babychanger.png" />
                     </ion-thumbnail>
                   </ion-col>
 
                   <ion-col size="3">
                     <ion-thumbnail v-if="!flush.free" class="icon">
-                      <img alt="Free" src="../images/free.png" />
+                      <img alt="Free" src="../images/filters/free.png" />
                     </ion-thumbnail>
                   </ion-col>
 
