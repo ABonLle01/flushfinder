@@ -79,6 +79,49 @@ const getFlushDistance = (lat:number, long:number) => {
   align-items: center;
   margin-top: 0;
 }
+.bath img{
+  max-height: 100px;
+  max-width: 100px;
+  min-width: 100px;
+  min-height: 100px;
+  border-radius: 15px;
+}
+
+.col {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.filters img {
+  height: 35px;
+  width: 35px;
+}
+
+.name {
+  margin: 0;
+  font-size: 1.2rem;
+  width: 100%;
+}
+
+.data {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* .card {
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 0;
+}
 
 .col {
   display: flex;
@@ -108,7 +151,7 @@ const getFlushDistance = (lat:number, long:number) => {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
+} */
 
 
 @media screen and (min-width: 696px) {

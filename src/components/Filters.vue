@@ -2,15 +2,15 @@
   <ion-list>
     <ion-item :inset="true" id="ejemplo">
       <!-- label-placement="end" -->
-      <img alt="Handicapped" src="../images/handicapped.png" />
+      <img alt="Handicapped" src="../images/filters/handicapped.png" />
       <ion-checkbox label-placement="end" justify="start" id="handicapped" value="handicapped" v-model="filtros.handicapped">Discapacitados</ion-checkbox>
     </ion-item>
     <ion-item>
-      <img alt="BabyChanger" src="../images/babychanger.png" />
+      <img alt="BabyChanger" src="../images/filters/babychanger.png" />
       <ion-checkbox label-placement="end" justify="start" id="babychanger" value="babychanger" v-model="filtros.babychanger">Sala de lactancia</ion-checkbox>
     </ion-item>
     <ion-item lines="none">
-      <img alt="Free" src="../images/free.png" />
+      <img alt="Free" src="../images/filters/free.png" />
       <ion-checkbox label-placement="end" justify="start"  id="free" value="free" v-model="filtros.free">De pago</ion-checkbox>
     </ion-item>
     <br />
