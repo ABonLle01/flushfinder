@@ -2,31 +2,42 @@
   <ion-list>
     <ion-item :inset="true" id="ejemplo">
       <!-- label-placement="end" -->
-      <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
-      <input type="checkbox" id="discapacitados" value="discapacitados" v-model="filtros" />
-      <label for="discapacitados">Discapacitados</label>
+      <img alt="Handicapped" src="../images/handicapped.png" />
+      <ion-checkbox label-placement="end" justify="start" id="handicapped" value="handicapped" v-model="filtros.handicapped">Discapacitados</ion-checkbox>
     </ion-item>
     <ion-item>
-      <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
-      <input type="checkbox" id="lactancia" value="lactancia" v-model="filtros" />
-      <label for="lactancia">Sala de lactancia</label>
+      <img alt="BabyChanger" src="../images/babychanger.png" />
+      <ion-checkbox label-placement="end" justify="start" id="babychanger" value="babychanger" v-model="filtros.babychanger">Sala de lactancia</ion-checkbox>
     </ion-item>
     <ion-item lines="none">
-      <img alt="Imagen 3" src="https://picsum.photos/1500/100" />
-      <input type="checkbox" id="dePago" value="dePago" v-model="filtros" />
-      <label for="dePago">De pago</label>
+      <img alt="Free" src="../images/free.png" />
+      <ion-checkbox label-placement="end" justify="start"  id="free" value="free" v-model="filtros.free">De pago</ion-checkbox>
     </ion-item>
     <br />
     <span>Checked names: {{ filtros }}</span>
+    <ion-button @click="logFiltros">Mostrar Filtros</ion-button>
   </ion-list>
 </template>
 
 
 <script setup lang="ts">
-import { IonList, IonItem } from '@ionic/vue';
+import { IonList, IonItem, IonCheckbox, IonButton } from '@ionic/vue';
 import { ref } from 'vue';
-const filtros = ref([]); 
 
+const filtros = ref({
+  handicapped: false,
+  babychanger: false,
+  free: false,
+});
+
+
+const logFiltros = () => {
+  console.log(filtros.value);
+  /* console.log(filtros.value.handicapped);
+  console.log(filtros.value.babychanger);
+  console.log(filtros.value.free); */
+
+};
 
 
 /* import { IonCheckbox } from '@ionic/vue';
