@@ -1,24 +1,25 @@
 <template>
   <ion-list>
-    <ion-card v-for="(flush, index) in flushList" :key="index" class="card" v-bind:data-id="index">
+    <ion-card v-for="(flush, index) in flushList" :key="index" class="card" v-bind:data-id="index" @click="setLocation({
+      latitude: Number(flush.latitude),
+      longitude: Number(flush.longitude)
+    })">
       <ion-row>
 
-        <ion-col size="3" class="col">
-          <ion-thumbnail>
-            <div class="bath">
-              <img alt="BathLogo" v-bind:src="flush.image" />
-            </div>
-          </ion-thumbnail>
+        <ion-col size="4" class="col">
+          <div class="bath">
+            <img alt="BathLogo" v-bind:src="flush.image" />
+          </div>
         </ion-col>
 
-        <ion-col size="7" class="col">
-          
+        <ion-col size="8" class="col">
+
           <div class="properties">
             <ion-row class="data">
-                <p>
-                  {{ flush.score }} | {{ flush.condition }} | 
-                  <!-- {{ flush.latitude + flush.longitude }} --> distancia
-                </p>
+              <p>
+                {{ flush.score }} | {{ flush.condition }} |
+                <!-- {{ flush.latitude + flush.longitude }} --> distancia
+              </p>
             </ion-row>
 
             <ion-row>
@@ -26,27 +27,27 @@
             </ion-row>
 
             <ion-row class="filters">
-                <ion-row>
-                  
-                  <ion-col>
-                    <ion-thumbnail v-if="flush.handicapped" class="icon">
-                      <img alt="handicapped" src="../images/handicapped.png" />
-                    </ion-thumbnail>
-                  </ion-col>
+              <ion-row>
 
-                  <ion-col>
-                    <ion-thumbnail v-if="flush.changingstation" class="icon">
-                      <img alt="changingstation" src="../images/babychanger.png" />
-                    </ion-thumbnail>
-                  </ion-col>
+                <ion-col>
+                  <ion-thumbnail v-if="flush.handicapped" class="icon">
+                    <img alt="handicapped" src="../images/handicapped.png" />
+                  </ion-thumbnail>
+                </ion-col>
 
-                  <ion-col size="3">
-                    <ion-thumbnail v-if="!flush.free" class="icon">
-                      <img alt="Free" src="../images/free.png" />
-                    </ion-thumbnail>
-                  </ion-col>
+                <ion-col>
+                  <ion-thumbnail v-if="flush.changingstation" class="icon">
+                    <img alt="changingstation" src="../images/babychanger.png" />
+                  </ion-thumbnail>
+                </ion-col>
 
-                </ion-row>  
+                <ion-col size="3">
+                  <ion-thumbnail v-if="!flush.free" class="icon">
+                    <img alt="Free" src="../images/free.png" />
+                  </ion-thumbnail>
+                </ion-col>
+
+              </ion-row>
             </ion-row>
 
           </div>
@@ -66,20 +67,29 @@ defineProps({
   }
 })
 
+const emit = defineEmits(['setLocation'])
+
+const setLocation = (args) => {
+  emit('setLocation', args)
+}
 </script>
   
 <style scoped>
-
 .card {
   justify-content: flex-start;
   align-items: center;
   margin-top: 0;
+  border-radius: 15px;
 }
-.bath img{
-  max-height: 100px;
-  max-width: 100px;
-  min-width: 100px;
-  min-height: 100px;
+
+.bath {
+  margin: auto;
+  margin-left: 10px;
+}
+
+.bath img {
+  height: 120px;
+  width: 120px;
   border-radius: 15px;
 }
 
@@ -87,6 +97,7 @@ defineProps({
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding: 0;
 }
 
 .filters {
@@ -138,6 +149,5 @@ defineProps({
     height: auto;
   }
 } */
-
 </style>
   
