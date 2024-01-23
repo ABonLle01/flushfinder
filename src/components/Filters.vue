@@ -99,4 +99,8 @@ img{
     margin-right: 10px;
 }
 
+ion-button{
+  position: absolute;
+  left: 12dvw;
+}
 </style>

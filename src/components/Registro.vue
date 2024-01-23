@@ -1,40 +1,45 @@
 <template>
   <div>
     <form @submit.prevent="submitForm">
-      <p v-if="errors.length">
-        <b>Por favor, corrija el(los) siguiente(s) error(es):</b>
-        <ul>
-          <li v-for="error in errors" :key="error">{{ error }}</li>
-        </ul>
-      </p>
-
-      <ion-item>
-        <ion-input v-model="formData.name" placeholder="Nombre del baño" color="dark"></ion-input>
-      </ion-item>
+      
+          <ion-item>
+            <ion-label for="" position="fixed">Nombre</ion-label>
+            <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
+          </ion-item>
 
         <div class="wrapper">
-            <label for="status">Estado del baño</label>
-            <div class="rating">
-              <input value="5" name="rate" id="star5" type="radio" @click="rating">
-              <label title="text" for="star5"></label>
-              <input value="4" name="rate" id="star4" type="radio" @click="rating">
-              <label title="text" for="star4"></label>
-              <input value="3" name="rate" id="star3" type="radio" @click="rating">
-              <label title="text" for="star3"></label>
-              <input value="2" name="rate" id="star2" type="radio" @click="rating">
-              <label title="text" for="star2"></label>
-              <input value="1" name="rate" id="star1" type="radio" @click="rating">
-              <label title="text" for="star1"></label>
-            </div>
-            <label for="handicapped">Discapacitados</label>
-            <ion-toggle id="handicapped" value="handicapped" @ionChange="handleToggleChange('handicapped')" label-placement="start" :checked="formData.filtros.includes('handicapped')"></ion-toggle>
-            <label for="babychanger">Sala de lactancia</label>
-            <ion-toggle id="babychanger" value="babychanger" @ionChange="handleToggleChange('babychanger')" label-placement="start" :checked="formData.filtros.includes('babychanger')"></ion-toggle>
-            <label for="free">Acceso gratuito</label>
-            <ion-toggle id="free" value="free" @ionChange="handleToggleChange('free')" label-placement="start" :checked="formData.filtros.includes('free')"></ion-toggle>
-            <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
-            <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
+
+          
+          <label for="status">Estado del baño</label>
+          <div class="rating">
+            <input value="5" name="rate" id="star5" type="radio" @click="rating">
+            <label title="text" for="star5"></label>
+            <input value="4" name="rate" id="star4" type="radio" @click="rating">
+            <label title="text" for="star4"></label>
+            <input value="3" name="rate" id="star3" type="radio" @click="rating">
+            <label title="text" for="star3"></label>
+            <input value="2" name="rate" id="star2" type="radio" @click="rating">
+            <label title="text" for="star2"></label>
+            <input value="1" name="rate" id="star1" type="radio" @click="rating">
+            <label title="text" for="star1"></label>
+          </div>
+          <ion-label for="handicapped" class="lbl">Discapacitados</ion-label>
+          <ion-toggle id="handicapped" value="handicapped" class="tgl" @ionChange="handleToggleChange('handicapped')" label-placement="start" :checked="formData.filtros.includes('handicapped')"></ion-toggle>
+          <ion-label for="babychanger" class="lbl">Sala de lactancia</ion-label>
+          <ion-toggle id="babychanger" value="babychanger" class="tgl" @ionChange="handleToggleChange('babychanger')" label-placement="start" :checked="formData.filtros.includes('babychanger')"></ion-toggle>
+          <ion-label for="free" class="lbl">Acceso gratuito</ion-label>
+          <ion-toggle id="free" value="free" class="tgl" @ionChange="handleToggleChange('free')" label-placement="start" :checked="formData.filtros.includes('free')"></ion-toggle>
+          <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
+          <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
         </div>
+
+        <p v-if="errors.length">
+          <!-- <b>Por favor, corrija el(los) siguiente(s) error(es):</b> -->
+          <p v-for="error in errors" :key="error">{{ error }}</p>
+          <!-- <ul>
+            <li v-for="error in errors" :key="error">{{ error }}</li>
+          </ul> -->
+        </p>
 
       <span class="test">Checked filters: {{ formData.filtros }}</span>
 
@@ -43,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonItem, IonToggle, IonInput, IonRow  } from '@ionic/vue';
+import { IonItem, IonToggle, IonInput, IonLabel  } from '@ionic/vue';
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 
@@ -114,6 +119,7 @@ const submitForm = () => {
 
 <style scoped>
 
+
 form {
   --background-color: rgba(140, 0, 255, 0.205);
   height: 49.9vh;
@@ -130,11 +136,25 @@ form {
   grid-auto-rows: minmax(fit-content, auto);
 
   margin-top: 2rem;
-  justify-content: center; 
+/*   justify-content: center;  */
   align-items: center;
+  
 }
 
+.lbl{
+  text-align: left;
+  margin-left: 1.6rem;
+}
 
+.tgl{
+  position: relative;
+  left: 15dvw;
+}
+
+.rating{
+  position: relative;
+  right: 9dvw;
+}
 
 .wrapper>label{
   font-size: large;
@@ -163,10 +183,11 @@ form {
  font-weight: bold;
 }
 
-.btn:hover {
+/* .btn:hover {
  transform: translateY(-3px);
  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
+ */
 
 .btn:active {
  transform: translateY(-1px);
