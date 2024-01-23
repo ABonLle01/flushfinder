@@ -140,11 +140,17 @@ const getCurrentLocation = () => {
 
   .map {
     width: 44vw;
-    height: 85vh;
+    height: 100vh;
+    position: sticky;
   }
-
+ 
   .list {
     width: 56vw;
+    height: 100vw;
+  }
+ 
+  .form{
+    position: sticky
   }
 
 }
