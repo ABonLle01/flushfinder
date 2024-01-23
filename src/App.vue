@@ -39,12 +39,13 @@
 
         </ion-toolbar>
       </ion-header>
-    </ion-page>
+
     
     <!-- mapa + lista -->
     <ion-content class="ion-padding"> 
-      <MainPage />
+      <router-view></router-view>
     </ion-content>
+  </ion-page>
   </ion-app>
 
 
@@ -57,7 +58,7 @@
 import Filters from './components/Filters.vue';
 import MainPage from '@/components/MainPage.vue';
 import { add } from 'ionicons/icons';
-import {IonApp, IonHeader, IonContent, IonIcon, IonMenu, IonFab, IonFabButton, IonToolbar, IonButtons, IonMenuButton, IonSearchbar} from '@ionic/vue';
+import {IonApp, IonHeader, IonContent, IonIcon, IonMenu, IonFab, IonFabButton, IonToolbar, IonButtons, IonMenuButton, IonSearchbar, IonPage, IonTitle} from '@ionic/vue';
 import { ref } from 'vue';
 import {archiveOutline, archiveSharp, heartOutline, heartSharp, mailOutline, mailSharp,
    paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, 

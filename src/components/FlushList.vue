@@ -1,6 +1,9 @@
 <template>
   <ion-list>
-    <ion-card v-for="(flush, index) in flushList" :key="index" class="card" v-bind:data-id="index">
+    <ion-card v-for="(flush, index) in flushList" :key="index" class="card" v-bind:data-id="index" @click="setLocation({
+      latitude: Number(flush.latitude),
+      longitude: Number(flush.longitude)
+    })">
       <ion-row>
         <ion-col size="3" class="col">
           <ion-thumbnail>
@@ -64,20 +67,29 @@ defineProps({
   }
 })
 
+const emit = defineEmits(['setLocation'])
+
+const setLocation = (args) => {
+  emit('setLocation', args)
+}
 </script>
   
 <style scoped>
-
 .card {
   justify-content: center;
   align-items: center;
   margin-top: 0;
+  border-radius: 15px;
 }
-.bath img{
-  max-height: 100px;
-  max-width: 100px;
-  min-width: 100px;
-  min-height: 100px;
+
+.bath {
+  margin: auto;
+  margin-left: 10px;
+}
+
+.bath img {
+  height: 120px;
+  width: 120px;
   border-radius: 15px;
 }
 
