@@ -37,10 +37,8 @@ const filtros = ref({
 
 
 const logFiltros = () => {
-  console.log(filtros.value);
+  console.log(filtros.value);  
 };
-
-
 
 
 </script>

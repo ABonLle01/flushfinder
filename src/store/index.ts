@@ -1,4 +1,7 @@
 import { createStore, createLogger } from 'vuex';
+import { Geolocation } from '@ionic-native/geolocation';
+import { ref } from 'vue';
+
 
 const store = createStore({
   state: {
@@ -19,3 +22,43 @@ const store = createStore({
 });
 
 export default store;
+
+
+
+
+
+export interface Coordinates{
+  latitude:number;
+  longitude:number;
+}
+
+export function haversineDistance(pointA: Coordinates, pointB: Coordinates): number {
+  var radius = 6371;
+
+  const deltaLatitude = (pointB.latitude - pointA.latitude) * Math.PI / 180;
+  const deltaLongitude = (pointB.longitude - pointA.longitude) * Math.PI / 180;
+
+  const halfChordLength = Math.cos(
+      pointA.latitude * Math.PI / 180) * Math.cos(pointB.latitude * Math.PI / 180) 
+      * Math.sin(deltaLongitude/2) * Math.sin(deltaLongitude/2)
+      + Math.sin(deltaLatitude/2) * Math.sin(deltaLatitude/2);
+
+  const angularDistance = 2 * Math.atan2(Math.sqrt(halfChordLength), Math.sqrt(1 - halfChordLength));
+
+  return radius * angularDistance;
+}
+
+const currentLocation = ref({ latitude: 0, longitude: 0 });
+
+export const getCurrentLocation = () => {
+  Geolocation.getCurrentPosition().then((resp) => {
+    currentLocation.value = {
+      latitude: resp.coords.latitude,
+      longitude: resp.coords.longitude
+    };
+
+  }).catch((error) => {
+    console.error('Error getting location', error);
+  });
+};
+

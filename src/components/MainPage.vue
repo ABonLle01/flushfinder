@@ -21,11 +21,13 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
-import { Geolocation } from '@ionic-native/geolocation';
+
 import { getFlushList } from '@/services';
 import { onMounted, ref, watchEffect, computed } from 'vue';
 import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { useStore } from 'vuex';
+
+import { getCurrentLocation } from '@/store';
 
 const store = useStore();
 const showList = ref(store.state.showList);
@@ -76,22 +78,6 @@ const setLocation = ({ latitude, longitude }) => {
   currentLocation.value = { latitude, longitude };
 }
 
-const getCurrentLocation = () => {
-  Geolocation.getCurrentPosition().then((resp) => {
-    currentLocation.value = {
-      latitude: resp.coords.latitude,
-      longitude: resp.coords.longitude
-    };
-
-/*     console.log('Latitude:', resp.coords.latitude);
-    console.log('Longitude:', resp.coords.longitude); */
-  }).catch((error) => {
-    console.error('Error getting location', error);
-  });
-};
-
-
-
 </script>
 
 
@@ -99,7 +85,7 @@ const getCurrentLocation = () => {
 
 <style scoped>
 .map {
-  height: 44vh;
+  height: 50vh;
   position: sticky;
   top: 0;
   z-index: 9;

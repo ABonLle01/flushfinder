@@ -18,7 +18,7 @@
             <ion-row class="data">
               <p>
                 {{ flush.score }} | {{ flush.condition }} |
-                <!-- {{ flush.latitude + flush.longitude }} --> distancia
+                {{ calcularDistancia(Number(flush.latitude), Number(flush.longitude)) }} km
               </p>
             </ion-row>
 
@@ -58,20 +58,66 @@
 </template>
   
 <script setup lang="ts">
-import { getFlushList } from '@/services';
+
 import { IonList, IonCard, IonRow, IonCol, IonThumbnail, IonTitle } from '@ionic/vue';
+import { ref } from 'vue';
+import { haversineDistance, Coordinates, getCurrentLocation } from '@/store/index';
+import { Geolocation } from '@ionic-native/geolocation';
+
+const currentLocation = ref({ latitude: 0, longitude: 0 });
+
 
 defineProps({
   flushList: {
     type: Array<any>
+  },
+  filtros: {
+    type: Object
   }
 })
+
+let lat:number = 0;
+let long:number = 0;
+
+Geolocation.getCurrentPosition().then((resp) => {
+  currentLocation.value = {
+    latitude: resp.coords.latitude,
+    longitude: resp.coords.longitude
+  };
+
+  lat = resp.coords.latitude;
+  long = resp.coords.longitude;
+
+  console.info("Latitud: " + lat + ", Longitud: " + long);
+
+}).catch((error) => {
+  console.error('Error getting location', error);
+});
+
+
+const calcularDistancia = (latitude: number, longitude: number) => {
+const puntoA: Coordinates = {
+  latitude: currentLocation.value.latitude,
+  longitude: currentLocation.value.longitude
+};
+
+const puntoB: Coordinates = {
+  latitude,
+  longitude
+};
+
+const distancia = haversineDistance(puntoA, puntoB);
+return distancia.toFixed(2);
+};
+
 
 const emit = defineEmits(['setLocation'])
 
 const setLocation = (args) => {
   emit('setLocation', args)
 }
+
+
 </script>
   
 <style scoped>
