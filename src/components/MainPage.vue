@@ -9,7 +9,7 @@
         <div class="list" v-if="showList">
           <FlushList :flushList="flushList" @setLocation="setLocation" />
         </div>
-        <router-view></router-view>
+        <router-view class="form"></router-view>
       </div>
     </ion-content>
   </ion-page>
@@ -83,24 +83,14 @@ const getCurrentLocation = () => {
       longitude: resp.coords.longitude
     };
 
-    console.log('Latitude:', resp.coords.latitude);
-    console.log('Longitude:', resp.coords.longitude);
+/*     console.log('Latitude:', resp.coords.latitude);
+    console.log('Longitude:', resp.coords.longitude); */
   }).catch((error) => {
     console.error('Error getting location', error);
   });
 };
 
 
-
-/* const cambiarContenido = () => {
-  try {
-    showList.value = !showList.value;
-    actualizarRuta();
-  } catch (error) {
-    console.error('Error en cambiarContenido:', error);
-  }
-};
-*/
 
 </script>
 
@@ -140,11 +130,17 @@ const getCurrentLocation = () => {
 
   .map {
     width: 44vw;
-    height: 85vh;
+    height: 100vh;
+    position: sticky;
   }
 
   .list {
     width: 56vw;
+    height: 100vw;
+  }
+
+  .form{
+    position: sticky
   }
 
 }

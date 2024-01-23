@@ -23,12 +23,16 @@
             <input value="1" name="rate" id="star1" type="radio" @click="rating">
             <label title="text" for="star1"></label>
           </div>
+          
           <ion-label for="handicapped" class="lbl">Discapacitados</ion-label>
           <ion-toggle id="handicapped" value="handicapped" class="tgl" @ionChange="handleToggleChange('handicapped')" label-placement="start" :checked="formData.filtros.includes('handicapped')"></ion-toggle>
+          
           <ion-label for="babychanger" class="lbl">Sala de lactancia</ion-label>
           <ion-toggle id="babychanger" value="babychanger" class="tgl" @ionChange="handleToggleChange('babychanger')" label-placement="start" :checked="formData.filtros.includes('babychanger')"></ion-toggle>
+          
           <ion-label for="free" class="lbl">Acceso gratuito</ion-label>
           <ion-toggle id="free" value="free" class="tgl" @ionChange="handleToggleChange('free')" label-placement="start" :checked="formData.filtros.includes('free')"></ion-toggle>
+          
           <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
           <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
         </div>
@@ -41,7 +45,7 @@
           </ul> -->
         </p>
 
-      <span class="test">Checked filters: {{ formData.filtros }}</span>
+      <!-- <span class="test">Checked filters: {{ formData.filtros }}</span> -->
 
     </form>
   </div>
@@ -124,11 +128,13 @@ const submitForm = () => {
 
 form {
   --background-color: rgba(140, 0, 255, 0.205);
-  height: 49.9vh;
+  height: 48.5vh;
   display: flex;
   flex-direction: column;
   justify-content: center; 
   align-items: center;
+
+  position: sticky;
 }
 
 .wrapper{
@@ -145,7 +151,9 @@ form {
 
 .lbl{
   text-align: left;
-  margin-left: 1.6rem;
+  margin-left: 0.5rem;
+
+  font-size: large;
 }
 
 .tgl{
@@ -155,7 +163,7 @@ form {
 
 .rating{
   position: relative;
-  right: 9dvw;
+  right: 3dvw;
 }
 
 .wrapper>label{
@@ -177,10 +185,10 @@ form {
 
 .btn {
  position: relative;
- font-size: 17px;
+ font-size: 16px;
  text-transform: uppercase;
  text-decoration: none;
- padding: 1em 2.5em;
+ padding: 1em 1em;
  display: inline-block;
  border-radius: 6em;
  transition: all .2s;
@@ -191,11 +199,6 @@ form {
  font-weight: bold;
 }
 
-/* .btn:hover {
- transform: translateY(-3px);
- box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
- */
 
 .btn:active {
  transform: translateY(-1px);

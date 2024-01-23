@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import L, { icon, marker } from 'leaflet';
 import { getFlushList } from '@/services';
 
 const props = withDefaults(defineProps<{
@@ -28,26 +28,31 @@ import { IonPage, IonContent } from '@ionic/vue';
 
 const map = ref(null);
 
-const initializeMap = async () => {
-  try {
-    const response = await fetch('https://api.flushfinder.es/flushes');
-    const flushList = await response.json();
-
-    const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
-    map.value = L.map(props.mapId).setView(initialCoordinates, 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map.value);
-
-    const customIcon = L.icon({
+const customIcon = L.icon({
       iconUrl: markerIcon,
       iconSize: [32, 51],
       iconAnchor: [16, 51],
       popupAnchor: [0, -32],
     });
 
+const initializeMap = async () => {
+  try {
+    const response = await fetch('https://api.flushfinder.es/flushes');
+    const flushList = await response.json();
+
+    const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
+    
+    map.value = L.map(props.mapId).setView(initialCoordinates, 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map.value);
+
+    
+
     flushList.forEach((flush) => {
       const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
       const marker = L.marker(markerCoordinates, { icon: customIcon }).addTo(map.value);
     });
+
+    
 
     console.log('Map initialized with custom markers');
   } catch (error) {
@@ -62,6 +67,9 @@ onMounted(() => {
 watch(props, () => {
   const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
   map.value.setView(initialCoordinates, 16);
+
+  /* L.marker(initialCoordinates, {icon: customIcon }).addTo(map.value); */
+
 })
 </script>
 
@@ -69,6 +77,6 @@ watch(props, () => {
 <style scoped>
 #map {
   width: 100%;
-  height: 100vh;
+  height: 98vh;
 }
 </style>
