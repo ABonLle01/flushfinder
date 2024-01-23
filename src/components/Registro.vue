@@ -46,7 +46,7 @@
     </form>
   </div>
 </template>
-
+ 
 <script setup lang="ts">
 import { IonItem, IonToggle, IonInput, IonLabel  } from '@ionic/vue';
 import { ref } from 'vue';
@@ -67,7 +67,7 @@ const formData = ref<FormData>({
 
 const handleToggleChange = async (value: string) => {
   const index = formData.value.filtros.indexOf(value);
-
+ 
   if (index === -1) {
     formData.value.filtros.push(value);
   } else {
@@ -96,9 +96,8 @@ const rating = (event: Event) => {
   formData.value.rating = selectedRating;
   console.log("Puntuación seleccionada:", selectedRating);
 }
-
 const errors = ref<string[]>([]);
-
+ 
 const submitForm = () => {
   errors.value = [];
   /* hacer que no se puedan meter nombres que sean espacios en blanco */
@@ -108,15 +107,18 @@ const submitForm = () => {
   if(!formData.value.rating){
     errors.value.push('Selecciona una puntuacion.')
   }
-
+  if(!formData.value.rating){
+    errors.value.push('Selecciona una puntuacion.')
+  }
+ 
   if (errors.value.length === 0) {  
     console.log(formData.value.filtros);
-
+ 
     console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
   }
 };
 </script>
-
+ 
 <style scoped>
 
 
@@ -159,8 +161,14 @@ form {
 .wrapper>label{
   font-size: large;
 }
-
-
+ 
+ 
+ 
+.wrapper>label{
+  font-size: large;
+}
+ 
+ 
 .test{
   position: relative;
   top: 50px;
@@ -193,7 +201,6 @@ form {
  transform: translateY(-1px);
  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
-
 .btn::after {
  content: "";
  display: inline-block;
@@ -220,23 +227,23 @@ form {
 .rating{
   margin-bottom: 6px;
 }
-
+ 
 .rating:not(:checked) > input {
   position: absolute;
   appearance: none;
 }
-
+ 
 .rating:not(:checked) > label {
   float: right;
   cursor: pointer;
   font-size: 30px;
   color: #666;
 }
-
+ 
 .rating:not(:checked) > label:before {
   content: '★';
 }
-
+ 
 .rating > input:checked + label:hover,
 .rating > input:checked + label:hover ~ label,
 .rating > input:checked ~ label:hover,
@@ -244,18 +251,18 @@ form {
 .rating > label:hover ~ input:checked ~ label {
   color: #EA358C;
 }
-
+ 
 .rating:not(:checked) > label:hover,
 .rating:not(:checked) > label:hover ~ label {
   color: #EA358C;
 }
-
+ 
 .rating > input:checked ~ label {
   color: #EA358C;
 }
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
 </style>

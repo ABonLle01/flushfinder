@@ -1,17 +1,15 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div class="container" >
+      <div class="container">
         <div class="map">
-          <MapViewer />
+          <MapViewer :latitude="currentLocation.latitude" :longitude="currentLocation.longitude" />
         </div>
 
         <div class="list" v-if="showList">
-          <FlushList :flushList="flushList" />
+          <FlushList :flushList="flushList" @setLocation="setLocation" />
         </div>
-        
-        <router-view v-else></router-view>
-
+        <router-view></router-view>
       </div>
     </ion-content>
   </ion-page>
@@ -49,7 +47,7 @@ const actualizarRuta = () => {
   const currentRoute: RouteLocationNormalizedLoaded | undefined = router.currentRoute.value;
 
   if (currentRoute) {
-    const folderId = currentRoute.params.id ? `/${currentRoute.params.id}` : '/MainPage';
+    const folderId = currentRoute.params.id ? `/${currentRoute.params.id}` : '/';
     const newPath = showList.value ? folderId : '/registro';
     router.push({ path: newPath });
   }
@@ -57,7 +55,7 @@ const actualizarRuta = () => {
 
 onMounted(() => {
   actualizarRuta();
-}); 
+});
 
 
 watchEffect(() => {
@@ -72,6 +70,11 @@ onMounted(async () => {
   flushList.value = await getFlushList(false);
   getCurrentLocation();
 });
+
+const setLocation = ({ latitude, longitude }) => {
+  console.log({ latitude, longitude })
+  currentLocation.value = { latitude, longitude };
+}
 
 const getCurrentLocation = () => {
   Geolocation.getCurrentPosition().then((resp) => {
@@ -105,18 +108,17 @@ const getCurrentLocation = () => {
 
 
 <style scoped>
-
-.map{
+.map {
   height: 44vh;
   position: sticky;
   top: 0;
   z-index: 9;
 }
 
-/* .list{
-  border: solid;
-  border-color: blue; 
-} */
+.list {
+  height: 50vh;
+  overflow-y: auto;
+}
 
 .container {
   text-align: center;
@@ -126,25 +128,24 @@ const getCurrentLocation = () => {
   /* border: solid 3px green; */
 }
 
-@media screen and (min-width: 696px){
+@media screen and (min-width: 696px) {
   /*   *:hover{
     border: solid 10px red;
   } */
 
-  .container{
+  .container {
     display: -webkit-box;
     flex-direction: row;
   }
 
-  .map{
+  .map {
     width: 44vw;
     height: 85vh;
   }
 
-  .list{
+  .list {
     width: 56vw;
   }
 
 }
-
 </style>

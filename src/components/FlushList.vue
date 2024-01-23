@@ -1,24 +1,25 @@
 <template>
   <ion-list>
-    <ion-card v-for="(flush, index) in flushList" :key="index" class="card">
+    <ion-card v-for="(flush, index) in flushList" :key="index" class="card" v-bind:data-id="index" @click="setLocation({
+      latitude: Number(flush.latitude),
+      longitude: Number(flush.longitude)
+    })">
       <ion-row>
 
-        <ion-col size="3" class="col">
-          <ion-thumbnail>
-            <div class="bath">
-              <img alt="BathLogo" v-bind:src="flush.image" />
-            </div>
-          </ion-thumbnail>
+        <ion-col size="4" class="col">
+          <div class="bath">
+            <img alt="BathLogo" v-bind:src="flush.image" />
+          </div>
         </ion-col>
 
-        <ion-col size="7" class="col">
-          
+        <ion-col size="8" class="col">
+
           <div class="properties">
             <ion-row class="data">
-                <p>
-                  {{ flush.score }} | {{ flush.condition }} | 
-                  <!-- {{ flush.latitude + flush.longitude }} --> distancia
-                </p>
+              <p>
+                {{ flush.score }} | {{ flush.condition }} |
+                <!-- {{ flush.latitude + flush.longitude }} --> distancia
+              </p>
             </ion-row>
 
             <ion-row>
@@ -46,7 +47,7 @@
                     </ion-thumbnail>
                   </ion-col>
 
-                </ion-row>  
+              </ion-row>
             </ion-row>
 
           </div>
@@ -57,6 +58,7 @@
 </template>
   
 <script setup lang="ts">
+import { getFlushList } from '@/services';
 import { IonList, IonCard, IonRow, IonCol, IonThumbnail, IonTitle } from '@ionic/vue';
 
 defineProps({
@@ -65,19 +67,30 @@ defineProps({
   }
 })
 
-const getFlushDistance = (lat:number, long:number) => {
-// hacer cosas
+const emit = defineEmits(['setLocation'])
+
+const setLocation = (args) => {
+  emit('setLocation', args)
 }
-
-
 </script>
   
 <style scoped>
-
 .card {
   justify-content: flex-start;
   align-items: center;
   margin-top: 0;
+  border-radius: 15px;
+}
+
+.bath {
+  margin: auto;
+  margin-left: 10px;
+}
+
+.bath img {
+  height: 120px;
+  width: 120px;
+  border-radius: 15px;
 }
 .bath img{
   max-height: 100px;
@@ -127,6 +140,7 @@ const getFlushDistance = (lat:number, long:number) => {
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding: 0;
 }
 
 .filters {
@@ -136,8 +150,8 @@ const getFlushDistance = (lat:number, long:number) => {
 }
 
 .filters img {
-  height: 8vw;
-  width: 8vw;
+  height: 35px;
+  width: 35px;
 }
 
 .name {
@@ -154,7 +168,7 @@ const getFlushDistance = (lat:number, long:number) => {
 } */
 
 
-@media screen and (min-width: 696px) {
+/* @media screen and (min-width: 696px) {
   .card {
     height: 25vh;
     gap: 5px;
@@ -165,65 +179,6 @@ const getFlushDistance = (lat:number, long:number) => {
     height: auto;
   }
 }
-
- /* 
- .item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 0px;
-  width: 100%;
-
-  height: fit-content;
-  justify-content: center;
-  justify-items: start;
-  padding: 5px;
-}
-
-.item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 15px;
-}
-
-.item .data {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-left: 20px;
-}
-
-.item .title {
-  margin: 0;
-  font-size: 1.2rem;
-  width: 100%;
-}
-
-.item .filters {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.item .properties {
-  align-self: center;
-}
-
-.filters img {
-  height: 6vw;
-  width: 6vw;
-}
-.filters{
-  display: flex;
-  flex-direction: row;
-}
-
-.icon{
-  justify-content: center;
-  align-items: center;
-}
- */
 
 @media screen and (min-width: 696px) {
   .card {
@@ -236,7 +191,6 @@ const getFlushDistance = (lat:number, long:number) => {
     width: 100%; 
     height: auto;
   }
-}
-
+} */
 </style>
   
