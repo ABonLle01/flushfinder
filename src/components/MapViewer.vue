@@ -77,6 +77,6 @@ watch(props, () => {
 <style scoped>
 #map {
   width: 100%;
-  height: 98vh;
+  height: 100%;
 }
 </style>

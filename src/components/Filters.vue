@@ -27,17 +27,17 @@
 <script setup lang="ts">
 import { IonList, IonItem, IonCheckbox, IonButton } from '@ionic/vue';
 import { ref } from 'vue';
-
+import { getFlushList } from '@/services';
 
 const filtros = ref({
   handicapped: false,
   babychanger: false,
-  free: false,
+  free: true,
 });
 
-
 const logFiltros = () => {
-  console.log(filtros.value);  
+  getFlushList(filtros.value.handicapped, filtros.value.babychanger, filtros.value.free);
+  console.log(filtros.value);
 };
 
 

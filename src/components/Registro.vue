@@ -128,7 +128,7 @@ const submitForm = () => {
 
 form {
   --background-color: rgba(140, 0, 255, 0.205);
-  height: 48.5vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center; 
@@ -170,12 +170,9 @@ form {
   font-size: large;
 }
  
- 
- 
 .wrapper>label{
   font-size: large;
 }
- 
  
 .test{
   position: relative;
@@ -204,6 +201,7 @@ form {
  transform: translateY(-1px);
  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
+
 .btn::after {
  content: "";
  display: inline-block;
@@ -216,15 +214,6 @@ form {
  z-index: -1;
  transition: all .4s;
 }
-
-/* .btn::after {
- background-color: #fff;
-} */
-
-/* .btn:hover::after {
- transform: scaleX(1.4) scaleY(1.6);
- opacity: 0;
-} */
 
 
 .rating{
@@ -264,8 +253,7 @@ form {
   color: #EA358C;
 }
  
- 
- 
+
  
  
 </style>

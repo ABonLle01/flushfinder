@@ -22,7 +22,7 @@ import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, Io
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
 
-import { getFlushList } from '@/services';
+import { showFlushList } from '@/services';
 import { onMounted, ref, watchEffect, computed } from 'vue';
 import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { useStore } from 'vuex';
@@ -69,7 +69,7 @@ window.addEventListener('orientationchange', () => {
 });
 
 onMounted(async () => {
-  flushList.value = await getFlushList(false);
+  flushList.value = await showFlushList();
   getCurrentLocation();
 });
 
@@ -85,14 +85,14 @@ const setLocation = ({ latitude, longitude }) => {
 
 <style scoped>
 .map {
-  height: 50vh;
+  height: 40vh;
   position: sticky;
   top: 0;
   z-index: 9;
 }
 
 .list {
-  height: 50vh;
+  height: 100%;
   overflow-y: auto;
 }
 
@@ -103,6 +103,8 @@ const setLocation = ({ latitude, longitude }) => {
   right: 0;
   /* border: solid 3px green; */
 }
+
+
 
 @media screen and (min-width: 696px) {
   /*   *:hover{
