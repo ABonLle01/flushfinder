@@ -11,7 +11,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <Filters />
+        <Filters  />
       </ion-content>
     </ion-menu>
 
@@ -43,7 +43,8 @@
     
     <!-- mapa + lista -->
     <ion-content class="ion-padding"> 
-      <router-view></router-view>
+      <!-- :updatedList="updatedList" -->
+      <router-view ></router-view>
     </ion-content>
   </ion-page>
   </ion-app>
@@ -65,6 +66,45 @@ import {archiveOutline, archiveSharp, heartOutline, heartSharp, mailOutline, mai
    warningOutline, warningSharp} from 'ionicons/icons';
 
 import { useStore } from 'vuex';
+import { getFlushList } from '@/services';
+
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+/* 
+
+const updatedList = ref([]);
+
+const applyFilters = (filtros) => {
+  getFlushList(filtros.handicapped, filtros.babychanger, filtros.free)
+    .then((updatedListData) => {
+      updatedList.value = updatedListData;
+    })
+    .catch((error) => {
+      console.error('Error aplicando filtros:', error);
+    });
+};
+
+router.afterEach((to, from) => {
+  if (to.meta.showMainPage) {
+    // Aquí puedes llamar a applyFilters si necesitas filtrar la lista al entrar en MainPage.vue
+  }
+});
+
+const flushList = ref([]);
+
+// Método para actualizar la lista de tarjetas
+const updateFlushList = (filtros) => {
+  getFlushList(filtros.handicapped, filtros.babychanger, filtros.free)
+    .then((updatedListData) => {
+      flushList.value = updatedListData;
+    })
+    .catch((error) => {
+      console.error('Error aplicando filtros:', error);
+    });
+}; 
+*/
 
 const selectedIndex = ref(0);
 const appPages = [

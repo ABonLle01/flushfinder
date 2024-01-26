@@ -32,14 +32,19 @@ import { getFlushList } from '@/services';
 const filtros = ref({
   handicapped: false,
   babychanger: false,
-  free: true,
+  free: false,
 });
 
-const logFiltros = () => {
+/* const logFiltros = () => {
   getFlushList(filtros.value.handicapped, filtros.value.babychanger, filtros.value.free);
   console.log(filtros.value);
-};
+}; */
 
+const emit = defineEmits(['applyFilters']);
+
+const logFiltros = () => {
+  emit('applyFilters', filtros.value);
+};
 
 </script>
 

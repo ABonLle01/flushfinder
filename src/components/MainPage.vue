@@ -7,6 +7,7 @@
         </div>
 
         <div class="list" v-if="showList">
+          <Filters  @applyFilters="applyFilters"/>
           <FlushList :flushList="flushList" @setLocation="setLocation" />
         </div>
         <router-view class="form"></router-view>
@@ -21,9 +22,10 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
+import Filters from '@/components/Filters.vue';
 
-import { showFlushList } from '@/services';
-import { onMounted, ref, watchEffect, computed } from 'vue';
+import { getFlushList } from '@/services';
+import { onMounted, ref, watchEffect } from 'vue';
 import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { useStore } from 'vuex';
 
@@ -36,6 +38,30 @@ const flushList = ref([]);
 
 const isHorizontal = ref(false);
 const currentLocation = ref({ latitude: 0, longitude: 0 });
+
+defineProps({
+  updatedList: {
+    type: Array,
+    required: true,
+  },
+});
+
+const applyFilters = (filtros) => {
+  getFlushList(filtros.handicapped, filtros.babychanger, filtros.free)
+    .then((updatedList) => {
+      flushList.value = updatedList;
+    })
+    .catch((error) => {
+      console.error('Error applying filters:', error);
+    });
+};
+
+onMounted(() => {
+  getFlushList(false, false, false).then((initialList) => {
+    flushList.value = initialList;
+  });
+});
+
 
 onMounted(() => {
   store.watch(() => store.state.showList, (newValue) => {
@@ -69,7 +95,6 @@ window.addEventListener('orientationchange', () => {
 });
 
 onMounted(async () => {
-  flushList.value = await showFlushList();
   getCurrentLocation();
 });
 
@@ -77,6 +102,8 @@ const setLocation = ({ latitude, longitude }) => {
   console.log({ latitude, longitude })
   currentLocation.value = { latitude, longitude };
 }
+
+
 
 </script>
 

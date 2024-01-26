@@ -42,7 +42,7 @@
                   </ion-col>
 
                   <ion-col size="3">
-                    <ion-thumbnail v-if="!flush.free" class="icon">
+                    <ion-thumbnail v-if="flush.free" class="icon">
                       <img alt="Free" src="../images/filters/free.png" />
                     </ion-thumbnail>
                   </ion-col>
@@ -88,7 +88,7 @@ Geolocation.getCurrentPosition().then((resp) => {
   lat = resp.coords.latitude;
   long = resp.coords.longitude;
 
-  console.info("Latitud: " + lat + ", Longitud: " + long);
+  console.log("Latitud: " + lat + ", Longitud: " + long);
 
 }).catch((error) => {
   console.error('Error getting location', error);
