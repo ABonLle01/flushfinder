@@ -47,7 +47,7 @@ defineProps({
 });
 
 const applyFilters = (filtros) => {
-  getFlushList(filtros.handicapped, filtros.babychanger, filtros.free)
+  getFlushList(filtros.handicapped, filtros.changingstation, filtros.free)
     .then((updatedList) => {
       flushList.value = updatedList;
     })

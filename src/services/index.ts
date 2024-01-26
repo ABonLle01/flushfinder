@@ -1,7 +1,8 @@
 const getFlushList = async (handicapped: boolean, changingstation:boolean, free:boolean) =>{
     /* const response = await fetch(`http://localhost:3000/flush?handicapped=${handicapped}&changingstation=${changingstation}&free=${free}`); */
     
-    let url = 'http://localhost:3000/flush?';
+    let url = "https://api.flushfinder.es/flush?";
+    /* let url = 'http://localhost:3000/flush?'; */
     if (handicapped) {
         url += 'handicapped=true&';
     }

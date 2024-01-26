@@ -9,8 +9,8 @@
       <ion-checkbox label-placement="end" justify="start" id="handicapped" value="handicapped" v-model="filtros.handicapped">Discapacitados</ion-checkbox>
     </ion-item>
     <ion-item>
-      <img alt="BabyChanger" src="../images/filters/babychanger.png" />
-      <ion-checkbox label-placement="end" justify="start" id="babychanger" value="babychanger" v-model="filtros.babychanger">Sala de lactancia</ion-checkbox>
+      <img alt="Changingstation" src="../images/filters/babychanger.png" />
+      <ion-checkbox label-placement="end" justify="start" id="changingstation" value="changingstation" v-model="filtros.changingstation">Sala de lactancia</ion-checkbox>
     </ion-item>
     <ion-item lines="none">
       <img alt="Free" src="../images/filters/free.png" />
@@ -31,12 +31,12 @@ import { getFlushList } from '@/services';
 
 const filtros = ref({
   handicapped: false,
-  babychanger: false,
+  changingstation: false,
   free: false,
 });
 
 /* const logFiltros = () => {
-  getFlushList(filtros.value.handicapped, filtros.value.babychanger, filtros.value.free);
+  getFlushList(filtros.value.handicapped, filtros.value.changingstation, filtros.value.free);
   console.log(filtros.value);
 }; */
 
