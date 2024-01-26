@@ -31,7 +31,7 @@
    
   const initializeMap = async () => {
     try {
-      const response = await fetch('https://api.flushfinder.es/flushes');
+      const response = await fetch('https://api.flushfinder.es/flush');
       const flushList = await response.json();
    
       const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
