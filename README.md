@@ -15,6 +15,8 @@
 > | npm install --save-dev @types/leaflet | ionic generate component Mapa
 > - Descarga plugin Leaflet
 
+### Comando antes de transpilar a android para sincronizar los pluggin de capacitos con la build de android
+>npx cap sync
 
 ### Recursos
 > APIs

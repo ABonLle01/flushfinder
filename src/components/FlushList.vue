@@ -64,17 +64,25 @@ import { ref } from 'vue';
 import { haversineDistance, Coordinates, getCurrentLocation } from '@/store/index';
 import { Geolocation } from '@ionic-native/geolocation';
 
-const currentLocation = ref({ latitude: 0, longitude: 0 });
 
 
-defineProps({
+const props = defineProps({
   flushList: {
     type: Array<any>
+  },
+  initialLocation: {
+    type: Object
   },
   filtros: {
     type: Object
   }
 })
+
+const currentLocation = ref({ 
+  latitude: props.initialLocation.latitude ? props.initialLocation.latitude : 0, 
+  longitude: props.initialLocation.longitude ? props.initialLocation.longitude : 0
+});
+
 
 let lat:number = 0;
 let long:number = 0;

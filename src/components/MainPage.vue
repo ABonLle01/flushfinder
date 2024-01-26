@@ -3,12 +3,11 @@
     <ion-content :fullscreen="true">
       <div class="container">
         <div class="map">
-          <MapViewer :latitude="currentLocation.latitude" :longitude="currentLocation.longitude" />
+          <MapViewer v-if="currentLocation" :latitude="currentLocation.latitude" :longitude="currentLocation.longitude" />
         </div>
 
         <div class="list" v-if="showList">
-          <Filters  @applyFilters="applyFilters"/>
-          <FlushList :flushList="flushList" @setLocation="setLocation" />
+          <FlushList v-if="currentLocation" :flushList="flushList" :initialLocation="currentLocation" @setLocation="setLocation" />
         </div>
         <router-view class="form"></router-view>
       </div>
@@ -25,11 +24,16 @@ import MapViewer from '@/components/MapViewer.vue';
 import Filters from '@/components/Filters.vue';
 
 import { getFlushList } from '@/services';
-import { onMounted, ref, watchEffect } from 'vue';
+import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { getCurrentLocation } from '@/store';
+
+import { useFilterStore } from '@/store/useFiltersStore';
+import { Preferences } from '@capacitor/preferences';
+
+const filtersStore = useFilterStore();
 
 const store = useStore();
 const showList = ref(store.state.showList);
@@ -37,14 +41,8 @@ const router = useRouter();
 const flushList = ref([]);
 
 const isHorizontal = ref(false);
-const currentLocation = ref({ latitude: 0, longitude: 0 });
+const currentLocation = ref();
 
-defineProps({
-  updatedList: {
-    type: Array,
-    required: true,
-  },
-});
 
 const applyFilters = (filtros) => {
   getFlushList(filtros.handicapped, filtros.changingstation, filtros.free)
@@ -56,7 +54,19 @@ const applyFilters = (filtros) => {
     });
 };
 
-onMounted(() => {
+watch(() => filtersStore.filters, () => {
+  applyFilters(filtersStore.filters)
+}, { deep: true })
+
+onMounted(async () => {
+  let { value }: any = await Preferences.get({ key: 'userLastLocation' });
+  value = JSON.parse(value)
+
+  currentLocation.value = {
+    latitude: value ? value.latitude : 0,
+    longitude: value ? value.longitude : 0
+  }
+
   getFlushList(false, false, false).then((initialList) => {
     flushList.value = initialList;
   });
@@ -102,8 +112,6 @@ const setLocation = ({ latitude, longitude }) => {
   console.log({ latitude, longitude })
   currentLocation.value = { latitude, longitude };
 }
-
-
 
 </script>
 
@@ -154,7 +162,7 @@ const setLocation = ({ latitude, longitude }) => {
     height: 100vw;
   }
 
-  .form{
+  .form {
     position: sticky
   }
 

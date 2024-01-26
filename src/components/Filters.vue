@@ -16,35 +16,27 @@
       <img alt="Free" src="../images/filters/free.png" />
       <ion-checkbox label-placement="end" justify="start"  id="free" value="free" v-model="filtros.free">De pago</ion-checkbox>
     </ion-item>
-  <div class="button">
-    <ion-button color="tertiary" class="btn" @click="logFiltros">Aplicar Filtros</ion-button>
-  </div>
-    
   </ion-list>
 </template>
 
 
 <script setup lang="ts">
 import { IonList, IonItem, IonCheckbox, IonButton } from '@ionic/vue';
-import { ref } from 'vue';
-import { getFlushList } from '@/services';
+import { ref, Ref, watch, onMounted } from 'vue';
+import { Filters } from '@/interfaces';
+import { useFilterStore } from '@/store/useFiltersStore';
 
-const filtros = ref({
+const filtersStore = useFilterStore();
+
+const filtros: Ref<Filters> = ref({
   handicapped: false,
   changingstation: false,
   free: false,
 });
 
-/* const logFiltros = () => {
-  getFlushList(filtros.value.handicapped, filtros.value.changingstation, filtros.value.free);
-  console.log(filtros.value);
-}; */
-
-const emit = defineEmits(['applyFilters']);
-
-const logFiltros = () => {
-  emit('applyFilters', filtros.value);
-};
+watch(filtros.value, () => {
+  filtersStore.setFilters(filtros.value);
+})
 
 </script>
 
