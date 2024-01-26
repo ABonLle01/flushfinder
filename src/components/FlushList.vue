@@ -5,75 +5,121 @@
       longitude: Number(flush.longitude)
     })">
       <ion-row>
-
+ 
         <ion-col size="4" class="col">
           <div class="bath">
             <img alt="BathLogo" v-bind:src="flush.image" />
           </div>
         </ion-col>
-
+ 
         <ion-col size="8" class="col">
-
+ 
           <div class="properties">
             <ion-row class="data">
               <p>
                 {{ flush.score }} | {{ flush.condition }} |
-                <!-- {{ flush.latitude + flush.longitude }} --> distancia
+                {{ calcularDistancia(Number(flush.latitude), Number(flush.longitude)) }} km
               </p>
             </ion-row>
-
+ 
             <ion-row>
               <ion-title class="name">{{ flush.name }}</ion-title>
             </ion-row>
-
+ 
             <ion-row class="filters">
-              <ion-row>
-
-                <ion-col>
-                  <ion-thumbnail v-if="flush.handicapped" class="icon">
-                    <img alt="handicapped" src="../images/handicapped.png" />
-                  </ion-thumbnail>
-                </ion-col>
-
-                <ion-col>
-                  <ion-thumbnail v-if="flush.changingstation" class="icon">
-                    <img alt="changingstation" src="../images/babychanger.png" />
-                  </ion-thumbnail>
-                </ion-col>
-
-                <ion-col size="3">
-                  <ion-thumbnail v-if="!flush.free" class="icon">
-                    <img alt="Free" src="../images/free.png" />
-                  </ion-thumbnail>
-                </ion-col>
-
+                <ion-row>
+                 
+                  <ion-col>
+                    <ion-thumbnail v-if="flush.handicapped" class="icon">
+                      <img alt="handicapped" src="../images/filters/handicapped.png" />
+                    </ion-thumbnail>
+                  </ion-col>
+ 
+                  <ion-col>
+                    <ion-thumbnail v-if="flush.changingstation" class="icon">
+                      <img alt="changingstation" src="../images/filters/babychanger.png" />
+                    </ion-thumbnail>
+                  </ion-col>
+ 
+                  <ion-col size="3">
+                    <ion-thumbnail v-if="!flush.free" class="icon">
+                      <img alt="Free" src="../images/filters/free.png" />
+                    </ion-thumbnail>
+                  </ion-col>
+ 
               </ion-row>
             </ion-row>
-
+ 
           </div>
         </ion-col>
       </ion-row>
     </ion-card>
   </ion-list>
 </template>
-  
+ 
 <script setup lang="ts">
-import { getFlushList } from '@/services';
+ 
 import { IonList, IonCard, IonRow, IonCol, IonThumbnail, IonTitle } from '@ionic/vue';
-
+import { ref } from 'vue';
+import { haversineDistance, Coordinates, getCurrentLocation } from '@/store/index';
+import { Geolocation } from '@ionic-native/geolocation';
+ 
+const currentLocation = ref({ latitude: 0, longitude: 0 });
+ 
+ 
 defineProps({
   flushList: {
     type: Array<any>
+  },
+  filtros: {
+    type: Object
   }
 })
-
+ 
+let lat:number = 0;
+let long:number = 0;
+ 
+Geolocation.getCurrentPosition().then((resp) => {
+  currentLocation.value = {
+    latitude: resp.coords.latitude,
+    longitude: resp.coords.longitude
+  };
+ 
+  lat = resp.coords.latitude;
+  long = resp.coords.longitude;
+ 
+  console.info("Latitud: " + lat + ", Longitud: " + long);
+ 
+}).catch((error) => {
+  console.error('Error getting location', error);
+});
+ 
+ 
+const calcularDistancia = (latitude: number, longitude: number) => {
+const puntoA: Coordinates = {
+  latitude: currentLocation.value.latitude,
+  longitude: currentLocation.value.longitude
+};
+ 
+const puntoB: Coordinates = {
+  latitude,
+  longitude
+};
+ 
+const distancia = haversineDistance(puntoA, puntoB);
+return distancia.toFixed(2);
+};
+ 
+ 
 const emit = defineEmits(['setLocation'])
-
+ 
 const setLocation = (args) => {
   emit('setLocation', args)
 }
+ 
+ 
 </script>
-  
+ 
 <style scoped>
 .card {
   justify-content: flex-start;
@@ -81,73 +127,116 @@ const setLocation = (args) => {
   margin-top: 0;
   border-radius: 15px;
 }
-
+ 
 .bath {
   margin: auto;
   margin-left: 10px;
 }
-
+ 
 .bath img {
   height: 120px;
   width: 120px;
   border-radius: 15px;
 }
-
+.bath img{
+  max-height: 100px;
+  max-width: 100px;
+  min-width: 100px;
+  min-height: 100px;
+  border-radius: 15px;
+}
+ 
 .col {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0;
 }
-
+ 
 .filters {
   display: flex;
   justify-content: center;
   gap: 15px;
 }
-
+ 
 .filters img {
   height: 35px;
   width: 35px;
 }
-
+ 
 .name {
   margin: 0;
   font-size: 1.2rem;
   width: 100%;
 }
-
+ 
 .data {
   margin: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
-
+ 
+/* .card {
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 0;
+}
+ 
+.col {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+}
+ 
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+ 
+.filters img {
+  height: 35px;
+  width: 35px;
+}
+ 
+.name {
+  margin: 0;
+  font-size: 1.2rem;
+  width: 100%;
+}
+ 
+.data {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+} */
+ 
+ 
 /* @media screen and (min-width: 696px) {
   .card {
     height: 25vh;
     gap: 5px;
   }
-
+ 
   .card img {
-    width: 100%; 
+    width: 100%;
     height: auto;
   }
 }
-
+ 
 @media screen and (min-width: 696px) {
   .card {
     height: 25vh;
     gap: 5px;
     grid-template-columns: 15vw 1fr;
   }
-
+ 
   .card img {
-    width: 100%; 
+    width: 100%;
     height: auto;
   }
 } */
 </style>
-  
+ 

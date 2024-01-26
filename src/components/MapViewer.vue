@@ -123,7 +123,7 @@ onMounted(() => {
 
 watch(props, () => {
   const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
-  map.value.setView(initialCoordinates, 16);
+  map.value.setView(initialCoordinates, 25);
 });
 </script>
 

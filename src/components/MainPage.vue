@@ -109,14 +109,14 @@ const getCurrentLocation = () => {
 
 <style scoped>
 .map {
-  height: 44vh;
+  height: 40vh;
   position: sticky;
   top: 0;
   z-index: 9;
 }
 
 .list {
-  height: 50vh;
+  height: 100%;
   overflow-y: auto;
 }
 
