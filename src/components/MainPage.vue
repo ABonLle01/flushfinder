@@ -9,6 +9,7 @@
         <div class="list" v-if="showList">
           <FlushList v-if="currentLocation" :flushList="flushList" :initialLocation="currentLocation" @setLocation="setLocation" />
         </div>
+
         <router-view class="form"></router-view>
       </div>
     </ion-content>
@@ -16,15 +17,13 @@
 </template>
 
 
-
 <script setup lang="ts">
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonContent, IonPage } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
-import Filters from '@/components/Filters.vue';
 
 import { getFlushList } from '@/services';
-import { computed, onMounted, ref, watch, watchEffect } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { useStore } from 'vuex';
 
@@ -37,10 +36,9 @@ const filtersStore = useFilterStore();
 
 const store = useStore();
 const showList = ref(store.state.showList);
+
 const router = useRouter();
 const flushList = ref([]);
-
-const isHorizontal = ref(false);
 const currentLocation = ref();
 
 
@@ -54,9 +52,12 @@ const applyFilters = (filtros) => {
     });
 };
 
+
 watch(() => filtersStore.filters, () => {
-  applyFilters(filtersStore.filters)
-}, { deep: true })
+    applyFilters(filtersStore.filters)
+  }, { deep: true }
+)
+
 
 onMounted(async () => {
   let { value }: any = await Preferences.get({ key: 'userLastLocation' });
@@ -70,6 +71,9 @@ onMounted(async () => {
   getFlushList(false, false, false).then((initialList) => {
     flushList.value = initialList;
   });
+
+  getCurrentLocation();
+
 });
 
 
@@ -90,23 +94,6 @@ const actualizarRuta = () => {
     router.push({ path: newPath });
   }
 };
-
-onMounted(() => {
-  actualizarRuta();
-});
-
-
-watchEffect(() => {
-  console.log('isHorizontal:', !isHorizontal.value);
-});
-
-window.addEventListener('orientationchange', () => {
-  isHorizontal.value = window.matchMedia('(orientation: landscape)').matches;
-});
-
-onMounted(async () => {
-  getCurrentLocation();
-});
 
 const setLocation = ({ latitude, longitude }) => {
   console.log({ latitude, longitude })
@@ -136,15 +123,9 @@ const setLocation = ({ latitude, longitude }) => {
   position: absolute;
   left: 0;
   right: 0;
-  /* border: solid 3px green; */
 }
 
-
-
 @media screen and (min-width: 696px) {
-  /*   *:hover{
-    border: solid 10px red;
-  } */
 
   .container {
     display: -webkit-box;
@@ -167,4 +148,5 @@ const setLocation = ({ latitude, longitude }) => {
   }
 
 }
+
 </style>

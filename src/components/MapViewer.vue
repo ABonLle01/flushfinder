@@ -136,11 +136,8 @@ watch(props, () => {
   map.value.setView(initialCoordinates, 17);
 });
 </script>
-   
-   
-   
-   
-   
+
+
    
 <style scoped>
 #map {

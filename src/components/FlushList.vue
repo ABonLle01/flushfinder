@@ -61,9 +61,9 @@
 
 import { IonList, IonCard, IonRow, IonCol, IonThumbnail, IonTitle } from '@ionic/vue';
 import { ref } from 'vue';
-import { haversineDistance, Coordinates, getCurrentLocation } from '@/store/index';
+import { haversineDistance, getCurrentLocation } from '@/store/index';
 import { Geolocation } from '@ionic-native/geolocation';
-
+import { Coordinates } from '@/interfaces';
 
 
 const props = defineProps({
@@ -104,18 +104,18 @@ Geolocation.getCurrentPosition().then((resp) => {
 
 
 const calcularDistancia = (latitude: number, longitude: number) => {
-const puntoA: Coordinates = {
-  latitude: currentLocation.value.latitude,
-  longitude: currentLocation.value.longitude
-};
+  const puntoA: Coordinates = {
+    latitude: currentLocation.value.latitude,
+    longitude: currentLocation.value.longitude
+  };
 
-const puntoB: Coordinates = {
-  latitude,
-  longitude
-};
+  const puntoB: Coordinates = {
+    latitude,
+    longitude
+  };
 
-const distancia = haversineDistance(puntoA, puntoB);
-return distancia.toFixed(2);
+  const distancia = haversineDistance(puntoA, puntoB);
+  return distancia.toFixed(2);
 };
 
 
@@ -184,67 +184,5 @@ const setLocation = (args) => {
   gap: 10px;
 }
 
-/* .card {
-  justify-content: flex-start;
-  align-items: center;
-  margin-top: 0;
-}
-
-.col {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0;
-}
-
-.filters {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.filters img {
-  height: 35px;
-  width: 35px;
-}
-
-.name {
-  margin: 0;
-  font-size: 1.2rem;
-  width: 100%;
-}
-
-.data {
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-} */
-
-
-/* @media screen and (min-width: 696px) {
-  .card {
-    height: 25vh;
-    gap: 5px;
-  }
-
-  .card img {
-    width: 100%; 
-    height: auto;
-  }
-}
-
-@media screen and (min-width: 696px) {
-  .card {
-    height: 25vh;
-    gap: 5px;
-    grid-template-columns: 15vw 1fr;
-  }
-
-  .card img {
-    width: 100%; 
-    height: auto;
-  }
-} */
 </style>
   

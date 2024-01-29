@@ -1,7 +1,7 @@
 import { createStore, createLogger } from 'vuex';
 import { Geolocation } from '@ionic-native/geolocation';
 import { ref } from 'vue';
-
+import { Coordinates } from '@/interfaces';
 
 const store = createStore({
   state: {
@@ -26,11 +26,7 @@ export default store;
 
 
 
-
-export interface Coordinates{
-  latitude:number;
-  longitude:number;
-}
+/* Calculo de coordenadas */
 
 export function haversineDistance(pointA: Coordinates, pointB: Coordinates): number {
   var radius = 6371;
@@ -47,6 +43,9 @@ export function haversineDistance(pointA: Coordinates, pointB: Coordinates): num
 
   return radius * angularDistance;
 }
+
+
+/* Ubicacion actual */
 
 const currentLocation = ref({ latitude: 0, longitude: 0 });
 

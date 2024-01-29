@@ -1,15 +1,13 @@
 <template>
   <div>
     <form @submit.prevent="submitForm">
-      
           <ion-item>
-            <ion-label for="" position="fixed">Nombre</ion-label>
+            <ion-label for="name" position="fixed">Nombre</ion-label>
             <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
           </ion-item>
 
         <div class="wrapper">
 
-          
           <label for="status">Estado del baño</label>
           <div class="rating">
             <input value="5" name="rate" id="star5" type="radio" @click="rating">
@@ -24,28 +22,23 @@
             <label title="text" for="star1"></label>
           </div>
           
-          <ion-label for="handicapped" class="lbl">Discapacitados</ion-label>
-          <ion-toggle id="handicapped" value="handicapped" class="tgl" @ionChange="handleToggleChange('handicapped')" label-placement="start" :checked="formData.filtros.includes('handicapped')"></ion-toggle>
-          
-          <ion-label for="babychanger" class="lbl">Sala de lactancia</ion-label>
-          <ion-toggle id="babychanger" value="babychanger" class="tgl" @ionChange="handleToggleChange('babychanger')" label-placement="start" :checked="formData.filtros.includes('babychanger')"></ion-toggle>
-          
-          <ion-label for="free" class="lbl">Acceso gratuito</ion-label>
-          <ion-toggle id="free" value="free" class="tgl" @ionChange="handleToggleChange('free')" label-placement="start" :checked="formData.filtros.includes('free')"></ion-toggle>
-          
+          <label for="handicapped">Discapacitados</label>
+          <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
+
+          <label for="changingstation">Sala de lactancia</label>
+          <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
+
+          <label for="free">Acceso gratuito</label>
+          <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
+
           <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
           <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
+
         </div>
 
         <p v-if="errors.length">
-          <!-- <b>Por favor, corrija el(los) siguiente(s) error(es):</b> -->
           <p v-for="error in errors" :key="error">{{ error }}</p>
-          <!-- <ul>
-            <li v-for="error in errors" :key="error">{{ error }}</li>
-          </ul> -->
         </p>
-
-      <!-- <span class="test">Checked filters: {{ formData.filtros }}</span> -->
 
     </form>
   </div>
@@ -56,31 +49,35 @@ import { IonItem, IonToggle, IonInput, IonLabel  } from '@ionic/vue';
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 
+const errors = ref<string[]>([]);
+
+const store = useStore();
+
 interface FormData {
   name: string;
-  filtros: string[];
-  rating: string;
+  score: string;
+/*   latitude: number;
+  longitude: number; */
+  handicapped: boolean;
+  changingstation: boolean;
+  free: boolean;
 }
+
 
 const formData = ref<FormData>({
   name: '',
-  filtros: [],
-  rating: '' 
+  score: '',
+/*   latitude: lat,
+  longitude: long, */
+  handicapped: false,
+  changingstation: false,
+  free: false 
 });
 
 
-const handleToggleChange = async (value: string) => {
-  const index = formData.value.filtros.indexOf(value);
- 
-  if (index === -1) {
-    formData.value.filtros.push(value);
-  } else {
-    formData.value.filtros.splice(index, 1);
-  }
-
+const handleToggleChange = (toggleName: keyof FormData | string) => {
+  formData.value[toggleName] = !formData.value[toggleName];
 };
-
-const store = useStore();
 
 const toggleShowList = () => {
   store.dispatch('toggleShowList');
@@ -97,10 +94,10 @@ const cancel = () => {
 
 const rating = (event: Event) => {
   const selectedRating = (event.target as HTMLInputElement).value;
-  formData.value.rating = selectedRating;
+  formData.value.score = selectedRating;
   console.log("Puntuación seleccionada:", selectedRating);
 }
-const errors = ref<string[]>([]);
+
  
 const submitForm = () => {
   errors.value = [];
@@ -108,24 +105,20 @@ const submitForm = () => {
   if (!formData.value.name) {
     errors.value.push('El nombre es obligatorio.');
   }
-  if(!formData.value.rating){
+
+  if(!formData.value.score){
     errors.value.push('Selecciona una puntuacion.')
   }
-  if(!formData.value.rating){
-    errors.value.push('Selecciona una puntuacion.')
-  }
- 
+
   if (errors.value.length === 0) {  
-    console.log(formData.value.filtros);
- 
+    console.log(formData.value);
     console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
   }
 };
 </script>
  
+
 <style scoped>
-
-
 form {
   --background-color: rgba(140, 0, 255, 0.205);
   height: 100%;
@@ -144,21 +137,9 @@ form {
   grid-auto-rows: minmax(fit-content, auto);
 
   margin-top: 2rem;
-/*   justify-content: center;  */
+
   align-items: center;
   
-}
-
-.lbl{
-  text-align: left;
-  margin-left: 0.5rem;
-
-  font-size: large;
-}
-
-.tgl{
-  position: relative;
-  left: 15dvw;
 }
 
 .rating{
@@ -173,12 +154,6 @@ form {
 .wrapper>label{
   font-size: large;
 }
- 
-.test{
-  position: relative;
-  top: 50px;
-}
-
 
 .btn {
  position: relative;
@@ -195,7 +170,6 @@ form {
  color: white;
  font-weight: bold;
 }
-
 
 .btn:active {
  transform: translateY(-1px);
@@ -214,7 +188,6 @@ form {
  z-index: -1;
  transition: all .4s;
 }
-
 
 .rating{
   margin-bottom: 6px;
@@ -252,8 +225,5 @@ form {
 .rating > input:checked ~ label {
   color: #EA358C;
 }
- 
-
- 
  
 </style>

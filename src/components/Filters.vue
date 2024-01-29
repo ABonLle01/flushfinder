@@ -3,26 +3,27 @@
     <img src="../images/filters/filtros.png" alt="icono">
     <p>Filtros de búsqueda</p>
   </div>
-  <ion-list>
-    <ion-item :inset="true" id="ejemplo">
+  
+  <div class="list">
+    <div class="item" :inset="true" id="ejemplo">
       <img alt="Handicapped" src="../images/filters/handicapped.png" />
       <ion-checkbox label-placement="end" justify="start" id="handicapped" value="handicapped" v-model="filtros.handicapped">Discapacitados</ion-checkbox>
-    </ion-item>
-    <ion-item>
+    </div>
+    <div class="item">
       <img alt="Changingstation" src="../images/filters/babychanger.png" />
       <ion-checkbox label-placement="end" justify="start" id="changingstation" value="changingstation" v-model="filtros.changingstation">Sala de lactancia</ion-checkbox>
-    </ion-item>
-    <ion-item lines="none">
+    </div>
+    <div class="item" lines="none">
       <img alt="Free" src="../images/filters/free.png" />
       <ion-checkbox label-placement="end" justify="start"  id="free" value="free" v-model="filtros.free">De pago</ion-checkbox>
-    </ion-item>
-  </ion-list>
+    </div>
+  </div>
 </template>
 
 
 <script setup lang="ts">
-import { IonList, IonItem, IonCheckbox, IonButton } from '@ionic/vue';
-import { ref, Ref, watch, onMounted } from 'vue';
+import { IonCheckbox } from '@ionic/vue';
+import { ref, Ref, watch } from 'vue';
 import { Filters } from '@/interfaces';
 import { useFilterStore } from '@/store/useFiltersStore';
 
@@ -61,18 +62,18 @@ img{
   font-weight: bold;
 }
 
-.button{
+.item{
   display: flex;
-  justify-content: center;
+  position: relative;
+  align-items: center;
 
-  width: 100%;
+  padding: 20px 20px;
 
-  margin-top: 2dvh;
+  border-bottom: solid 0.3px rgba(146, 146, 146, 0.4);
 }
 
-.btn{
-  width: 65%;
-  font-weight: bold;
+.item:last-child{
+  border-bottom: none;
 }
 
 </style>

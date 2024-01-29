@@ -4,6 +4,13 @@ interface Filters {
     free: boolean
 }
 
+interface Coordinates{
+    latitude:number;
+    longitude:number;
+  }
+
 export type {
-    Filters
+    Filters, Coordinates
 }
+
+
