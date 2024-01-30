@@ -25,7 +25,7 @@
 import { IonCheckbox } from '@ionic/vue';
 import { ref, Ref, watch } from 'vue';
 import { Filters } from '@/interfaces';
-import { useFilterStore } from '@/store/useFiltersStore';
+import { useFilterStore } from '@/store/piniaStore';
 
 const filtersStore = useFilterStore();
 

@@ -45,30 +45,24 @@
 </template>
  
 <script setup lang="ts">
+
+import { Preferences } from '@capacitor/preferences';
 import { IonItem, IonToggle, IonInput, IonLabel  } from '@ionic/vue';
 import { ref } from 'vue';
 import { useStore } from 'vuex';
+
+import { FormData } from '../interfaces'
 
 const errors = ref<string[]>([]);
 
 const store = useStore();
 
-interface FormData {
-  name: string;
-  score: string;
-/*   latitude: number;
-  longitude: number; */
-  handicapped: boolean;
-  changingstation: boolean;
-  free: boolean;
-}
-
-
 const formData = ref<FormData>({
   name: '',
+  image: 'https://picsum.photos/100/100',
   score: '',
-/*   latitude: lat,
-  longitude: long, */
+  latitude: 1,
+  longitude: 1,
   handicapped: false,
   changingstation: false,
   free: false 
@@ -99,7 +93,7 @@ const rating = (event: Event) => {
 }
 
  
-const submitForm = () => {
+const submitForm = async() => {
   errors.value = [];
   /* hacer que no se puedan meter nombres que sean espacios en blanco */
   if (!formData.value.name) {
@@ -111,6 +105,37 @@ const submitForm = () => {
   }
 
   if (errors.value.length === 0) {  
+
+  try {
+    const { value } = await Preferences.get({ key: 'userLastLocation' });
+
+    if (value) {
+      const locationData = JSON.parse(value);
+      formData.value.latitude = locationData.latitude;
+      formData.value.longitude = locationData.longitude;
+    } else {
+      console.warn('No se encontraron datos de ubicación guardados.');
+    }
+
+    const response = await fetch('https://api.flushfinder.es/flush', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData.value)
+    });
+
+    if (response.ok) {
+      console.log('¡Datos del formulario enviados con éxito!');
+    } else {
+      console.error('Error al enviar los datos del formulario:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error al obtener los datos de ubicación guardados o al enviar el formulario:', error);
+  }
+
+
+
     console.log(formData.value);
     console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
   }

@@ -17,7 +17,7 @@
           <div class="properties">
             <ion-row class="data">
               <p>
-                {{ flush.score }} | {{ flush.condition }} |
+                {{ flush.score }} | {{ condition(flush.score) }} |
                 {{ calcularDistancia(Number(flush.latitude), Number(flush.longitude)) }} km
               </p>
             </ion-row>
@@ -61,10 +61,9 @@
 
 import { IonList, IonCard, IonRow, IonCol, IonThumbnail, IonTitle } from '@ionic/vue';
 import { ref } from 'vue';
-import { haversineDistance, getCurrentLocation } from '@/store/index';
+import { haversineDistance } from '@/store/index';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Coordinates } from '@/interfaces';
-
 
 const props = defineProps({
   flushList: {
@@ -124,6 +123,35 @@ const emit = defineEmits(['setLocation'])
 const setLocation = (args) => {
   emit('setLocation', args)
 }
+
+const condition = (x: number): string => {
+  let result: string;
+
+  switch (true) {
+    case x < 0:
+      console.log("Negative number!!");
+      break;
+    case x >= 4:
+      result = "Excelente";
+      break;
+    case x >= 3:
+      result = "Bueno";
+      break;
+    case x >= 2:
+      result = "Aceptable";
+      break;
+    case x >= 1:
+      result = "Sucio";
+      break;
+    case x<1:
+      result = "Muy sucio";
+      break;
+    default:
+      result = "undefined";
+  }
+
+  return result;
+};
 
 
 </script>

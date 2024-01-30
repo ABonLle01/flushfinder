@@ -28,8 +28,7 @@ import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { getCurrentLocation } from '@/store';
-
-import { useFilterStore } from '@/store/useFiltersStore';
+import { useLocationStore, useFilterStore } from '@/store/piniaStore';
 import { Preferences } from '@capacitor/preferences';
 
 const filtersStore = useFilterStore();
@@ -40,7 +39,7 @@ const showList = ref(store.state.showList);
 const router = useRouter();
 const flushList = ref([]);
 const currentLocation = ref();
-
+const currentLocationStore = useLocationStore();
 
 const applyFilters = (filtros) => {
   getFlushList(filtros.handicapped, filtros.changingstation, filtros.free)
@@ -71,6 +70,8 @@ onMounted(async () => {
   getFlushList(false, false, false).then((initialList) => {
     flushList.value = initialList;
   });
+
+  currentLocationStore.setCurrentLocation(currentLocation.value);
 
   getCurrentLocation();
 

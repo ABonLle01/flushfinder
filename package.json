@@ -1,7 +1,7 @@
 {
   "name": "flusfinder",
   "private": true,
-  "version": "0.0.1",
+  "version": "BETA 0.5.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
