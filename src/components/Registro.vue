@@ -1,53 +1,60 @@
 <template>
-  <div>
+  <div class="register">
     <form @submit.prevent="submitForm">
-          <ion-item>
-            <ion-label for="name" position="fixed">Nombre</ion-label>
-            <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
-          </ion-item>
 
-        <div class="wrapper">
+      <div class="relleno">
+        <img src="/favicon.png" alt="logo">
+        <h1>FLUSHFINDER</h1>
+      </div>
 
-          <label for="status">Estado del baño</label>
-          <div class="rating">
-            <input value="5" name="rate" id="star5" type="radio" @click="rating">
-            <label title="text" for="star5"></label>
-            <input value="4" name="rate" id="star4" type="radio" @click="rating">
-            <label title="text" for="star4"></label>
-            <input value="3" name="rate" id="star3" type="radio" @click="rating">
-            <label title="text" for="star3"></label>
-            <input value="2" name="rate" id="star2" type="radio" @click="rating">
-            <label title="text" for="star2"></label>
-            <input value="1" name="rate" id="star1" type="radio" @click="rating">
-            <label title="text" for="star1"></label>
-          </div>
-          
-          <label for="handicapped">Discapacitados</label>
-          <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
+      <ion-item class="nombre">
+        <label for="name" class="lbl">Nombre</label>
+        <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
+      </ion-item>
 
-          <label for="changingstation">Sala de lactancia</label>
-          <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
+      <div class="wrapper">
 
-          <label for="free">Acceso gratuito</label>
-          <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
-
-          <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
-          <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
-
+        <label for="status">Estado del baño</label>
+        <div class="rating">
+          <input value="5" name="rate" id="star5" type="radio" @click="rating">
+          <label title="text" for="star5"></label>
+          <input value="4" name="rate" id="star4" type="radio" @click="rating">
+          <label title="text" for="star4"></label>
+          <input value="3" name="rate" id="star3" type="radio" @click="rating">
+          <label title="text" for="star3"></label>
+          <input value="2" name="rate" id="star2" type="radio" @click="rating">
+          <label title="text" for="star2"></label>
+          <input value="1" name="rate" id="star1" type="radio" @click="rating">
+          <label title="text" for="star1"></label>
         </div>
+        
+        <label for="handicapped">Discapacitados</label>
+        <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
 
-        <p v-if="errors.length">
-          <p v-for="error in errors" :key="error">{{ error }}</p>
-        </p>
+        <label for="changingstation">Sala de lactancia</label>
+        <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
+
+        <label for="free">Acceso gratuito</label>
+        <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
+
+        <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
+        <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
+
+      </div>
+
+      <p v-if="errors.length">
+        <p v-for="error in errors" :key="error">{{ error }}</p>
+      </p>
 
     </form>
   </div>
 </template>
  
+
 <script setup lang="ts">
 
 import { Preferences } from '@capacitor/preferences';
-import { IonItem, IonToggle, IonInput, IonLabel  } from '@ionic/vue';
+import { IonItem, IonToggle, IonInput  } from '@ionic/vue';
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 
@@ -138,6 +145,9 @@ const submitForm = async() => {
 
     console.log(formData.value);
     console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
+
+
+    toggleShowList();
   }
 };
 </script>
@@ -146,14 +156,75 @@ const submitForm = async() => {
 <style scoped>
 form {
   --background-color: rgba(140, 0, 255, 0.205);
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center; 
   align-items: center;
 
-  position: sticky;
+/*   height: 50vh; */
+
+  margin-top: 18%;
+
 }
+
+.relleno{
+  display: none;
+}
+
+
+@media screen and (min-width: 1100px) {
+  .register{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+
+    height: fit-content;
+  }
+
+  label,.nombre{
+    font-size: xx-large;
+  }
+
+  .wrapper{
+    gap: 30px;
+  }
+
+  .lbl{
+    width: 100%;
+  }
+
+  .relleno h1{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bolder;
+  }
+
+  .relleno{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
+    margin-bottom: 70px;
+    width: 100%;
+    gap: 40px;
+  
+    color: white;
+    background-color: #EA358C;
+    border-radius: 25px;
+  }
+
+  .relleno img{
+    width: 200px;
+    height: 200px;
+  }
+
+  form{
+    margin-left: 30px;
+  }
+
+}
+
 
 .wrapper{
   display: grid;
@@ -172,13 +243,6 @@ form {
   right: 3dvw;
 }
 
-.wrapper>label{
-  font-size: large;
-}
- 
-.wrapper>label{
-  font-size: large;
-}
 
 .btn {
  position: relative;

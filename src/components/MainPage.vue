@@ -124,9 +124,13 @@ const setLocation = ({ latitude, longitude }) => {
   position: absolute;
   left: 0;
   right: 0;
+  width: 100%;
+  /* height: 100%; */
 }
 
-@media screen and (min-width: 696px) {
+
+
+@media screen and (min-width: 1100px) {
 
   .container {
     display: -webkit-box;
@@ -135,7 +139,7 @@ const setLocation = ({ latitude, longitude }) => {
 
   .map {
     width: 44vw;
-    height: 100vh;
+    height: 900px;
     position: sticky;
   }
 
@@ -149,5 +153,6 @@ const setLocation = ({ latitude, longitude }) => {
   }
 
 }
+
 
 </style>
