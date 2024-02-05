@@ -5,29 +5,20 @@ import MainPage from '../components/MainPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/MainPage',
+    path: '/',
     component: MainPage,
     children: [
       {
         path: 'registro',
         component: Registro,
-        meta: { showRegistro: true }
+        meta: { showRegistro: true },
       }
     ]
   },
   {
     path: '/',
-    redirect: '/MainPage'
+    redirect: '/'
   },
-  {
-    path: '/registro',
-    component: Registro,
-    meta: { showRegistro: false }
-  },
-  {
-    path: '/App',
-    component: () => import ('../App.vue')
-  }
 ];
 
 const router = createRouter({

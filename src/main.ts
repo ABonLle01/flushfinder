@@ -3,6 +3,9 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 
+import { createPinia } from 'pinia'
+const pinia = createPinia()
+
 import { IonicVue } from '@ionic/vue';
 import { Geolocation } from '@ionic-native/geolocation';
 
@@ -30,6 +33,7 @@ import './theme/variables.css';
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
+  .use(pinia)
   .use(store);
 
 // Agrega el servicio de Geolocation al objeto global
