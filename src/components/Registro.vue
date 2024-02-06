@@ -1,86 +1,87 @@
 <template>
-  <div>
+  <div class="register">
     <form @submit.prevent="submitForm">
-      
-          <ion-item>
-            <ion-label for="" position="fixed">Nombre</ion-label>
-            <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
-          </ion-item>
 
-        <div class="wrapper">
+      <div class="relleno">
+        <img src="/favicon.png" alt="logo">
+        <div class="text">
+          <h1>AÑADE UN NUEVO FLUSH</h1>
+          <p>Colabora con la comunidad</p>
+        </div>      
+      </div>
 
-          
-          <label for="status">Estado del baño</label>
-          <div class="rating">
-            <input value="5" name="rate" id="star5" type="radio" @click="rating">
-            <label title="text" for="star5"></label>
-            <input value="4" name="rate" id="star4" type="radio" @click="rating">
-            <label title="text" for="star4"></label>
-            <input value="3" name="rate" id="star3" type="radio" @click="rating">
-            <label title="text" for="star3"></label>
-            <input value="2" name="rate" id="star2" type="radio" @click="rating">
-            <label title="text" for="star2"></label>
-            <input value="1" name="rate" id="star1" type="radio" @click="rating">
-            <label title="text" for="star1"></label>
-          </div>
-          
-          <ion-label for="handicapped" class="lbl">Discapacitados</ion-label>
-          <ion-toggle id="handicapped" value="handicapped" class="tgl" @ionChange="handleToggleChange('handicapped')" label-placement="start" :checked="formData.filtros.includes('handicapped')"></ion-toggle>
-          
-          <ion-label for="babychanger" class="lbl">Sala de lactancia</ion-label>
-          <ion-toggle id="babychanger" value="babychanger" class="tgl" @ionChange="handleToggleChange('babychanger')" label-placement="start" :checked="formData.filtros.includes('babychanger')"></ion-toggle>
-          
-          <ion-label for="free" class="lbl">Acceso gratuito</ion-label>
-          <ion-toggle id="free" value="free" class="tgl" @ionChange="handleToggleChange('free')" label-placement="start" :checked="formData.filtros.includes('free')"></ion-toggle>
-          
-          <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
-          <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
+      <ion-item class="nombre">
+        <label for="name" class="lbl">Nombre</label>
+        <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
+      </ion-item>
+
+      <div class="wrapper">
+
+        <label for="status">Estado del baño</label>
+        <div class="rating">
+          <input value="5" name="rate" id="star5" type="radio" @click="rating">
+          <label title="text" for="star5"></label>
+          <input value="4" name="rate" id="star4" type="radio" @click="rating">
+          <label title="text" for="star4"></label>
+          <input value="3" name="rate" id="star3" type="radio" @click="rating">
+          <label title="text" for="star3"></label>
+          <input value="2" name="rate" id="star2" type="radio" @click="rating">
+          <label title="text" for="star2"></label>
+          <input value="1" name="rate" id="star1" type="radio" @click="rating">
+          <label title="text" for="star1"></label>
         </div>
+        
+        <label for="handicapped">Discapacitados</label>
+        <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
 
-        <p v-if="errors.length">
-          <!-- <b>Por favor, corrija el(los) siguiente(s) error(es):</b> -->
-          <p v-for="error in errors" :key="error">{{ error }}</p>
-          <!-- <ul>
-            <li v-for="error in errors" :key="error">{{ error }}</li>
-          </ul> -->
-        </p>
+        <label for="changingstation">Sala de lactancia</label>
+        <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
 
-      <!-- <span class="test">Checked filters: {{ formData.filtros }}</span> -->
+        <label for="free">Acceso gratuito</label>
+        <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
+
+        <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
+        <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
+
+      </div>
+
+      <p v-if="errors.length">
+        <p v-for="error in errors" :key="error">{{ error }}</p>
+      </p>
 
     </form>
   </div>
 </template>
  
+
 <script setup lang="ts">
-import { IonItem, IonToggle, IonInput, IonLabel  } from '@ionic/vue';
+
+import { Preferences } from '@capacitor/preferences';
+import { IonItem, IonToggle, IonInput  } from '@ionic/vue';
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 
-interface FormData {
-  name: string;
-  filtros: string[];
-  rating: string;
-}
+import { FormData } from '../interfaces'
+
+const errors = ref<string[]>([]);
+
+const store = useStore();
 
 const formData = ref<FormData>({
   name: '',
-  filtros: [],
-  rating: '' 
+  image: 'https://picsum.photos/100/100',
+  score: '',
+  latitude: 1,
+  longitude: 1,
+  handicapped: false,
+  changingstation: false,
+  free: false 
 });
 
 
-const handleToggleChange = async (value: string) => {
-  const index = formData.value.filtros.indexOf(value);
- 
-  if (index === -1) {
-    formData.value.filtros.push(value);
-  } else {
-    formData.value.filtros.splice(index, 1);
-  }
-
+const handleToggleChange = (toggleName: keyof FormData | string) => {
+  formData.value[toggleName] = !formData.value[toggleName];
 };
-
-const store = useStore();
 
 const toggleShowList = () => {
   store.dispatch('toggleShowList');
@@ -97,45 +98,146 @@ const cancel = () => {
 
 const rating = (event: Event) => {
   const selectedRating = (event.target as HTMLInputElement).value;
-  formData.value.rating = selectedRating;
+  formData.value.score = selectedRating;
   console.log("Puntuación seleccionada:", selectedRating);
 }
-const errors = ref<string[]>([]);
+
  
-const submitForm = () => {
+const submitForm = async() => {
   errors.value = [];
   /* hacer que no se puedan meter nombres que sean espacios en blanco */
   if (!formData.value.name) {
     errors.value.push('El nombre es obligatorio.');
   }
-  if(!formData.value.rating){
+
+  if(!formData.value.score){
     errors.value.push('Selecciona una puntuacion.')
   }
-  if(!formData.value.rating){
-    errors.value.push('Selecciona una puntuacion.')
-  }
- 
+
   if (errors.value.length === 0) {  
-    console.log(formData.value.filtros);
- 
+
+  try {
+    const { value } = await Preferences.get({ key: 'userLastLocation' });
+
+    if (value) {
+      const locationData = JSON.parse(value);
+      formData.value.latitude = locationData.latitude;
+      formData.value.longitude = locationData.longitude;
+    } else {
+      console.warn('No se encontraron datos de ubicación guardados.');
+    }
+
+    const response = await fetch('https://api.flushfinder.es/flush', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData.value)
+    });
+
+    if (response.ok) {
+      console.log('¡Datos del formulario enviados con éxito!');
+    } else {
+      console.error('Error al enviar los datos del formulario:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error al obtener los datos de ubicación guardados o al enviar el formulario:', error);
+  }
+
+
+
+    console.log(formData.value);
     console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
+
+
+    toggleShowList();
   }
 };
 </script>
  
+
 <style scoped>
-
-
 form {
   --background-color: rgba(140, 0, 255, 0.205);
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center; 
   align-items: center;
 
-  position: sticky;
+/*   height: 50vh; */
+
+  margin-top: 18%;
+
 }
+
+.relleno{
+  display: none;
+}
+
+
+@media screen and (min-width: 1100px) {
+  .register{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+
+    height: fit-content;
+  }
+
+  label,.nombre{
+    font-size: xx-large;
+  }
+
+  .wrapper{
+    gap: 30px;
+  }
+
+  .lbl{
+    width: 100%;
+  }
+
+  .relleno h1{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bolder;
+  }
+
+  .relleno{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
+    margin-bottom: 70px;
+    width: 100%;
+    gap: 40px;
+  
+    color: white;
+    background-color: #EA358C;
+    border-radius: 25px;
+  }
+
+  .relleno img{
+    width: 200px;
+    height: 200px;
+  }
+
+  form{
+    margin-left: 30px;
+  }
+
+  .text{
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+  }
+
+  .text p{
+    font-weight: bolder;
+  }
+ 
+}
+
 
 .wrapper{
   display: grid;
@@ -144,39 +246,14 @@ form {
   grid-auto-rows: minmax(fit-content, auto);
 
   margin-top: 2rem;
-/*   justify-content: center;  */
+
   align-items: center;
   
-}
-
-.lbl{
-  text-align: left;
-  margin-left: 0.5rem;
-
-  font-size: large;
-}
-
-.tgl{
-  position: relative;
-  left: 15dvw;
 }
 
 .rating{
   position: relative;
   right: 3dvw;
-}
-
-.wrapper>label{
-  font-size: large;
-}
- 
-.wrapper>label{
-  font-size: large;
-}
- 
-.test{
-  position: relative;
-  top: 50px;
 }
 
 
@@ -196,7 +273,6 @@ form {
  font-weight: bold;
 }
 
-
 .btn:active {
  transform: translateY(-1px);
  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -214,7 +290,6 @@ form {
  z-index: -1;
  transition: all .4s;
 }
-
 
 .rating{
   margin-bottom: 6px;
@@ -252,8 +327,5 @@ form {
 .rating > input:checked ~ label {
   color: #EA358C;
 }
- 
-
- 
  
 </style>

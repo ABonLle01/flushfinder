@@ -32,9 +32,9 @@
           </ion-buttons>
           
           <!-- barra de navegacion -->
-          <div class="bar">
+          <!-- <div class="bar">
             <ion-searchbar class="searchBar" v-model="searchTerm" @ionChange="onSearchChange"></ion-searchbar>
-          </div>
+          </div> -->
           
 
         </ion-toolbar>
@@ -57,54 +57,19 @@
 
 <script setup lang="ts">
 import Filters from './components/Filters.vue';
-import MainPage from '@/components/MainPage.vue';
 import { add } from 'ionicons/icons';
 import {IonApp, IonHeader, IonContent, IonIcon, IonMenu, IonFab, IonFabButton, IonToolbar, IonButtons, IonMenuButton, IonSearchbar, IonPage, IonTitle} from '@ionic/vue';
 import { ref } from 'vue';
+
 import {archiveOutline, archiveSharp, heartOutline, heartSharp, mailOutline, mailSharp,
    paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, 
    warningOutline, warningSharp} from 'ionicons/icons';
 
 import { useStore } from 'vuex';
-import { getFlushList } from '@/services';
 
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-
-/* 
-
-const updatedList = ref([]);
-
-const applyFilters = (filtros) => {
-  getFlushList(filtros.handicapped, filtros.babychanger, filtros.free)
-    .then((updatedListData) => {
-      updatedList.value = updatedListData;
-    })
-    .catch((error) => {
-      console.error('Error aplicando filtros:', error);
-    });
-};
-
-router.afterEach((to, from) => {
-  if (to.meta.showMainPage) {
-    // Aquí puedes llamar a applyFilters si necesitas filtrar la lista al entrar en MainPage.vue
-  }
-});
-
-const flushList = ref([]);
-
-// Método para actualizar la lista de tarjetas
-const updateFlushList = (filtros) => {
-  getFlushList(filtros.handicapped, filtros.babychanger, filtros.free)
-    .then((updatedListData) => {
-      flushList.value = updatedListData;
-    })
-    .catch((error) => {
-      console.error('Error aplicando filtros:', error);
-    });
-}; 
-*/
 
 const selectedIndex = ref(0);
 const appPages = [
@@ -157,19 +122,6 @@ const store = useStore();
 const toggleShowList = () => {
   store.dispatch('toggleShowList');
 };
-
-const searchTerm = ref('');
-
-const onSearchChange = (event: CustomEvent) => {
-  console.log('Search term:', event.detail.value);
-  // Puedes realizar acciones adicionales aquí, como filtrar los resultados.
-
-  return {
-    searchTerm,
-    onSearchChange,
-  };
-};
-
 
 </script>
 

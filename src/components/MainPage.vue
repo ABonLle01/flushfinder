@@ -9,6 +9,7 @@
         <div class="list" v-if="showList">
           <FlushList v-if="currentLocation" :flushList="flushList" :initialLocation="currentLocation" @setLocation="setLocation" />
         </div>
+
         <router-view class="form"></router-view>
       </div>
     </ion-content>
@@ -16,33 +17,29 @@
 </template>
 
 
-
 <script setup lang="ts">
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonContent, IonPage } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
-import Filters from '@/components/Filters.vue';
 
 import { getFlushList } from '@/services';
-import { computed, onMounted, ref, watch, watchEffect } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { useStore } from 'vuex';
 
 import { getCurrentLocation } from '@/store';
-
-import { useFilterStore } from '@/store/useFiltersStore';
+import { useLocationStore, useFilterStore } from '@/store/piniaStore';
 import { Preferences } from '@capacitor/preferences';
 
 const filtersStore = useFilterStore();
 
 const store = useStore();
 const showList = ref(store.state.showList);
+
 const router = useRouter();
 const flushList = ref([]);
-
-const isHorizontal = ref(false);
 const currentLocation = ref();
-
+const currentLocationStore = useLocationStore();
 
 const applyFilters = (filtros) => {
   getFlushList(filtros.handicapped, filtros.changingstation, filtros.free)
@@ -54,9 +51,12 @@ const applyFilters = (filtros) => {
     });
 };
 
+
 watch(() => filtersStore.filters, () => {
-  applyFilters(filtersStore.filters)
-}, { deep: true })
+    applyFilters(filtersStore.filters)
+  }, { deep: true }
+)
+
 
 onMounted(async () => {
   let { value }: any = await Preferences.get({ key: 'userLastLocation' });
@@ -70,6 +70,11 @@ onMounted(async () => {
   getFlushList(false, false, false).then((initialList) => {
     flushList.value = initialList;
   });
+
+  currentLocationStore.setCurrentLocation(currentLocation.value);
+
+  getCurrentLocation();
+
 });
 
 
@@ -90,23 +95,6 @@ const actualizarRuta = () => {
     router.push({ path: newPath });
   }
 };
-
-onMounted(() => {
-  actualizarRuta();
-});
-
-
-watchEffect(() => {
-  console.log('isHorizontal:', !isHorizontal.value);
-});
-
-window.addEventListener('orientationchange', () => {
-  isHorizontal.value = window.matchMedia('(orientation: landscape)').matches;
-});
-
-onMounted(async () => {
-  getCurrentLocation();
-});
 
 const setLocation = ({ latitude, longitude }) => {
   console.log({ latitude, longitude })
@@ -136,15 +124,13 @@ const setLocation = ({ latitude, longitude }) => {
   position: absolute;
   left: 0;
   right: 0;
-  /* border: solid 3px green; */
+  width: 100%;
+  /* height: 100%; */
 }
 
 
 
-@media screen and (min-width: 696px) {
-  /*   *:hover{
-    border: solid 10px red;
-  } */
+@media screen and (min-width: 1100px) {
 
   .container {
     display: -webkit-box;
@@ -153,7 +139,7 @@ const setLocation = ({ latitude, longitude }) => {
 
   .map {
     width: 44vw;
-    height: 100vh;
+    height: 900px;
     position: sticky;
   }
 
@@ -167,4 +153,6 @@ const setLocation = ({ latitude, longitude }) => {
   }
 
 }
+
+
 </style>

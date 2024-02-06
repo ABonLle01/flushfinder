@@ -16,3 +16,14 @@ export const useFilterStore = defineStore('filters', () => {
 
     return { filters, setFilters }
 })
+
+export const useLocationStore = defineStore('location', {
+    state: () => ({
+      currentLocation: null,
+    }),
+    actions: {
+      setCurrentLocation(location) {
+        this.currentLocation = location;
+      },
+    },
+  });
