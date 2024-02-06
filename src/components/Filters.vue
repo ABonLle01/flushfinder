@@ -18,6 +18,8 @@
       <ion-checkbox label-placement="end" justify="start"  id="free" value="free" v-model="filtros.free">De pago</ion-checkbox>
     </div>
   </div>
+
+  <p> Numero de baños: {{  }} </p>
 </template>
 
 

@@ -1,11 +1,8 @@
 <template>
   <ion-list>
-    <ion-card v-for="(flush, index) in flushList" :key="index" class="card" v-bind:data-id="index" @click="setLocation({
-      latitude: Number(flush.latitude),
-      longitude: Number(flush.longitude)
-    })">
+    <ion-card v-for="(flush, index) in flushList" :key="index" class="card" :style="{ 'background-color': selectedCardIndex === index ? '#ea358c2a' : '' }"
+              v-bind:data-id="index" @click="setLocaltionAndHighlight(index)">
       <ion-row>
-
         <ion-col size="4" class="col">
           <div class="bath">
             <img alt="BathLogo" v-bind:src="flush.image" />
@@ -82,6 +79,7 @@ const currentLocation = ref({
   longitude: props.initialLocation.longitude ? props.initialLocation.longitude : 0
 });
 
+const selectedCardIndex = ref(-1);
 
 let lat:number = 0;
 let long:number = 0;
@@ -117,11 +115,18 @@ const calcularDistancia = (latitude: number, longitude: number) => {
   return distancia.toFixed(2);
 };
 
-
 const emit = defineEmits(['setLocation'])
 
 const setLocation = (args) => {
   emit('setLocation', args)
+}
+
+const setLocaltionAndHighlight = (index) => {
+  setLocation({
+    latitude: Number(props.flushList[index].latitude),
+    longitude: Number(props.flushList[index].longitude)
+  });
+  selectedCardIndex.value=index;
 }
 
 const condition = (x: number): string => {

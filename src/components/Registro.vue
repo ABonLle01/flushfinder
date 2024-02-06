@@ -4,7 +4,10 @@
 
       <div class="relleno">
         <img src="/favicon.png" alt="logo">
-        <h1>FLUSHFINDER</h1>
+        <div class="text">
+          <h1>AÑADE UN NUEVO FLUSH</h1>
+          <p>Colabora con la comunidad</p>
+        </div>      
       </div>
 
       <ion-item class="nombre">
@@ -223,6 +226,16 @@ form {
     margin-left: 30px;
   }
 
+  .text{
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+  }
+
+  .text p{
+    font-weight: bolder;
+  }
+ 
 }
 
 

@@ -49,7 +49,7 @@ const initializeMap = async () => {
     const mapMarker = L.icon({
       iconUrl: markerIcon,
       iconSize: [32, 51],
-      iconAnchor: [16, 51],
+      iconAnchor: [16, 46],
       popupAnchor: [0, -32],
     });
 
@@ -57,8 +57,18 @@ const initializeMap = async () => {
       const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
       // Asegúrate de que map.value esté definido antes de agregar el marcador
       if (map.value) {
-        L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value);
+        const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value);
+        marker.bindPopup(
+        `<h3>${flush.name}</h3>
+        <p>Puntuacion: ${flush.score}</p>
+        <p>Estado: ${flush.condition}</p>
+         `
+      );
       }
+    });
+
+    map.value.on('moveend', () => {
+      map.value.closePopup();
     });
 
     console.log('Map initialized with custom markers');
@@ -110,7 +120,7 @@ onMounted(() => {
   const userMarkerIcon = L.icon({
     iconUrl: currentMarkerIcon,
     iconSize: [32, 32],
-    iconAnchor: [16, 32],
+    iconAnchor: [16, 16],
     popupAnchor: [0, -32],
   });
 
