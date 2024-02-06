@@ -13,10 +13,11 @@
       <ion-label>Pac-Man</ion-label>
     </ion-item>
     <ion-item>
-      <ion-label>Super Mario World</ion-label>
+      <ion-label>Super Mario World.</ion-label>
     </ion-item>
   </ion-list>
 </template>
+
   
 <script lang="ts">
   import { IonItem, IonLabel, IonList } from '@ionic/vue';
