@@ -1,3 +1,5 @@
+import { ref } from "vue";
+
 const getFlushList = async (handicapped: boolean, changingstation:boolean, free:boolean) =>{
     /* const response = await fetch(`http://localhost:3000/flush?handicapped=${handicapped}&changingstation=${changingstation}&free=${free}`); */
     
@@ -16,9 +18,9 @@ const getFlushList = async (handicapped: boolean, changingstation:boolean, free:
     url = url.slice(0, -1);
 
     const response = await fetch(url);
-    
     const flushList = await response.json();
     console.log(flushList);
+
     return flushList;
 }
  

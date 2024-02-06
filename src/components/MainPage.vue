@@ -31,6 +31,8 @@ import { getCurrentLocation } from '@/store';
 import { useLocationStore, useFilterStore } from '@/store/piniaStore';
 import { Preferences } from '@capacitor/preferences';
 
+let flushcounter = ref(0);
+
 const filtersStore = useFilterStore();
 
 const store = useStore();
@@ -45,6 +47,9 @@ const applyFilters = (filtros) => {
   getFlushList(filtros.handicapped, filtros.changingstation, filtros.free)
     .then((updatedList) => {
       flushList.value = updatedList;
+
+      store.state.flushcounter=flushList.value.length;
+      console.log("Store state: "+ store.state.flushcounter + " (MainPage)")
     })
     .catch((error) => {
       console.error('Error applying filters:', error);
@@ -63,8 +68,8 @@ onMounted(async () => {
   value = JSON.parse(value)
 
   currentLocation.value = {
-    latitude: value ? value.latitude : 0,
-    longitude: value ? value.longitude : 0
+    latitude: value ? value.latitude : 36,
+    longitude: value ? value.longitude : -4
   }
 
   getFlushList(false, false, false).then((initialList) => {
@@ -99,6 +104,7 @@ const actualizarRuta = () => {
 const setLocation = ({ latitude, longitude }) => {
   console.log({ latitude, longitude })
   currentLocation.value = { latitude, longitude };
+  console.log(flushcounter);
 }
 
 </script>

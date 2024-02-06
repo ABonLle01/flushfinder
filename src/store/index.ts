@@ -6,10 +6,14 @@ import { Coordinates } from '@/interfaces';
 const store = createStore({
   state: {
     showList: true,
+    flushcounter: 0,
   },
   mutations: {
     setShowList(state, newValue) {
       state.showList = newValue;
+    },
+    setFlushcounter(state, value) {
+      state.flushcounter = value;
     },
   },
   actions: {
@@ -60,4 +64,5 @@ export const getCurrentLocation = () => {
     console.error('Error getting location', error);
   });
 };
+
 
