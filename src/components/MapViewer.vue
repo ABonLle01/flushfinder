@@ -5,15 +5,19 @@
   </ion-content>
 </ion-page>
 </template>
-
+   
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { IonPage, IonContent } from '@ionic/vue';
+import { Preferences } from '@capacitor/preferences';
+
 
 const map = ref(null);
 const userMarker = ref(null);
+
+const isInitialPosSet = ref(false)
 
 const props = withDefaults(defineProps<{
   latitude: number;
@@ -31,7 +35,7 @@ import markerIcon from '../images/mapMarker.png';
 
 const initializeMap = async () => {
   try {
-    const response = await fetch('https://api.flushfinder.es/flushes');
+    const response = await fetch('https://api.flushfinder.es/flush');
     const flushList = await response.json();
 
     const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
@@ -47,7 +51,7 @@ const initializeMap = async () => {
     const mapMarker = L.icon({
       iconUrl: markerIcon,
       iconSize: [32, 51],
-      iconAnchor: [16, 51],
+      iconAnchor: [16, 46],
       popupAnchor: [0, -32],
     });
 
@@ -55,8 +59,18 @@ const initializeMap = async () => {
       const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
       // Asegúrate de que map.value esté definido antes de agregar el marcador
       if (map.value) {
-        L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value);
+        const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value);
+        marker.bindPopup(
+        `<h3>${flush.name}</h3>
+        <p>Puntuacion: ${flush.score}</p>
+        <p>Estado: ${flush.condition}</p>
+         `
+      );
       }
+    });
+
+    map.value.on('moveend', () => {
+      map.value.closePopup();
     });
 
     console.log('Map initialized with custom markers');
@@ -80,14 +94,22 @@ const watchUserLocation = () => {
       userMarker.value.setLatLng([latitude, longitude]);
 
       // Centra el mapa en la nueva ubicación del usuario
-      map.value.setView([latitude, longitude], map.value.getZoom());
+      if (!isInitialPosSet.value) {
+        Preferences.set({
+          key: 'userLastLocation', value: JSON.stringify({
+            latitude,
+            longitude
+          })
+        });
+        map.value.setView([latitude, longitude], map.value.getZoom());
+        isInitialPosSet.value = true
+      }
     }
   };
 
   const onError = (error) => {
     console.error('Error getting location:', error);
   };
-
   // Inicia el seguimiento de la ubicación del usuario
   navigator.geolocation.watchPosition(onLocationUpdate, onError, watchOptions);
 };
@@ -100,7 +122,7 @@ onMounted(() => {
   const userMarkerIcon = L.icon({
     iconUrl: currentMarkerIcon,
     iconSize: [32, 32],
-    iconAnchor: [16, 32],
+    iconAnchor: [16, 16],
     popupAnchor: [0, -32],
   });
 
@@ -123,15 +145,12 @@ onMounted(() => {
 
 watch(props, () => {
   const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
-  map.value.setView(initialCoordinates, 25);
+  map.value.setView(initialCoordinates, 17);
 });
 </script>
 
 
-
-
-
-
+   
 <style scoped>
 #map {
 width: 100%;

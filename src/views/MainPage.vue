@@ -39,9 +39,9 @@ import { onMounted, ref } from 'vue';
 const flushList = ref([]);
 
 
-onMounted(async () => {
+/* onMounted(async () => {
   flushList.value = await getFlushList(false);
-})
+}) */
 </script>
 
 <style scoped>
