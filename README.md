@@ -18,6 +18,9 @@
 >npx cap sync
 > - Comando antes de transpilar a android para sincronizar los pluggin de capacitor con la build de android
 
+>npm install bad-words 
+> | npm i --save-dev @types/bad-words
+> - Diccionario de palabras malsonantes ;p
 
 ### Recursos
 > APIs

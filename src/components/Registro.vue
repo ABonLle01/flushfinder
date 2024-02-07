@@ -40,7 +40,7 @@
         <label for="free">Acceso gratuito</label>
         <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
 
-        <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
+        <button class="btn" id="add" type="submit">Añadir</button>
         <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
 
       </div>
@@ -62,6 +62,8 @@ import { ref } from 'vue';
 import { useStore } from 'vuex';
 
 import { FormData } from '../interfaces'
+
+import badWords from 'bad-words';
 
 const errors = ref<string[]>([]);
 
@@ -87,10 +89,6 @@ const toggleShowList = () => {
   store.dispatch('toggleShowList');
 };
 
-const addFlush = () => {
-  console.log("Flush added");
-};
-
 const cancel = () => {
   console.log("cancel");
   toggleShowList();
@@ -102,56 +100,90 @@ const rating = (event: Event) => {
   console.log("Puntuación seleccionada:", selectedRating);
 }
 
+
+function filterBadWords(name: string): string {
+  const filter = new badWords();
+  return filter.clean(name);
+}
  
+function validateBathroomName(name: string): boolean {
+  // Expresión regular que coincide con cadenas que contienen solo letras, números, espacios y ciertos caracteres especiales comunes,
+  // y no permite varios caracteres especiales seguidos
+  const regex = /^[A-Za-záéíóúüÜñÑ]+(?: [A-Za-záéíóúüÜñÑ]+)*$/;
+
+  // La función test() de la expresión regular devuelve true si la cadena contiene solo letras, 
+  // y false si contiene algún otro tipo de caracter
+
+  if (!regex.test(name)) {
+    if (name.trim() === '') {
+      errors.value.push('El nombre no puede estar vacío.');
+    } else {
+      errors.value.push('El nombre debe contener solo letras y un único espacio.');
+    }
+    return false; // Retorna false para indicar que la validación ha fallado
+  }
+
+  return regex.test(name);
+}
+
+
 const submitForm = async() => {
   errors.value = [];
-  /* hacer que no se puedan meter nombres que sean espacios en blanco */
-  if (!formData.value.name) {
-    errors.value.push('El nombre es obligatorio.');
+
+  const validatedName = validateBathroomName(formData.value.name);
+
+  if(validatedName){
+    if (filterBadWords(formData.value.name).includes("*")) {
+      errors.value.push('El nombre no puede contener palabras malsonantes.');
+    } else formData.value.name=formData.value.name.toUpperCase();
   }
 
   if(!formData.value.score){
     errors.value.push('Selecciona una puntuacion.')
   }
 
+  // Verifica si no hay errores en el formulario
   if (errors.value.length === 0) {  
 
-  try {
-    const { value } = await Preferences.get({ key: 'userLastLocation' });
+    try {
+      // Obtiene la última ubicación del usuario
+      const { value } = await Preferences.get({ key: 'userLastLocation' }); 
 
-    if (value) {
-      const locationData = JSON.parse(value);
-      formData.value.latitude = locationData.latitude;
-      formData.value.longitude = locationData.longitude;
-    } else {
-      console.warn('No se encontraron datos de ubicación guardados.');
+      if (value) {
+        const locationData = JSON.parse(value);
+        formData.value.latitude = locationData.latitude; 
+        formData.value.longitude = locationData.longitude;
+      } else {
+        console.warn('No se encontraron datos de ubicación guardados.'); 
+      }
+
+      // Realiza una solicitud POST a la API para enviar los datos del formulario
+      const response = await fetch('https://api.flushfinder.es/flush', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData.value)
+      });
+
+      // Verifica si la respuesta de la solicitud fue exitosa
+      if (response.ok) {
+        console.log('¡Datos del formulario enviados con éxito!');
+      } else {
+        console.error('Error al enviar los datos del formulario:', response.statusText);
+      }
+
+    } catch (error) {
+      console.error('Error al obtener los datos de ubicación guardados o al enviar el formulario:', error);
     }
-
-    const response = await fetch('https://api.flushfinder.es/flush', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData.value)
-    });
-
-    if (response.ok) {
-      console.log('¡Datos del formulario enviados con éxito!');
-    } else {
-      console.error('Error al enviar los datos del formulario:', response.statusText);
-    }
-  } catch (error) {
-    console.error('Error al obtener los datos de ubicación guardados o al enviar el formulario:', error);
-  }
-
-
 
     console.log(formData.value);
     console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
 
-
+    console.log("Flush added");
     toggleShowList();
   }
+
 };
 </script>
  

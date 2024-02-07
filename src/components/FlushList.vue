@@ -15,7 +15,7 @@
             <ion-row class="data">
               <p>
                 {{ flush.score }} | {{ condition(flush.score) }} |
-                {{ calcularDistancia(Number(flush.latitude), Number(flush.longitude)) }} km
+                {{ calcularDistancia(Number(flush.latitude), Number(flush.longitude)) }}
               </p>
             </ion-row>
 
@@ -111,8 +111,20 @@ const calcularDistancia = (latitude: number, longitude: number) => {
     longitude
   };
 
-  const distancia = haversineDistance(puntoA, puntoB);
-  return distancia.toFixed(2);
+  let distancia = haversineDistance(puntoA, puntoB);
+  let result = "";
+  
+  //si la distancia es menor a 1 km
+  if(distancia<1){
+    distancia=distancia * 1000;
+    distancia=parseFloat(distancia.toFixed(0));
+    result = distancia + " m";
+  }else{
+    distancia=parseFloat(distancia.toFixed(2));
+    result = distancia + " km"
+  } 
+  
+  return result;
 };
 
 const emit = defineEmits(['setLocation'])
@@ -158,9 +170,10 @@ const condition = (x: number): string => {
   return result;
 };
 
-
 </script>
-  
+
+
+
 <style scoped>
 .card {
   justify-content: flex-start;

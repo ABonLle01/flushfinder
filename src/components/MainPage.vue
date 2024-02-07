@@ -44,7 +44,7 @@ const currentLocation = ref();
 const currentLocationStore = useLocationStore();
 
 const applyFilters = (filtros) => {
-  getFlushList(filtros.handicapped, filtros.changingstation, filtros.free)
+  getFlushList(filtros.handicapped, filtros.changingstation, filtros.free,currentLocation.value.latitude, currentLocation.value.longitude)
     .then((updatedList) => {
       flushList.value = updatedList;
 
@@ -64,22 +64,27 @@ watch(() => filtersStore.filters, () => {
 
 
 onMounted(async () => {
-  let { value }: any = await Preferences.get({ key: 'userLastLocation' });
-  value = JSON.parse(value)
+  try {
+      let { value }: any = await Preferences.get({ key: 'userLastLocation' });
+      value = JSON.parse(value);
 
-  currentLocation.value = {
-    latitude: value ? value.latitude : 36,
-    longitude: value ? value.longitude : -4
+      currentLocation.value = {
+          latitude: value ? value.latitude : 36,
+          longitude: value ? value.longitude : -4
+      };
+
+      const initialList = await getFlushList(false, false, false, currentLocation.value.latitude, currentLocation.value.longitude);
+      /* console.log("InitialList="+initialList) */
+
+      flushList.value = initialList;
+      /* console.log("Flushlist.value="+flushList.value) */
+      /* console.log(flushcounter); */
+      
+      currentLocationStore.setCurrentLocation(currentLocation.value);
+      getCurrentLocation();
+  } catch (error) {
+      console.error(error);
   }
-
-  getFlushList(false, false, false).then((initialList) => {
-    flushList.value = initialList;
-  });
-
-  currentLocationStore.setCurrentLocation(currentLocation.value);
-
-  getCurrentLocation();
-
 });
 
 
