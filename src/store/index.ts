@@ -1,9 +1,6 @@
 import { createStore, createLogger } from 'vuex';
 import { Geolocation } from '@ionic-native/geolocation';
 import { ref } from 'vue';
-
-import { Geolocation } from '@ionic-native/geolocation';
-import { ref } from 'vue';
 import { Coordinates } from '@/interfaces';
 
 const store = createStore({
@@ -63,4 +60,3 @@ export const getCurrentLocation = () => {
     console.error('Error getting location', error);
   });
 };
-
