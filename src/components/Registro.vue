@@ -1,6 +1,6 @@
 <template>
   <div class="register">
-    <form @submit.prevent="submitForm">
+    <form enctype="multipart/form-data" @submit.prevent="submitForm">
 
       <div class="relleno">
         <img src="/favicon.png" alt="logo">
@@ -13,6 +13,11 @@
       <ion-item class="nombre">
         <label for="name" class="lbl">Nombre</label>
         <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
+      </ion-item>
+
+      <ion-item class="imagen">
+        <label for="image">Imagen</label>
+        <input type="file" id="image" name="image" accept="image/*" @change="handleImageChange">
       </ion-item>
 
       <div class="wrapper">
@@ -40,7 +45,7 @@
         <label for="free">Acceso gratuito</label>
         <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
 
-        <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
+        <button class="btn" id="add" type="submit" >Añadir</button>
         <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
 
       </div>
@@ -55,103 +60,173 @@
  
 
 <script setup lang="ts">
-
+ 
 import { Preferences } from '@capacitor/preferences';
 import { IonItem, IonToggle, IonInput  } from '@ionic/vue';
 import { ref } from 'vue';
 import { useStore } from 'vuex';
+import badWords from 'bad-words';
 
-import { FormData } from '../interfaces'
-
+import { FormData as datos } from '@/interfaces'; 
+ 
 const errors = ref<string[]>([]);
-
+ 
 const store = useStore();
-
-const formData = ref<FormData>({
+ 
+const formData = ref<datos>({
   name: '',
-  image: 'https://picsum.photos/100/100',
+  image: null,
   score: '',
   latitude: 1,
   longitude: 1,
   handicapped: false,
   changingstation: false,
-  free: false 
+  free: false
 });
+ 
+//Imagen
+const handleImageChange = (event) => {
+  const fileInput = event.target;
+  const file = fileInput.files[0];
 
+  if (file) {
+    console.log("Imagen seleccionada:", file);
+    formData.value.image = file;
+  }
+};
 
+ 
 const handleToggleChange = (toggleName: keyof FormData | string) => {
   formData.value[toggleName] = !formData.value[toggleName];
 };
-
+ 
 const toggleShowList = () => {
   store.dispatch('toggleShowList');
 };
-
-const addFlush = () => {
-  console.log("Flush added");
-};
-
+ 
 const cancel = () => {
   console.log("cancel");
   toggleShowList();
 };
-
+ 
 const rating = (event: Event) => {
   const selectedRating = (event.target as HTMLInputElement).value;
   formData.value.score = selectedRating;
   console.log("Puntuación seleccionada:", selectedRating);
 }
-
+ 
+ 
+function filterBadWords(name: string): string {
+  const filter = new badWords();
+  return filter.clean(name);
+}
+ 
+function validateBathroomName(name: string): boolean {
+  // Expresión regular que coincide con cadenas que contienen solo letras, números, espacios y ciertos caracteres especiales comunes,
+  // y no permite varios caracteres especiales seguidos
+  const regex = /^[A-Za-záéíóúüÜñÑ]+(?: [A-Za-záéíóúüÜñÑ]+)*$/;
+ 
+  // La función test() de la expresión regular devuelve true si la cadena contiene solo letras,
+  // y false si contiene algún otro tipo de caracter
+ 
+  if (!regex.test(name)) {
+    if (name.trim() === '') {
+      errors.value.push('El nombre no puede estar vacío.');
+    } else {
+      errors.value.push('El nombre debe contener solo letras y un único espacio.');
+    }
+    return false; // Retorna false para indicar que la validación ha fallado
+  }
+ 
+  return regex.test(name);
+}
+ 
  
 const submitForm = async() => {
-  errors.value = [];
-  /* hacer que no se puedan meter nombres que sean espacios en blanco */
-  if (!formData.value.name) {
-    errors.value.push('El nombre es obligatorio.');
-  }
 
+  console.log("SubmitForm()");
+  console.log(formData);
+  errors.value = [];
+ 
+  const validatedName = validateBathroomName(formData.value.name);
+ 
+  if(validatedName){
+    if (filterBadWords(formData.value.name).includes("*")) {
+      errors.value.push('El nombre no puede contener palabras malsonantes.');
+    } else formData.value.name=formData.value.name.toUpperCase();
+  }
+ 
   if(!formData.value.score){
     errors.value.push('Selecciona una puntuacion.')
   }
-
+ 
+  // Verifica si no hay errores en el formulario
   if (errors.value.length === 0) {  
+ 
+    try {
+      // Obtiene la última ubicación del usuario
+      const { value } = await Preferences.get({ key: 'userLastLocation' });
+ 
+      if (value) {
+        const locationData = JSON.parse(value);
+        formData.value.latitude = locationData.latitude;
+        formData.value.longitude = locationData.longitude;
+      } else {
+        console.warn('No se encontraron datos de ubicación guardados.');
+      }
 
-  try {
-    const { value } = await Preferences.get({ key: 'userLastLocation' });
+      
 
-    if (value) {
-      const locationData = JSON.parse(value);
-      formData.value.latitude = locationData.latitude;
-      formData.value.longitude = locationData.longitude;
-    } else {
-      console.warn('No se encontraron datos de ubicación guardados.');
+      const formDataToSend = new FormData();
+        formDataToSend.append('name', formData.value.name);
+        formDataToSend.append('score', formData.value.score);
+        formDataToSend.append('latitude', formData.value.latitude.toString());
+        formDataToSend.append('longitude', formData.value.longitude.toString());
+        formDataToSend.append('handicapped', formData.value.handicapped.toString());
+        formDataToSend.append('changingstation', formData.value.changingstation.toString());
+        formDataToSend.append('free', formData.value.free.toString());
+
+        if (formData.value.image instanceof File) {
+          formDataToSend.append('image', formData.value.image);
+          console.log("imagen cargada: ",formData.value.image)
+        }
+            
+      // Realiza una solicitud POST a la API para enviar los datos del formulario con la imagen
+      const response = await fetch('http://localhost:3000/flush', {
+        method: 'POST',
+        body: formDataToSend
+      });
+      console.log("FormdataToSend: "+formDataToSend)
+ 
+      // Realiza una solicitud POST a la API para enviar los datos del formulario
+      /* const response = await fetch('https://api.flushfinder.es/flush',  */
+/*       const response = await fetch('http://localhost:3000/flush',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData.value)
+      }); */
+ 
+      // Verifica si la respuesta de la solicitud fue exitosa
+      if (response.ok) {
+        console.log('¡Datos del formulario enviados con éxito!');
+      } else {
+        console.error('Error al enviar los datos del formulario:', response.statusText);
+      }
+ 
+    } catch (error) {
+      console.error('Error al obtener los datos de ubicación guardados o al enviar el formulario:', error);
     }
-
-    const response = await fetch('https://api.flushfinder.es/flush', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData.value)
-    });
-
-    if (response.ok) {
-      console.log('¡Datos del formulario enviados con éxito!');
-    } else {
-      console.error('Error al enviar los datos del formulario:', response.statusText);
-    }
-  } catch (error) {
-    console.error('Error al obtener los datos de ubicación guardados o al enviar el formulario:', error);
-  }
-
-
-
+ 
     console.log(formData.value);
     console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
-
-
+ 
+    console.log("Flush added");
     toggleShowList();
   }
+ 
 };
 </script>
  

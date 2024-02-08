@@ -11,7 +11,7 @@ interface Coordinates{
 
 interface FormData {
     name: string;
-    image: string;
+    image: File | null;
     score: string;
     latitude: number;
     longitude: number;
@@ -25,8 +25,8 @@ interface MapInstance {
     getLayer(name: string): any;
 }
 
-export type {
-    Filters, Coordinates, FormData, MapInstance
+export type{
+    Filters, Coordinates, MapInstance, FormData
 }
 
 
