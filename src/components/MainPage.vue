@@ -45,15 +45,15 @@ const currentLocationStore = useLocationStore();
 
 const applyFilters = (filtros) => {
   getFlushList(filtros.handicapped, filtros.changingstation, filtros.free,currentLocation.value.latitude, currentLocation.value.longitude)
-    .then((updatedList) => {
-      flushList.value = updatedList;
+  .then((updatedList) => {
+    flushList.value = updatedList;
 
-      store.state.flushcounter=flushList.value.length;
-      console.log("Store state: "+ store.state.flushcounter + " (MainPage)")
-    })
-    .catch((error) => {
-      console.error('Error applying filters:', error);
-    });
+    store.state.flushcounter=flushList.value.length;
+    console.log("Store state: "+ store.state.flushcounter + " (MainPage)")
+  })
+  .catch((error) => {
+    console.error('Error applying filters:', error);
+  });
 };
 
 
@@ -65,23 +65,21 @@ watch(() => filtersStore.filters, () => {
 
 onMounted(async () => {
   try {
-      let { value }: any = await Preferences.get({ key: 'userLastLocation' });
-      value = JSON.parse(value);
+    let { value }: any = await Preferences.get({ key: 'userLastLocation' });
+    value = JSON.parse(value);
 
-      currentLocation.value = {
-          latitude: value ? value.latitude : 36,
-          longitude: value ? value.longitude : -4
-      };
+    currentLocation.value = {
+        latitude: value ? value.latitude : 36,
+        longitude: value ? value.longitude : -4
+    };
 
-      const initialList = await getFlushList(false, false, false, currentLocation.value.latitude, currentLocation.value.longitude);
-      /* console.log("InitialList="+initialList) */
+    const initialList = await getFlushList(false, false, false, currentLocation.value.latitude, currentLocation.value.longitude);
 
-      flushList.value = initialList;
-      /* console.log("Flushlist.value="+flushList.value) */
-      /* console.log(flushcounter); */
-      
-      currentLocationStore.setCurrentLocation(currentLocation.value);
-      getCurrentLocation();
+    flushList.value = initialList;
+    
+    currentLocationStore.setCurrentLocation(currentLocation.value);
+    getCurrentLocation();
+
   } catch (error) {
       console.error(error);
   }
@@ -137,7 +135,6 @@ const setLocation = ({ latitude, longitude }) => {
   left: 0;
   right: 0;
   width: 100%;
-  /* height: 100%; */
 }
 
 

@@ -84,9 +84,7 @@ const props = defineProps({
 })
 
 const getCompleteImageUrl = (imageName: string) => {
-  // Construye la URL completa de la imagen
-/*   return `${process.env.VUE_APP_API_URL}/uploads/${imageName}`; */
-console.log(imageName)
+/*return `${process.env.VUE_APP_API_URL}/uploads/${imageName}`; */
   return `http://localhost:3000/uploads/${imageName}`;
 };
 
@@ -197,7 +195,6 @@ const condition = (x: number): string => {
   border-radius: 15px;
   
   height: 9rem;
-
 }
 
 .bath {
@@ -247,7 +244,6 @@ const condition = (x: number): string => {
 }
 
 .data {
-/*   margin: 10px; */
   display: flex;
   flex-direction: row;
   gap: 15px;
@@ -264,7 +260,6 @@ const condition = (x: number): string => {
 .infoCol{
   display: flex;
   justify-content: center;
-  /* align-items: center; */
 }
 
 .score{

@@ -115,7 +115,6 @@ const rating = (event: Event) => {
   console.log("Puntuación seleccionada:", selectedRating);
 }
 
-
 function filterBadWords(name: string): string {
   const filter = new badWords();
   return filter.clean(name);
