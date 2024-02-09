@@ -5,7 +5,9 @@
       <ion-row>
         <ion-col size="4" class="col">
           <div class="bath">
-            <img alt="BathLogo" v-bind:src="flush.image" />
+<!--             <img alt="BathLogo" v-bind:src="flush.image" /> -->
+          <img alt="BathLogo" :src="getCompleteImageUrl(flush.image)" />
+
           </div>
         </ion-col>
 
@@ -73,6 +75,13 @@ const props = defineProps({
     type: Object
   }
 })
+
+const getCompleteImageUrl = (imageName: string) => {
+  // Construye la URL completa de la imagen
+/*   return `${process.env.VUE_APP_API_URL}/uploads/${imageName}`; */
+console.log(imageName)
+  return `http://localhost:3000/uploads/${imageName}`;
+};
 
 const currentLocation = ref({ 
   latitude: props.initialLocation.latitude ? props.initialLocation.latitude : 0, 
