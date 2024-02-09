@@ -7,6 +7,7 @@ const store = createStore({
   state: {
     showList: true,
     flushcounter: 0,
+    selectedFlushName: null,
   },
   mutations: {
     setShowList(state, newValue) {
@@ -14,6 +15,9 @@ const store = createStore({
     },
     setFlushcounter(state, value) {
       state.flushcounter = value;
+    },
+    setSelectedFlushName(state, name) { 
+      state.selectedFlushName = name;
     },
   },
   actions: {

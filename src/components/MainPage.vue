@@ -128,6 +128,7 @@ const setLocation = ({ latitude, longitude }) => {
 .list {
   height: 100%;
   overflow-y: auto;
+  position: sticky;
 }
 
 .container {
@@ -146,17 +147,17 @@ const setLocation = ({ latitude, longitude }) => {
   .container {
     display: -webkit-box;
     flex-direction: row;
+    height: 100%;
   }
 
   .map {
-    width: 44vw;
-    height: 900px;
+    width: 50vw;
+    height: 100%;
     position: sticky;
   }
 
   .list {
-    width: 56vw;
-    height: 100vw;
+    width: 50vw;
   }
 
   .form {

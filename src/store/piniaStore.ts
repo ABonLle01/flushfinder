@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 import { Ref, ref } from "vue"
 import { Filters } from "@/interfaces"
+import ToastPlugin from "vue-toast-notification"
 
 
 export const useFilterStore = defineStore('filters', () => {
@@ -25,5 +26,27 @@ export const useLocationStore = defineStore('location', {
       setCurrentLocation(location) {
         this.currentLocation = location;
       },
+    },
+  });
+
+  export const useToastStore = defineStore('toast', {
+    state() {
+      return {
+        errors: [] as string[],
+      };
+    },
+    actions: {
+      showToast(message: string) {
+        this.errors.push(message);
+      },
+      addError(error: string) {
+        this.errors.push(error);
+      },
+      clearErrors() {
+        this.errors = [];
+      },
+      hasErrors() {
+        return this.errors.length > 0;
+      }
     },
   });

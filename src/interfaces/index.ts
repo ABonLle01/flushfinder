@@ -11,7 +11,7 @@ interface Coordinates{
 
 interface FormData {
     name: string;
-    image: string;
+    image: File | null;
     score: string;
     latitude: number;
     longitude: number;
@@ -20,9 +20,13 @@ interface FormData {
     free: boolean;
   }
 
+interface MapInstance {
+    getMarkerById(id: any): any;
+    getLayer(name: string): any;
+}
 
 export type {
-    Filters, Coordinates, FormData
+    Filters, Coordinates, FormData, MapInstance
 }
 
 

@@ -22,6 +22,9 @@
 > | npm i --save-dev @types/bad-words
 > - Diccionario de palabras malsonantes ;p
 
+>npm install vue-toast-notification --save
+> | npm install vue-toast-notification@^3
+> - Libreria toast
 ### Recursos
 > APIs
 > + Geolocation API
