@@ -1,158 +1,165 @@
 <template>
   <ion-page>
-    <ion-content>
-      <div :id="mapId"></div>
+    <ion-content :fullscreen="true">
+      <div class="container">
+        <div class="map">
+          <MapViewer v-if="currentLocation" :latitude="currentLocation.latitude" :longitude="currentLocation.longitude" />
+        </div>
+ 
+        <div class="list" v-if="showList">
+          <FlushList v-if="currentLocation" :flushList="flushList" :initialLocation="currentLocation" @setLocation="setLocation" />
+        </div>
+ 
+        <router-view class="form"></router-view>
+      </div>
     </ion-content>
   </ion-page>
 </template>
-   
+ 
+ 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import { IonPage, IonContent } from '@ionic/vue';
+import { IonContent, IonPage } from '@ionic/vue';
+import FlushList from '@/components/FlushList.vue';
+import MapViewer from '@/components/MapViewer.vue';
+ 
+import { getFlushList } from '@/services';
+import { onMounted, ref, watch } from 'vue';
+import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
+import { useStore } from 'vuex';
+ 
+import { getCurrentLocation } from '@/store';
+import { useLocationStore, useFilterStore } from '@/store/piniaStore';
 import { Preferences } from '@capacitor/preferences';
-
-const map = ref(null);
-const userMarker = ref(null);
-
-const isInitialPosSet = ref(false)
-
-const props = withDefaults(defineProps<{
-  latitude: number;
-  longitude: number;
-  mapId?: string;
-}>(), {
-  latitude: 0,
-  longitude: 0,
-  mapId: 'map',
-});
-
-import currentMarkerIcon from '../images/marklocation.png';
-import markerIcon from '../images/mapMarker.png';
-
-
-const initializeMap = async () => {
+ 
+let flushcounter = ref(0);
+ 
+const filtersStore = useFilterStore();
+ 
+const store = useStore();
+const showList = ref(store.state.showList);
+ 
+const router = useRouter();
+const flushList = ref([]);
+const currentLocation = ref();
+const currentLocationStore = useLocationStore();
+ 
+const applyFilters = (filtros) => {
+  getFlushList(filtros.handicapped, filtros.changingstation, filtros.free)
+    .then((updatedList) => {
+      flushList.value = updatedList;
+    })
+    .catch((error) => {
+      console.error('Error applying filters:', error);
+    });
+};
+ 
+ 
+watch(() => filtersStore.filters, () => {
+    applyFilters(filtersStore.filters)
+  }, { deep: true }
+)
+ 
+ 
+onMounted(async () => {
   try {
-    const response = await fetch('https://api.flushfinder.es/flush');
-    const flushList = await response.json();
-
-    const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
-    map.value = L.map(props.mapId).setView(initialCoordinates, 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map.value);
-
-    const customIcon = L.icon({
-      iconUrl: currentMarkerIcon,
-      iconSize: [32, 51],
-      iconAnchor: [16, 51],
-      popupAnchor: [0, -32],
-    });
-    const mapMarker = L.icon({
-      iconUrl: markerIcon,
-      iconSize: [32, 51],
-      iconAnchor: [16, 46],
-      popupAnchor: [0, -32],
-    });
-
-    flushList.forEach((flush) => {
-      const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
-      // Asegúrate de que map.value esté definido antes de agregar el marcador
-      if (map.value) {
-        const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value);
-        marker.bindPopup(
-        `<h3>${flush.name}</h3>
-        <p>Puntuacion: ${flush.score}</p>
-        <p>Estado: ${flush.condition}</p>
-         `
-      );
-      }
-    });
-
-    map.value.on('moveend', () => {
-      map.value.closePopup();
-    });
-
-    console.log('Map initialized with custom markers');
+      let { value }: any = await Preferences.get({ key: 'userLastLocation' });
+      value = JSON.parse(value);
+ 
+      currentLocation.value = {
+          latitude: value ? value.latitude : 0,
+          longitude: value ? value.longitude : 0
+      };
+ 
+      const initialList = await getFlushList(false, false, false);
+      console.log("InitialList="+initialList)
+ 
+      flushList.value = initialList;
+      console.log("Flushlist.value="+flushList.value)
+      currentLocationStore.setCurrentLocation(currentLocation.value);
+      getCurrentLocation();
   } catch (error) {
-    console.error('Error fetching flush list:', error);
+      console.error(error);
   }
-};
-
-const watchUserLocation = () => {
-  const watchOptions = {
-    enableHighAccuracy: true,
-    maximumAge: 30000,
-    timeout: 27000,
-  };
-
-  const onLocationUpdate = (position) => {
-    const { latitude, longitude } = position.coords;
-
-    // Verifica si userMarker.value está definido antes de actualizar su posición
-    if (userMarker.value) {
-      userMarker.value.setLatLng([latitude, longitude]);
-
-      // Centra el mapa en la nueva ubicación del usuario
-      if (!isInitialPosSet.value) {
-        Preferences.set({
-          key: 'userLastLocation', value: JSON.stringify({
-            latitude,
-            longitude
-          })
-        });
-        map.value.setView([latitude, longitude], map.value.getZoom());
-        isInitialPosSet.value = true
-      }
-    }
-  };
-
-  const onError = (error) => {
-    console.error('Error getting location:', error);
-  };
-  // Inicia el seguimiento de la ubicación del usuario
-  navigator.geolocation.watchPosition(onLocationUpdate, onError, watchOptions);
-};
-
+});
+ 
+ 
 onMounted(() => {
-  initializeMap();
-
-  // Agrega el marcador del usuario después de inicializar el mapa
-  const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
-  const userMarkerIcon = L.icon({
-    iconUrl: currentMarkerIcon,
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
-    popupAnchor: [0, -32],
+  store.watch(() => store.state.showList, (newValue) => {
+    showList.value = newValue;
+    actualizarRuta();
   });
-
-  // Asegúrate de que map.value esté definido antes de agregar el marcador del usuario
-  if (map.value) {
-    userMarker.value = L.marker(initialCoordinates, { icon: userMarkerIcon }).addTo(map.value);
-  } else {
-    // Si map.value no está definido, intenta agregar el marcador después de que se inicialice el mapa
-    const unwatch = watch(() => map.value, (newValue) => {
-      if (newValue) {
-        userMarker.value = L.marker(initialCoordinates, { icon: userMarkerIcon }).addTo(newValue);
-        unwatch();
-      }
-    });
+});
+ 
+ 
+const actualizarRuta = () => {
+  const currentRoute: RouteLocationNormalizedLoaded | undefined = router.currentRoute.value;
+ 
+  if (currentRoute) {
+    const folderId = currentRoute.params.id ? `/${currentRoute.params.id}` : '/';
+    const newPath = showList.value ? folderId : '/registro';
+    router.push({ path: newPath });
   }
-
-  // Inicia el seguimiento de la ubicación del usuario
-  watchUserLocation();
-});
-
-watch(props, () => {
-  const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
-  map.value.setView(initialCoordinates, 17);
-});
-</script>
-
-
-   
-<style scoped>
-#map {
-  width: 100%;
-  height: 100%;
+};
+ 
+const setLocation = ({ latitude, longitude }) => {
+  console.log({ latitude, longitude })
+  currentLocation.value = { latitude, longitude };
+  console.log(flushcounter);
 }
+ 
+</script>
+ 
+ 
+ 
+ 
+<style scoped>
+.map {
+  height: 40vh;
+  position: sticky;
+  top: 0;
+  z-index: 9;
+}
+ 
+.list {
+  height: 100%;
+  overflow-y: auto;
+}
+ 
+.container {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  /* height: 100%; */
+}
+ 
+ 
+ 
+@media screen and (min-width: 1100px) {
+ 
+  .container {
+    display: -webkit-box;
+    flex-direction: row;
+  }
+ 
+  .map {
+    width: 44vw;
+    height: 900px;
+    position: sticky;
+  }
+ 
+  .list {
+    width: 56vw;
+    height: 100vw;
+  }
+ 
+  .form {
+    position: sticky
+  }
+ 
+}
+ 
+ 
 </style>
+ 

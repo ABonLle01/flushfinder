@@ -1,83 +1,88 @@
 <template>
-  <div class="register">
-    <form @submit.prevent="submitForm">
-
-      <div class="relleno">
-        <img src="/favicon.png" alt="logo">
-        <div class="text">
-          <h1>AÑADE UN NUEVO FLUSH</h1>
-          <p>Colabora con la comunidad</p>
-        </div>      
-      </div>
-
-      <ion-item class="nombre">
-        <label for="name" class="lbl">Nombre</label>
-        <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
-      </ion-item>
-
-      <div class="wrapper">
-
-        <label for="status">Estado del baño</label>
-        <div class="rating">
-          <input value="5" name="rate" id="star5" type="radio" @click="rating">
-          <label title="text" for="star5"></label>
-          <input value="4" name="rate" id="star4" type="radio" @click="rating">
-          <label title="text" for="star4"></label>
-          <input value="3" name="rate" id="star3" type="radio" @click="rating">
-          <label title="text" for="star3"></label>
-          <input value="2" name="rate" id="star2" type="radio" @click="rating">
-          <label title="text" for="star2"></label>
-          <input value="1" name="rate" id="star1" type="radio" @click="rating">
-          <label title="text" for="star1"></label>
-        </div>
-        
-        <label for="handicapped">Discapacitados</label>
-        <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
-
-        <label for="changingstation">Sala de lactancia</label>
-        <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
-
-        <label for="free">Acceso gratuito</label>
-        <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
-
-        <button class="btn" id="add" type="submit" @click="addFlush()">Añadir</button>
-        <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
-
-      </div>
-
-      <p v-if="errors.length">
-        <p v-for="error in errors" :key="error">{{ error }}</p>
-      </p>
-
-    </form>
+  <div id="map-container">
+    <!-- Contenido del mapa aquí -->
   </div>
+
+  <form @submit.prevent="submitForm" id="register-form" :class="{ 'register': true, 'form': true }">
+
+    <div class="relleno">
+      <img src="/favicon.png" alt="logo">
+      <div class="text">
+        <h1>AÑADE UN NUEVO FLUSH</h1>
+        <p>Colabora con la comunidad</p>
+      </div>      
+    </div>
+
+    <ion-item class="nombre">
+      <label for="name" class="lbl">Nombre</label>
+      <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
+    </ion-item>
+
+    <input type="hidden" name="latitude" v-model="formData.latitude"> <!-- Campo oculto para almacenar la latitud del marcador -->
+    <input type="hidden" name="longitude" v-model="formData.longitude"> <!-- Campo oculto para almacenar la longitud del marcador -->
+
+    <div class="wrapper">
+
+      <label for="status">Estado del baño</label>
+      <div class="rating">
+        <input value="5" name="rate" id="star5" type="radio" @click="rating">
+        <label title="text" for="star5"></label>
+        <input value="4" name="rate" id="star4" type="radio" @click="rating">
+        <label title="text" for="star4"></label>
+        <input value="3" name="rate" id="star3" type="radio" @click="rating">
+        <label title="text" for="star3"></label>
+        <input value="2" name="rate" id="star2" type="radio" @click="rating">
+        <label title="text" for="star2"></label>
+        <input value="1" name="rate" id="star1" type="radio" @click="rating">
+        <label title="text" for="star1"></label>
+      </div>
+      
+      <label for="handicapped">Discapacitados</label>
+      <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
+
+      <label for="changingstation">Sala de lactancia</label>
+      <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
+
+      <label for="free">Acceso gratuito</label>
+      <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
+
+      <button class="btn" id="add" type="submit">Añadir</button>
+      <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
+
+    </div>
+
+    <p v-if="errors.length">
+      <p v-for="error in errors" :key="error">{{ error }}</p>
+    </p>
+
+  </form>
 </template>
- 
+
+
 
 <script setup lang="ts">
-
 import { Preferences } from '@capacitor/preferences';
-import { IonItem, IonToggle, IonInput  } from '@ionic/vue';
-import { ref } from 'vue';
+import { IonItem, IonToggle, IonInput } from '@ionic/vue';
+import { onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
+import L from 'leaflet';
+import { FormData } from '../interfaces';
+import markerIcon from '../images/mapMarker.png';
 
-import { FormData } from '../interfaces'
+const map = ref<L.Map | null>(null);
 
 const errors = ref<string[]>([]);
-
 const store = useStore();
-
 const formData = ref<FormData>({
   name: '',
   image: 'https://picsum.photos/100/100',
   score: '',
-  latitude: 1,
-  longitude: 1,
+  latitude: 0,
+  longitude: 0,
   handicapped: false,
   changingstation: false,
-  free: false 
+  free: false,
 });
-
 
 const handleToggleChange = (toggleName: keyof FormData | string) => {
   formData.value[toggleName] = !formData.value[toggleName];
@@ -100,61 +105,100 @@ const rating = (event: Event) => {
   const selectedRating = (event.target as HTMLInputElement).value;
   formData.value.score = selectedRating;
   console.log("Puntuación seleccionada:", selectedRating);
-}
+};
 
- 
-const submitForm = async() => {
+const updateMarkerCoordinates =  ( lat: number, lng: number )  => {
+  formData.value.latitude = lat;
+  formData.value.longitude = lng;
+};
+
+const onMapClick = (event: CustomEvent<{ lat: number; lng: number; }>) => {
+  // Importar el icono del marcador aquí para que esté disponible
+  
+  const mapMarker = L.icon({
+    iconUrl: markerIcon,
+    iconSize: [32, 51],
+    iconAnchor: [16, 51],
+    popupAnchor: [0, -32],
+  });
+
+  // Actualizar las coordenadas del marcador en el formulario
+  updateMarkerCoordinates(event.detail.lat, event.detail.lng);
+  // Agregar un marcador al mapa en la posición clicada
+  addMarker(event.detail.lat, event.detail.lng, mapMarker);
+};
+
+const addMarker = (lat: number, lng: number, icon: L.Icon) => {
+  if (map.value) {
+    // Crear un nuevo marcador en las coordenadas dadas con el icono especificado
+    const marker = L.marker([lat, lng], { icon }).addTo(map.value as L.Map);
+    // Guardar las coordenadas del marcador en el formulario junto con otros datos
+    formData.value.latitude = lat;
+    formData.value.longitude = lng;
+  }
+};
+
+onMounted(() => {
+  const mapContainer = document.getElementById('map-container') as HTMLElement;
+  console.log("HAy map container?"+mapContainer)
+  if (mapContainer) {
+    mapContainer.addEventListener('map-click', onMapClick);
+
+    // Considera agregar una limpieza de evento en el evento unmounted() para evitar posibles fugas de memoria
+    // mapContainer.removeEventListener('map-click', onMapClick);
+  } else {
+    console.error('El elemento con ID "map-container" no se encontró en el DOM.');
+  }
+});
+
+const submitForm = async () => {
   errors.value = [];
-  /* hacer que no se puedan meter nombres que sean espacios en blanco */
-  if (!formData.value.name) {
+  /* Make sure name cannot be empty */
+  if (!formData.value.name) { 
     errors.value.push('El nombre es obligatorio.');
   }
 
-  if(!formData.value.score){
-    errors.value.push('Selecciona una puntuacion.')
+  if (!formData.value.score) {
+    errors.value.push('Selecciona una puntuación.');
   }
 
-  if (errors.value.length === 0) {  
+  if (errors.value.length === 0) {
+    try {
+      const { value } = await Preferences.get({ key: 'userLastLocation' });
 
-  try {
-    const { value } = await Preferences.get({ key: 'userLastLocation' });
+      if (value) {
+        const locationData = JSON.parse(value);
+        formData.value.latitude = locationData.latitude;
+        formData.value.longitude = locationData.longitude;
+      } else {
+        console.warn('No se encontraron datos de ubicación guardados.');
+      }
 
-    if (value) {
-      const locationData = JSON.parse(value);
-      formData.value.latitude = locationData.latitude;
-      formData.value.longitude = locationData.longitude;
-    } else {
-      console.warn('No se encontraron datos de ubicación guardados.');
+      const response = await fetch('https://api.flushfinder.es/flush', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData.value),
+      });
+
+      if (response.ok) {
+        console.log('¡Datos del formulario enviados con éxito!');
+      } else {
+        console.error('Error al enviar los datos del formulario:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos de ubicación guardados o al enviar el formulario:', error);
     }
-
-    const response = await fetch('https://api.flushfinder.es/flush', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData.value)
-    });
-
-    if (response.ok) {
-      console.log('¡Datos del formulario enviados con éxito!');
-    } else {
-      console.error('Error al enviar los datos del formulario:', response.statusText);
-    }
-  } catch (error) {
-    console.error('Error al obtener los datos de ubicación guardados o al enviar el formulario:', error);
-  }
-
-
 
     console.log(formData.value);
-    console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
-
+    console.log('Formulario válido, datos:', JSON.stringify(formData.value));
 
     toggleShowList();
   }
 };
 </script>
- 
+
 
 <style scoped>
 form {
@@ -226,16 +270,6 @@ form {
     margin-left: 30px;
   }
 
-  .text{
-    display: flex;
-    flex-direction: column;
-    margin: 20px;
-  }
-
-  .text p{
-    font-weight: bolder;
-  }
- 
 }
 
 
