@@ -65,7 +65,7 @@
 
 import { Preferences } from '@capacitor/preferences';
 import { IonItem, IonToggle, IonInput  } from '@ionic/vue';
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useStore } from 'vuex';
 
 import badWords from 'bad-words';
@@ -186,6 +186,7 @@ const submitForm = async() => {
         formDataToSend.append('handicapped', formData.value.handicapped.toString());
         formDataToSend.append('changingstation', formData.value.changingstation.toString());
         formDataToSend.append('free', formData.value.free.toString());
+        
         if (formData.value.image instanceof File) {
           formDataToSend.append('image', formData.value.image);
           console.log("imagen cargada: ",formData.value.image)
