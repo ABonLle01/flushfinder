@@ -1,14 +1,14 @@
 <template>
   <div class="register">
-    <form enctype="multipart/form-data" @submit.prevent="submitForm" id="register-form" :class="{ 'register': true, 'form': true }>
+    <form enctype="multipart/form-data" @submit.prevent="submitForm" id="register-form" :class="{ 'register': true, 'form': true }">
 
-    <div class="relleno">
-      <img src="/favicon.png" alt="logo">
-      <div class="text">
-        <h1>AÑADE UN NUEVO FLUSH</h1>
-        <p>Colabora con la comunidad</p>
-      </div>      
-    </div>
+      <div class="relleno">
+        <img src="/favicon.png" alt="logo">
+        <div class="text">
+          <h1>AÑADE UN NUEVO FLUSH</h1>
+          <p>Colabora con la comunidad</p>
+        </div>      
+      </div>
 
       <div class="contenedor">
         <ion-item class="nombre">
@@ -52,16 +52,15 @@
       <button class="btn" id="add" type="submit">Añadir</button>
       <button class="btn" id="cancel" type="button" @click="toggleShowList();">Cancelar</button>
 
-    </div>
+      </div>
 
-    <p v-if="errors.length">
-      <p v-for="error in errors" :key="error">{{ error }}</p>
-    </p>
+      <p v-if="errors.length">
+        <p v-for="error in errors" :key="error">{{ error }}</p>
+      </p>
 
-  </form>
+    </form>
+  </div>
 </template>
-
-
 
 <script setup lang="ts">
 
@@ -71,12 +70,14 @@ import { useStore } from 'vuex';
 import L from 'leaflet';
 import { FormData as datos } from '../interfaces'; 
 import { locationService } from '@/services/DataService';
+import badWords from 'bad-words';
+import { Preferences } from '@capacitor/preferences';
 
 // Declaración de variables reactivas y funciones
 const map = ref<L.Map | null>(null); // Referencia al mapa Leaflet
 const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
 const store = useStore(); // Acceso al store Vuex
-import badWords from 'bad-words';
+
 
 const formData = ref<datos>({
   name: '',
@@ -180,16 +181,6 @@ const submitForm = async() => {
 
     try {
       // Obtiene la última ubicación del usuario
-      const { value } = await Preferences.get({ key: 'userLastLocation' }); 
-
-      if (value) {
-        const locationData = JSON.parse(value);
-        formData.value.latitude = locationData.latitude; 
-        formData.value.longitude = locationData.longitude;
-      } else {
-        console.warn('No se encontraron datos de ubicación guardados.'); 
-      }
-
       const formDataToSend = new FormData();
         formDataToSend.append('name', formData.value.name);
         formDataToSend.append('score', formData.value.score);

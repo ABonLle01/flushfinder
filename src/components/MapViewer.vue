@@ -14,15 +14,10 @@ import { Preferences } from '@capacitor/preferences';
 import currentMarkerIcon from '../images/marklocation.png';
 import markerIcon from '../images/mapMarker.png';
 import { useStore } from 'vuex';
+import { locationService } from "../services/DataService";
 
 const store = useStore();
 const selectedFlushName = computed(() => store.state.selectedFlushName);
-
-import currentMarkerIcon from '../images/marklocation.png';
-import markerIcon from '../images/mapMarker.png';
-
-import { locationService } from "../services/DataService";
-
 const map = ref<L.Map | null>(null);
 const userMarker = ref<L.Marker | null>(null);
 const isInitialPosSet = ref(false);
@@ -53,11 +48,10 @@ const initializeMap = async () => {
       popupAnchor: [0, -32],
     });
 
-    watchEffect(() => {
       flushList.forEach((flush) => {
         const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
         if (map.value) {
-          const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value);
+          const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value as L.Map);
             
           marker.bindPopup(
             `
@@ -78,13 +72,13 @@ const initializeMap = async () => {
           flush.isSelected = flush.name === selectedFlushName.value;
 
         }
-      })
-    flushList.forEach((flush) => {
+      });
+/*     flushList.forEach((flush) => {
       const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
       if (map.value) {
         L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value as L.Map);
       }
-    });
+    }); */
 
     map.value.on('moveend', () => {
       map.value.closePopup();
