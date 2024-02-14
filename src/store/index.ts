@@ -2,6 +2,7 @@ import { createStore, createLogger } from 'vuex';
 import { Geolocation } from '@ionic-native/geolocation';
 import { ref } from 'vue';
 import { Coordinates } from '@/interfaces';
+import { map } from 'leaflet';
 
 const store = createStore({
   state: {
@@ -60,3 +61,15 @@ export const getCurrentLocation = () => {
     console.error('Error getting location', error);
   });
 };
+
+
+
+
+export const getClickedCoord = (map) =>{
+  map.value?.on('click', (event: L.LeafletMouseEvent) => {
+    const clickedLat = event.latlng.lat;
+    const clickedLong = event.latlng.lng;
+  
+  
+  });
+}

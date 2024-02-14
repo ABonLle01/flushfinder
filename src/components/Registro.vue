@@ -47,7 +47,7 @@
       <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
 
       <button class="btn" id="add" type="submit">Añadir</button>
-      <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
+      <button class="btn" id="cancel" type="button" @click="toggleShowList();">Cancelar</button>
 
     </div>
 
@@ -61,19 +61,20 @@
 
 
 <script setup lang="ts">
-import { Preferences } from '@capacitor/preferences';
-import { IonItem, IonToggle, IonInput } from '@ionic/vue';
-import { onMounted, ref } from 'vue';
-import { useStore } from 'vuex';
-import L from 'leaflet';
-import { FormData } from '../interfaces';
-import markerIcon from '../images/mapMarker.png';
+// Importación de módulos y componentes necesarios
+import { IonItem, IonToggle, IonInput } from '@ionic/vue'; // Importa componentes de Ionic
+import { ref } from 'vue'; // Importa funciones necesarias de Vue
+import { useStore } from 'vuex'; // Importa la función useStore de Vuex para acceder al store
+import L from 'leaflet'; // Importa Leaflet para trabajar con mapas interactivos
+import { FormData } from '../interfaces'; // Importa la interfaz FormData
+import { locationService } from '@/services/DataService';
 
-const map = ref<L.Map | null>(null);
+// Declaración de variables reactivas y funciones
+const map = ref<L.Map | null>(null); // Referencia al mapa Leaflet
+const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
+const store = useStore(); // Acceso al store Vuex
 
-const errors = ref<string[]>([]);
-const store = useStore();
-const formData = ref<FormData>({
+const formData = ref<FormData>({ // Objeto reativo para almacenar los datos del formulario
   name: '',
   image: 'https://picsum.photos/100/100',
   score: '',
@@ -84,104 +85,66 @@ const formData = ref<FormData>({
   free: false,
 });
 
+// Función para manejar el cambio de estado de los toggles del formulario
 const handleToggleChange = (toggleName: keyof FormData | string) => {
   formData.value[toggleName] = !formData.value[toggleName];
 };
 
+// Función para alternar la visualización de la lista de baños
 const toggleShowList = () => {
   store.dispatch('toggleShowList');
 };
 
-const addFlush = () => {
-  console.log("Flush added");
-};
 
-const cancel = () => {
-  console.log("cancel");
-  toggleShowList();
-};
-
+// Función para manejar el evento de selección de puntuación
 const rating = (event: Event) => {
   const selectedRating = (event.target as HTMLInputElement).value;
   formData.value.score = selectedRating;
   console.log("Puntuación seleccionada:", selectedRating);
 };
 
-const updateMarkerCoordinates =  ( lat: number, lng: number )  => {
-  formData.value.latitude = lat;
-  formData.value.longitude = lng;
-};
 
-const onMapClick = (event: CustomEvent<{ lat: number; lng: number; }>) => {
-  // Importar el icono del marcador aquí para que esté disponible
-  
-  const mapMarker = L.icon({
-    iconUrl: markerIcon,
-    iconSize: [32, 51],
-    iconAnchor: [16, 51],
-    popupAnchor: [0, -32],
-  });
-
-  // Actualizar las coordenadas del marcador en el formulario
-  updateMarkerCoordinates(event.detail.lat, event.detail.lng);
-  // Agregar un marcador al mapa en la posición clicada
-  addMarker(event.detail.lat, event.detail.lng, mapMarker);
-};
-
-const addMarker = (lat: number, lng: number, icon: L.Icon) => {
-  if (map.value) {
-    // Crear un nuevo marcador en las coordenadas dadas con el icono especificado
-    const marker = L.marker([lat, lng], { icon }).addTo(map.value as L.Map);
-    // Guardar las coordenadas del marcador en el formulario junto con otros datos
-    formData.value.latitude = lat;
-    formData.value.longitude = lng;
-  }
-};
-
-onMounted(() => {
-  const mapContainer = document.getElementById('map-container') as HTMLElement;
-  console.log("HAy map container?"+mapContainer)
-  if (mapContainer) {
-    mapContainer.addEventListener('map-click', onMapClick);
-
-    // Considera agregar una limpieza de evento en el evento unmounted() para evitar posibles fugas de memoria
-    // mapContainer.removeEventListener('map-click', onMapClick);
-  } else {
-    console.error('El elemento con ID "map-container" no se encontró en el DOM.');
-  }
-});
-
-const submitForm = async () => {
+// Función para enviar el formulario
+const submitForm = async() => {
   errors.value = [];
-  /* Make sure name cannot be empty */
-  if (!formData.value.name) { 
+  
+  // Validación del formulario
+  if (!formData.value.name) {
     errors.value.push('El nombre es obligatorio.');
   }
 
-  if (!formData.value.score) {
-    errors.value.push('Selecciona una puntuación.');
+  if(!formData.value.score){
+    errors.value.push('Selecciona una puntuacion.')
   }
 
-  if (errors.value.length === 0) {
+  const savedLatitude = locationService.state.latitude.value
+  const savedLongitude = locationService.state.longitude.value
+
+  // Comprobar si las coordenadas se guardaron correctamente
+  if (savedLatitude!=null && savedLongitude!=null) {
+    // Asignar las coordenadas al formulario
+    formData.value.latitude = savedLatitude;
+    formData.value.longitude = savedLongitude;
+
+  } else {
+    // Si las coordenadas son 0,0, muestra un error y no envía el formulario
+    errors.value.push('Por favor, haz clic en el mapa para seleccionar la ubicación del baño.');
+    return;
+  }
+
+  // Si no hay errores en el formulario
+  if (errors.value.length === 0) {  
     try {
-      const { value } = await Preferences.get({ key: 'userLastLocation' });
-
-      if (value) {
-        const locationData = JSON.parse(value);
-        formData.value.latitude = locationData.latitude;
-        formData.value.longitude = locationData.longitude;
-      } else {
-        console.warn('No se encontraron datos de ubicación guardados.');
-      }
-
+      // Envía los datos del formulario a la API
       const response = await fetch('https://api.flushfinder.es/flush', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData.value),
+        body: JSON.stringify(formData.value)
       });
 
+      // Si la petición fue exitosa, muestra un mensaje de éxito en la consola
       if (response.ok) {
         console.log('¡Datos del formulario enviados con éxito!');
       } else {
@@ -192,11 +155,17 @@ const submitForm = async () => {
     }
 
     console.log(formData.value);
-    console.log('Formulario válido, datos:', JSON.stringify(formData.value));
+    console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
 
+    locationService.state.latitude.value=null;
+    locationService.state.longitude.value=null;
+
+    // Oculta la lista de baños
     toggleShowList();
   }
 };
+
+
 </script>
 
 

@@ -12,6 +12,11 @@ import L from 'leaflet';
 import { IonPage, IonContent } from '@ionic/vue';
 import { Preferences } from '@capacitor/preferences';
 
+import currentMarkerIcon from '../images/marklocation.png';
+import markerIcon from '../images/mapMarker.png';
+
+import { locationService } from "../services/DataService";
+
 const map = ref<L.Map | null>(null);
 const userMarker = ref<L.Marker | null>(null);
 const isInitialPosSet = ref(false);
@@ -26,9 +31,6 @@ const props = withDefaults(defineProps<{
   mapId: 'map',
 });
 
-import currentMarkerIcon from '../images/marklocation.png';
-import markerIcon from '../images/mapMarker.png';
-
 const initializeMap = async () => {
   try {
     const response = await fetch('https://api.flushfinder.es/flush');
@@ -38,12 +40,6 @@ const initializeMap = async () => {
     map.value = L.map(props.mapId).setView(initialCoordinates, 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo( map.value as L.Map);
 
-    const customIcon = L.icon({
-      iconUrl: currentMarkerIcon,
-      iconSize: [32, 51],
-      iconAnchor: [16, 51],
-      popupAnchor: [0, -32],
-    });
     const mapMarker = L.icon({
       iconUrl: markerIcon,
       iconSize: [32, 51],
@@ -132,38 +128,61 @@ watch(props, () => {
 
 // Función para llamar a la función del formulario de registro con las coordenadas del marcador
 const registerFormHandler = (latitude: number, longitude: number) => {
-  console.log('Manejador de formulario de registro llamado con:', latitude, longitude); // Agregar un registro para verificar las coordenadas
+
+  locationService.state.latitude=ref(latitude);
+  locationService.state.longitude=ref(longitude);
+
   const registerForm = document.getElementById('register-form');
   if (registerForm) {
     const event = new CustomEvent('map-click', {
-      detail: { lat: latitude, lng: longitude }
+      detail: { lat: latitude, lng: longitude }    
     });
     registerForm.dispatchEvent(event);
   }
-};
+}; 
 
 
 const isMarkerAdded = ref(false); // Nuevo estado para rastrear si se ha agregado un marcador
 
-// Define la función para agregar un marcador al mapa
-const addMarker = (coordinates: L.LatLng) => {
-  if (map.value && !isMarkerAdded.value) { // Verifica si no se ha agregado ya un marcador
+// Define la función para agregar un marcador al mapa y verifica si no se ha agregado ya un marcador
+/* const addMarker = (coordinates: L.LatLng) => {
+  if (map.value && !isMarkerAdded.value) { 
     // Crea un nuevo marcador en las coordenadas dadas
-    const marker = L.marker(coordinates).addTo(map.value as L.Map);
-    console.log('Marcador agregado en coordenadas:', coordinates); // Agregar un registro para verificar las coordenadas del marcador
     
+    const marker = L.marker(coordinates).addTo(map.value as L.Map);
+
     // Agrega el marcador al formulario o realiza otras acciones necesarias
     registerFormHandler(coordinates.lat, coordinates.lng);
 
     isMarkerAdded.value = true; // Marca que se ha agregado un marcador
   }
 };
+ */
+
+ let currentMarker: L.Marker | null = null;
+
+const addMarker = (coordinates: L.LatLng) => {
+  if (map.value) { 
+    // Elimina el marcador actual si existe
+    if (currentMarker) {
+      map.value.removeLayer(currentMarker); // Elimina el marcador actual del mapa
+      currentMarker = null; // Actualiza la referencia al marcador actual
+    }
+    
+    // Crea un nuevo marcador en las coordenadas dadas
+    const marker = L.marker(coordinates).addTo(map.value as L.Map);
+
+    // Actualiza la referencia al marcador actual
+    currentMarker = marker;
+
+    // Agrega el marcador al formulario o realiza otras acciones necesarias
+    registerFormHandler(coordinates.lat, coordinates.lng);
+  }
+};
 
 watchEffect(() => {
   map.value?.on('click', (event: L.LeafletMouseEvent) => {
-    const clickedCoordinates = event.latlng;
-    console.log('Coordenadas del clic:' + clickedCoordinates); // Agregar un registro para verificar las coordenadas
-    addMarker(clickedCoordinates);
+    addMarker(event.latlng);
   });
 });
 
