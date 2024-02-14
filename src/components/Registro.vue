@@ -10,8 +10,6 @@
         </div>      
       </div>
 
-      
-
       <div class="contenedor">
         <ion-item class="nombre">
           <label for="name" class="lbl">Nombre</label>
@@ -23,40 +21,38 @@
           <input type="file" id="image" name="image" accept="image/*" @change="handleImageChange" required>
         </ion-item>
       </div>
-
-        <input type="hidden" name="latitude" v-model="formData.latitude"> <!-- Campo oculto para almacenar la latitud del marcador -->
-        <input type="hidden" name="longitude" v-model="formData.longitude"> <!-- Campo oculto para almacenar la longitud del marcador -->
-      <div class="wrapper">
-
-      <label for="status">Estado del baño</label>
-      <div class="rating">
-        <input value="5" name="rate" id="star5" type="radio" @click="rating">
-        <label title="text" for="star5"></label>
-        <input value="4" name="rate" id="star4" type="radio" @click="rating">
-        <label title="text" for="star4"></label>
-        <input value="3" name="rate" id="star3" type="radio" @click="rating">
-        <label title="text" for="star3"></label>
-        <input value="2" name="rate" id="star2" type="radio" @click="rating">
-        <label title="text" for="star2"></label>
-        <input value="1" name="rate" id="star1" type="radio" @click="rating">
-        <label title="text" for="star1"></label>
-      </div>
       
-      <label for="handicapped">Discapacitados</label>
-      <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
+      <!-- Campos ocultos para almacenar la latitud y latitud del marcador -->
+      <input type="hidden" name="latitude" v-model="formData.latitude"> 
+      <input type="hidden" name="longitude" v-model="formData.longitude">
+    
+      <div class="wrapper">
+        <label for="status">Estado del baño</label>
+        <div class="rating">
+          <input value="5" name="rate" id="star5" type="radio" @click="rating">
+          <label title="text" for="star5"></label>
+          <input value="4" name="rate" id="star4" type="radio" @click="rating">
+          <label title="text" for="star4"></label>
+          <input value="3" name="rate" id="star3" type="radio" @click="rating">
+          <label title="text" for="star3"></label>
+          <input value="2" name="rate" id="star2" type="radio" @click="rating">
+          <label title="text" for="star2"></label>
+          <input value="1" name="rate" id="star1" type="radio" @click="rating">
+          <label title="text" for="star1"></label>
+        </div>
+        
+        <label for="handicapped">Discapacitados</label>
+        <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
 
-      <label for="changingstation">Sala de lactancia</label>
-      <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
+        <label for="changingstation">Sala de lactancia</label>
+        <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
 
         <label for="free">Acceso gratuito</label>
         <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
         <Toaster/>
         <button class="btn" id="add" type="submit">Añadir</button>
         <button class="btn" id="cancel" type="button" @click="toggleShowList()">Cancelar</button>
-
       </div>
-
-
     </form>
   </div>
 </template>
@@ -76,8 +72,6 @@ import useToasterStore from "../store/useToasterStore";
 
 const toasterStore = useToasterStore();
 
-/* const successToast = () => toasterStore.success({ text: "Yahoooooo!" }); */
-
 const errorToast = (errorMessage: string) => {
   toasterStore.error({ text: errorMessage });
 };
@@ -86,7 +80,6 @@ const errorToast = (errorMessage: string) => {
 const map = ref<L.Map | null>(null); // Referencia al mapa Leaflet
 const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
 const store = useStore(); // Acceso al store Vuex
-
 
 const formData = ref<datos>({
   name: '',
@@ -178,6 +171,7 @@ const submitForm = async() => {
 
   } else {
     // Si las coordenadas son 0,0, muestra un error y no envía el formulario
+    errorToast('Seleccione la ubicación del baño.')
     errors.value.push('Por favor, haz clic en el mapa para seleccionar la ubicación del baño.');
     return;
   }
@@ -231,12 +225,9 @@ const submitForm = async() => {
     locationService.state.latitude.value=null;
     locationService.state.longitude.value=null;
 
-    // Oculta la lista de baños
     toggleShowList();
   }
-
 };
-
 
 </script>
 
@@ -258,7 +249,6 @@ form {
 .contenedor{
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
 }
 
 

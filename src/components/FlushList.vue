@@ -102,8 +102,6 @@ const currentLocation = ref({
   longitude: props.initialLocation.longitude ? props.initialLocation.longitude : 0
 });
 
-/* const emit = defineEmits(['setLocation']); */
-
 let lat:number = 0;
 let long:number = 0;
 

@@ -71,7 +71,6 @@ const toastStore = useToasterStore();
 @media screen and (min-width: 1100px) {
 
 .toaster__inner {
-
   width: 20%;
 }
 

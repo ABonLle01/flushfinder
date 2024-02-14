@@ -5,6 +5,7 @@
     </ion-content>
   </ion-page>
 </template>
+
 <script setup lang="ts">
 import { ref, onMounted, watch, watchEffect, computed } from 'vue';
 import 'leaflet/dist/leaflet.css';
@@ -40,7 +41,6 @@ const initializeMap = async () => {
     const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
     map.value = L.map(props.mapId).setView(initialCoordinates, 13,{animate: false});
     
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo( map.value as L.Map);
 
     const mapMarker = L.icon({
@@ -49,7 +49,6 @@ const initializeMap = async () => {
       iconAnchor: [16, 51],
       popupAnchor: [0, -32],
     });
-
 
     flushList.forEach((flush) => {
       const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
@@ -73,14 +72,12 @@ const initializeMap = async () => {
         });
 
         flush.isSelected = flush.name === selectedFlushName.value;
-
       }
     })
 
     map.value.on('moveend', () => {
       map.value.closePopup();
     });
-
 
     console.log('Map initialized with custom markers');
   } catch (error) {
@@ -172,22 +169,7 @@ const registerFormHandler = (latitude: number, longitude: number) => {
 
 const isMarkerAdded = ref(false); // Nuevo estado para rastrear si se ha agregado un marcador
 
-// Define la función para agregar un marcador al mapa y verifica si no se ha agregado ya un marcador
-/* const addMarker = (coordinates: L.LatLng) => {
-  if (map.value && !isMarkerAdded.value) { 
-    // Crea un nuevo marcador en las coordenadas dadas
-    
-    const marker = L.marker(coordinates).addTo(map.value as L.Map);
-
-    // Agrega el marcador al formulario o realiza otras acciones necesarias
-    registerFormHandler(coordinates.lat, coordinates.lng);
-
-    isMarkerAdded.value = true; // Marca que se ha agregado un marcador
-  }
-};
- */
-
- let currentMarker: L.Marker | null = null;
+let currentMarker: L.Marker | null = null;
 
 const addMarker = (coordinates: L.LatLng) => {
   if (map.value) { 
