@@ -51,6 +51,7 @@ const toastStore = useToasterStore();
 
 .toaster__inner-text {
   flex: 1;
+  font-weight: bold;
 }
 
 /* Estilos para cada estado de toast */
@@ -71,12 +72,17 @@ const toastStore = useToasterStore();
 @media screen and (min-width: 1100px) {
 
 .toaster__inner {
-  width: 20%;
+  width: 25%;
 }
 
 
 .toaster__inner-icon {
   margin-right: 10px;
+}
+
+.toaster__inner-text {
+  flex: 1;
+  font-size: x-large;
 }
 
 }
