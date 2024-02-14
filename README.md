@@ -18,7 +18,13 @@
 >npx cap sync
 > - Comando antes de transpilar a android para sincronizar los pluggin de capacitor con la build de android
 
+>npm install bad-words 
+> | npm i --save-dev @types/bad-words
+> - Diccionario de palabras malsonantes ;p
 
+>npm install vue-toast-notification --save
+> | npm install vue-toast-notification@^3
+> - Libreria toast
 ### Recursos
 > APIs
 > + Geolocation API

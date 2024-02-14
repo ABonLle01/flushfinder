@@ -10,15 +10,17 @@
         </div>      
       </div>
 
-      <ion-item class="nombre">
-        <label for="name" class="lbl">Nombre</label>
-        <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
-      </ion-item>
+      <div class="contenedor">
+        <ion-item class="nombre">
+          <label for="name" class="lbl">Nombre</label>
+          <ion-input v-model="formData.name" placeholder="Ej: CESUR Málaga Este" color="dark" required></ion-input>
+        </ion-item>
 
-      <ion-item class="imagen">
-        <label for="image">Imagen</label>
-        <input type="file" id="image" name="image" accept="image/*" @change="handleImageChange">
-      </ion-item>
+        <ion-item class="image">
+          <label for="image" class="lbl">Imagen</label>
+          <input type="file" id="image" name="image" accept="image/*" @change="handleImageChange" required>
+        </ion-item>
+      </div>
 
       <div class="wrapper">
 
@@ -45,7 +47,7 @@
         <label for="free">Acceso gratuito</label>
         <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
 
-        <button class="btn" id="add" type="submit" >Añadir</button>
+        <button class="btn" id="add" type="submit">Añadir</button>
         <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
 
       </div>
@@ -67,12 +69,14 @@ import { ref } from 'vue';
 import { useStore } from 'vuex';
 import badWords from 'bad-words';
 
-import { FormData as datos } from '@/interfaces'; 
- 
+import badWords from 'bad-words';
+
+import { FormData as datos } from '@/interfaces';
+
 const errors = ref<string[]>([]);
  
 const store = useStore();
- 
+
 const formData = ref<datos>({
   name: '',
   image: null,
@@ -95,7 +99,15 @@ const handleImageChange = (event) => {
   }
 };
 
- 
+const handleImageChange = (event) => {
+  const fileInput = event.target;
+  const file = fileInput.files[0];
+  if (file) {
+    console.log("Imagen seleccionada:", file);
+    formData.value.image = file;
+  }
+};
+
 const handleToggleChange = (toggleName: keyof FormData | string) => {
   formData.value[toggleName] = !formData.value[toggleName];
 };
@@ -103,7 +115,7 @@ const handleToggleChange = (toggleName: keyof FormData | string) => {
 const toggleShowList = () => {
   store.dispatch('toggleShowList');
 };
- 
+
 const cancel = () => {
   console.log("cancel");
   toggleShowList();
@@ -114,8 +126,7 @@ const rating = (event: Event) => {
   formData.value.score = selectedRating;
   console.log("Puntuación seleccionada:", selectedRating);
 }
- 
- 
+
 function filterBadWords(name: string): string {
   const filter = new badWords();
   return filter.clean(name);
@@ -125,10 +136,10 @@ function validateBathroomName(name: string): boolean {
   // Expresión regular que coincide con cadenas que contienen solo letras, números, espacios y ciertos caracteres especiales comunes,
   // y no permite varios caracteres especiales seguidos
   const regex = /^[A-Za-záéíóúüÜñÑ]+(?: [A-Za-záéíóúüÜñÑ]+)*$/;
- 
-  // La función test() de la expresión regular devuelve true si la cadena contiene solo letras,
+
+  // La función test() de la expresión regular devuelve true si la cadena contiene solo letras, 
   // y false si contiene algún otro tipo de caracter
- 
+
   if (!regex.test(name)) {
     if (name.trim() === '') {
       errors.value.push('El nombre no puede estar vacío.');
@@ -137,19 +148,18 @@ function validateBathroomName(name: string): boolean {
     }
     return false; // Retorna false para indicar que la validación ha fallado
   }
- 
+
   return regex.test(name);
 }
- 
- 
-const submitForm = async() => {
 
+const submitForm = async() => {
   console.log("SubmitForm()");
   console.log(formData);
+
   errors.value = [];
- 
+
   const validatedName = validateBathroomName(formData.value.name);
- 
+
   if(validatedName){
     if (filterBadWords(formData.value.name).includes("*")) {
       errors.value.push('El nombre no puede contener palabras malsonantes.');
@@ -159,23 +169,25 @@ const submitForm = async() => {
   if(!formData.value.score){
     errors.value.push('Selecciona una puntuacion.')
   }
- 
+
+  if(!formData.value.image || formData.value.image==null){
+    errors.value.push('Selecciona una imagen.');
+  }
+
   // Verifica si no hay errores en el formulario
   if (errors.value.length === 0) {  
- 
+
     try {
       // Obtiene la última ubicación del usuario
-      const { value } = await Preferences.get({ key: 'userLastLocation' });
- 
+      const { value } = await Preferences.get({ key: 'userLastLocation' }); 
+
       if (value) {
         const locationData = JSON.parse(value);
-        formData.value.latitude = locationData.latitude;
+        formData.value.latitude = locationData.latitude; 
         formData.value.longitude = locationData.longitude;
       } else {
-        console.warn('No se encontraron datos de ubicación guardados.');
+        console.warn('No se encontraron datos de ubicación guardados.'); 
       }
-
-      
 
       const formDataToSend = new FormData();
         formDataToSend.append('name', formData.value.name);
@@ -185,7 +197,7 @@ const submitForm = async() => {
         formDataToSend.append('handicapped', formData.value.handicapped.toString());
         formDataToSend.append('changingstation', formData.value.changingstation.toString());
         formDataToSend.append('free', formData.value.free.toString());
-
+        
         if (formData.value.image instanceof File) {
           formDataToSend.append('image', formData.value.image);
           console.log("imagen cargada: ",formData.value.image)
@@ -196,37 +208,26 @@ const submitForm = async() => {
         method: 'POST',
         body: formDataToSend
       });
-      console.log("FormdataToSend: "+formDataToSend)
- 
-      // Realiza una solicitud POST a la API para enviar los datos del formulario
-      /* const response = await fetch('https://api.flushfinder.es/flush',  */
-/*       const response = await fetch('http://localhost:3000/flush',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData.value)
-      }); */
- 
+      console.log("FormdataToSend: "+formDataToSend);
+
       // Verifica si la respuesta de la solicitud fue exitosa
       if (response.ok) {
         console.log('¡Datos del formulario enviados con éxito!');
       } else {
         console.error('Error al enviar los datos del formulario:', response.statusText);
       }
- 
+
     } catch (error) {
       console.error('Error al obtener los datos de ubicación guardados o al enviar el formulario:', error);
     }
- 
+
     console.log(formData.value);
     console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
- 
+
     console.log("Flush added");
     toggleShowList();
   }
- 
+
 };
 </script>
  
@@ -241,12 +242,18 @@ form {
 
 /*   height: 50vh; */
 
-  margin-top: 18%;
+  margin-top: 10%;
 
 }
 
 .relleno{
   display: none;
+}
+
+.contenedor{
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
 }
 
 
@@ -264,8 +271,10 @@ form {
     font-size: xx-large;
   }
 
+
   .wrapper{
     gap: 30px;
+    margin-top: 2rem;
   }
 
   .lbl{
@@ -313,6 +322,14 @@ form {
  
 }
 
+@media screen and (max-width: 697px){
+
+  .contenedor{
+    max-width: 325px;
+  }
+
+}
+
 
 .wrapper{
   display: grid;
@@ -320,7 +337,7 @@ form {
   grid-gap: 20px;
   grid-auto-rows: minmax(fit-content, auto);
 
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 
   align-items: center;
   

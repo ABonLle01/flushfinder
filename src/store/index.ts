@@ -6,16 +6,24 @@ import { Coordinates } from '@/interfaces';
 const store = createStore({
   state: {
     showList: true,
+    flushcounter: 0,
+    selectedFlushName: null,
   },
   mutations: {
     setShowList(state, newValue) {
       state.showList = newValue;
     },
+    setFlushcounter(state, value) {
+      state.flushcounter = value;
+    },
+    setSelectedFlushName(state, name) { 
+      state.selectedFlushName = name;
+    },
   },
   actions: {
     toggleShowList({ commit, state }) {
       commit('setShowList', !state.showList);
-      console.log(state.showList);
+      /* console.log(state.showList); */
     },
   },
   plugins: process.env.NODE_ENV !== 'production' ? [createLogger()] : [],
@@ -60,4 +68,5 @@ export const getCurrentLocation = () => {
     console.error('Error getting location', error);
   });
 };
+
 

@@ -31,6 +31,8 @@ import { getCurrentLocation } from '@/store';
 import { useLocationStore, useFilterStore } from '@/store/piniaStore';
 import { Preferences } from '@capacitor/preferences';
 
+let flushcounter = ref(0);
+
 const filtersStore = useFilterStore();
 
 const store = useStore();
@@ -43,12 +45,15 @@ const currentLocationStore = useLocationStore();
 
 const applyFilters = (filtros) => {
   getFlushList(filtros.handicapped, filtros.changingstation, filtros.free,currentLocation.value.latitude, currentLocation.value.longitude)
-    .then((updatedList) => {
-      flushList.value = updatedList;
-    })
-    .catch((error) => {
-      console.error('Error applying filters:', error);
-    });
+  .then((updatedList) => {
+    flushList.value = updatedList;
+
+    store.state.flushcounter=flushList.value.length;
+    console.log("Store state: "+ store.state.flushcounter + " (MainPage)")
+  })
+  .catch((error) => {
+    console.error('Error applying filters:', error);
+  });
 };
 
 
@@ -58,45 +63,26 @@ watch(() => filtersStore.filters, () => {
 )
 
 onMounted(async () => {
-    try {
-        let { value }: any = await Preferences.get({ key: 'userLastLocation' });
-        value = JSON.parse(value);
+  try {
+    let { value }: any = await Preferences.get({ key: 'userLastLocation' });
+    value = JSON.parse(value);
 
-        currentLocation.value = {
-            latitude: value ? value.latitude : 0,
-            longitude: value ? value.longitude : 0
-        };
+    currentLocation.value = {
+        latitude: value ? value.latitude : 36,
+        longitude: value ? value.longitude : -4
+    };
 
-        const initialList = await getFlushList(false, false, false, currentLocation.value.latitude, currentLocation.value.longitude);
-        console.log("InitialList="+initialList)
+    const initialList = await getFlushList(false, false, false, currentLocation.value.latitude, currentLocation.value.longitude);
 
-        flushList.value = initialList;
-        console.log("Flushlist.value="+flushList.value)
-        currentLocationStore.setCurrentLocation(currentLocation.value);
-        getCurrentLocation();
-    } catch (error) {
-        console.error(error);
-    }
-});
-
-/* onMounted(async () => {
-  let { value }: any = await Preferences.get({ key: 'userLastLocation' });
-  value = JSON.parse(value)
-
-  currentLocation.value = {
-    latitude: value ? value.latitude : 0,
-    longitude: value ? value.longitude : 0
-  }
-
-  getFlushList(false, false, false).then((initialList) => {
     flushList.value = initialList;
-  });
+    
+    currentLocationStore.setCurrentLocation(currentLocation.value);
+    getCurrentLocation();
 
-  currentLocationStore.setCurrentLocation(currentLocation.value);
-
-  getCurrentLocation();
-
-}); */
+  } catch (error) {
+      console.error(error);
+  }
+});
 
 
 onMounted(() => {
@@ -120,6 +106,7 @@ const actualizarRuta = () => {
 const setLocation = ({ latitude, longitude }) => {
   console.log({ latitude, longitude })
   currentLocation.value = { latitude, longitude };
+  console.log(flushcounter);
 }
 
 </script>
@@ -138,6 +125,7 @@ const setLocation = ({ latitude, longitude }) => {
 .list {
   height: 100%;
   overflow-y: auto;
+  position: sticky;
 }
 
 .container {
@@ -146,7 +134,6 @@ const setLocation = ({ latitude, longitude }) => {
   left: 0;
   right: 0;
   width: 100%;
-  /* height: 100%; */
 }
 
 
@@ -156,17 +143,17 @@ const setLocation = ({ latitude, longitude }) => {
   .container {
     display: -webkit-box;
     flex-direction: row;
+    height: 100%;
   }
 
   .map {
-    width: 44vw;
-    height: 900px;
+    width: 50vw;
+    height: 100%;
     position: sticky;
   }
 
   .list {
-    width: 56vw;
-    height: 100vw;
+    width: 50vw;
   }
 
   .form {

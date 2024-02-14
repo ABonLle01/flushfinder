@@ -9,6 +9,7 @@ const pinia = createPinia()
 import { IonicVue } from '@ionic/vue';
 import { Geolocation } from '@ionic-native/geolocation';
 
+import ToastPlugin from 'vue-toast-notification';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -34,7 +35,8 @@ const app = createApp(App)
   .use(IonicVue)
   .use(router)
   .use(pinia)
-  .use(store);
+  .use(store)
+  .use(ToastPlugin);
 
 // Agrega el servicio de Geolocation al objeto global
  app.config.globalProperties.$geolocation = Geolocation; 

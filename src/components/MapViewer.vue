@@ -7,15 +7,21 @@
 </template>
    
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, watchEffect, computed } from 'vue';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { IonPage, IonContent } from '@ionic/vue';
 import { Preferences } from '@capacitor/preferences';
+import currentMarkerIcon from '../images/marklocation.png';
+import markerIcon from '../images/mapMarker.png';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const selectedFlushName = computed(() => store.state.selectedFlushName);
 const map = ref(null);
 const userMarker = ref(null);
 
-const isInitialPosSet = ref(false)
+const isInitialPosSet = ref(false);
 
 const props = withDefaults(defineProps<{
   latitude: number;
@@ -26,10 +32,6 @@ const props = withDefaults(defineProps<{
   longitude: 0,
   mapId: 'map',
 });
-
-import currentMarkerIcon from '../images/marklocation.png';
-import markerIcon from '../images/mapMarker.png';
-
 
 const initializeMap = async () => {
   try {
@@ -53,18 +55,32 @@ const initializeMap = async () => {
       popupAnchor: [0, -32],
     });
 
-    flushList.forEach((flush) => {
-      const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
-      // Asegúrate de que map.value esté definido antes de agregar el marcador
-      if (map.value) {
-        const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value);
-        marker.bindPopup(
-        `<h3>${flush.name}</h3>
-        <p>Puntuacion: ${flush.score}</p>
-        <p>Estado: ${flush.condition}</p>
-         `
-      );
-      }
+    watchEffect(() => {
+      flushList.forEach((flush) => {
+        const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
+        if (map.value) {
+          const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value);
+            
+          marker.bindPopup(
+            `
+            <h3>${flush.name}</h3>
+            <p>Puntuacion: ${flush.score}</p>
+            <p>Estado: ${flush.condition}</p>
+            `
+          );
+
+          marker.on('click',()=>{
+            store.commit('setSelectedFlushName', flush.name); 
+
+            if (flush.name === selectedFlushName.value) {
+              flush.isSelected = true;
+            }
+          });
+
+          flush.isSelected = flush.name === selectedFlushName.value;
+
+        }
+      })
     });
 
     map.value.on('moveend', () => {
