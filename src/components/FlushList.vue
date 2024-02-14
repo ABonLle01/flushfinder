@@ -85,7 +85,16 @@ const props = defineProps({
 
 const getCompleteImageUrl = (imageName: string) => {
 /*return `${process.env.VUE_APP_API_URL}/uploads/${imageName}`; */
-  return `http://localhost:3000/uploads/${imageName}`;
+  let url:string="";
+
+  if(!imageName.includes("flush")){
+    url = "https://picsum.photos/100/100";
+  }else{
+    url =  `http://localhost:3000/uploads/${imageName}`;
+  }
+
+  return url;
+  
 };
 
 const currentLocation = ref({ 

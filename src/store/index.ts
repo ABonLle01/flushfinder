@@ -6,7 +6,7 @@ import { Coordinates } from '@/interfaces';
 const store = createStore({
   state: {
     showList: true,
-    flushcounter: 0,
+    flushcounter: 20,
     selectedFlushName: null,
   },
   mutations: {

@@ -39,7 +39,9 @@ const initializeMap = async () => {
     const flushList = await response.json();
 
     const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
-    map.value = L.map(props.mapId).setView(initialCoordinates, 13);
+    map.value = L.map(props.mapId).setView(initialCoordinates, 13,{animate: false});
+    
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map.value);
 
     const customIcon = L.icon({
@@ -55,33 +57,32 @@ const initializeMap = async () => {
       popupAnchor: [0, -32],
     });
 
-    watchEffect(() => {
-      flushList.forEach((flush) => {
-        const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
-        if (map.value) {
-          const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value);
-            
-          marker.bindPopup(
-            `
-            <h3>${flush.name}</h3>
-            <p>Puntuacion: ${flush.score}</p>
-            <p>Estado: ${flush.condition}</p>
-            `
-          );
 
-          marker.on('click',()=>{
-            store.commit('setSelectedFlushName', flush.name); 
+    flushList.forEach((flush) => {
+      const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
+      if (map.value) {
+        const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value);
+        
+        marker.bindPopup(
+          `
+          <h3>${flush.name}</h3>
+          <p>Puntuacion: ${flush.score}</p>
+          <p>Estado: ${flush.condition}</p>
+          `
+        );
 
-            if (flush.name === selectedFlushName.value) {
-              flush.isSelected = true;
-            }
-          });
+        marker.on('click',()=>{
+          store.commit('setSelectedFlushName', flush.name); 
 
-          flush.isSelected = flush.name === selectedFlushName.value;
+          if (flush.name === selectedFlushName.value) {
+            flush.isSelected = true;
+          }
+        });
 
-        }
-      })
-    });
+        flush.isSelected = flush.name === selectedFlushName.value;
+
+      }
+    })
 
     map.value.on('moveend', () => {
       map.value.closePopup();

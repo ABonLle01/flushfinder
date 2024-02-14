@@ -25,6 +25,9 @@
 >npm install vue-toast-notification --save
 > | npm install vue-toast-notification@^3
 > - Libreria toast
+
+>npm install sass-loader sass --save-dev
+> - Libreria de css
 ### Recursos
 > APIs
 > + Geolocation API

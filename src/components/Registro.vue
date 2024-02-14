@@ -10,6 +10,8 @@
         </div>      
       </div>
 
+      
+
       <div class="contenedor">
         <ion-item class="nombre">
           <label for="name" class="lbl">Nombre</label>
@@ -46,15 +48,12 @@
 
         <label for="free">Acceso gratuito</label>
         <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
-
+        <Toaster/>
         <button class="btn" id="add" type="submit">Añadir</button>
-        <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
+        <button class="btn" id="cancel" type="button" @click="toggleShowList()">Cancelar</button>
 
       </div>
 
-      <p v-if="errors.length">
-        <p v-for="error in errors" :key="error">{{ error }}</p>
-      </p>
 
     </form>
   </div>
@@ -62,6 +61,18 @@
  
 
 <script setup lang="ts">
+
+import Toaster from "./Toaster.vue";
+import useToasterStore from "../store/useToasterStore";
+
+const toasterStore = useToasterStore();
+
+/* const successToast = () => toasterStore.success({ text: "Yahoooooo!" }); */
+
+const errorToast = (errorMessage: string) => {
+  toasterStore.error({ text: errorMessage });
+};
+
 
 import { Preferences } from '@capacitor/preferences';
 import { IonItem, IonToggle, IonInput  } from '@ionic/vue';
@@ -104,11 +115,6 @@ const toggleShowList = () => {
   store.dispatch('toggleShowList');
 };
 
-const cancel = () => {
-  console.log("cancel");
-  toggleShowList();
-};
-
 const rating = (event: Event) => {
   const selectedRating = (event.target as HTMLInputElement).value;
   formData.value.score = selectedRating;
@@ -130,8 +136,10 @@ function validateBathroomName(name: string): boolean {
 
   if (!regex.test(name)) {
     if (name.trim() === '') {
+      errorToast('El nombre no puede estar vacio.');
       errors.value.push('El nombre no puede estar vacío.');
     } else {
+      errorToast('El nombre debe contener solo letras y un único espacio.');
       errors.value.push('El nombre debe contener solo letras y un único espacio.');
     }
     return false; // Retorna false para indicar que la validación ha fallado
@@ -150,15 +158,18 @@ const submitForm = async() => {
 
   if(validatedName){
     if (filterBadWords(formData.value.name).includes("*")) {
+      errorToast('El nombre no puede contener palabras malsonantes.');
       errors.value.push('El nombre no puede contener palabras malsonantes.');
     } else formData.value.name=formData.value.name.toUpperCase();
   }
 
   if(!formData.value.score){
+    errorToast('Selecciona una puntuacion.');
     errors.value.push('Selecciona una puntuacion.')
   }
 
   if(!formData.value.image || formData.value.image==null){
+    errorToast('Selecciona una imagen.');
     errors.value.push('Selecciona una imagen.');
   }
 
@@ -178,18 +189,18 @@ const submitForm = async() => {
       }
 
       const formDataToSend = new FormData();
-        formDataToSend.append('name', formData.value.name);
-        formDataToSend.append('score', formData.value.score);
-        formDataToSend.append('latitude', formData.value.latitude.toString());
-        formDataToSend.append('longitude', formData.value.longitude.toString());
-        formDataToSend.append('handicapped', formData.value.handicapped.toString());
-        formDataToSend.append('changingstation', formData.value.changingstation.toString());
-        formDataToSend.append('free', formData.value.free.toString());
-        
-        if (formData.value.image instanceof File) {
-          formDataToSend.append('image', formData.value.image);
-          console.log("imagen cargada: ",formData.value.image)
-        }
+      formDataToSend.append('name', formData.value.name);
+      formDataToSend.append('score', formData.value.score);
+      formDataToSend.append('latitude', formData.value.latitude.toString());
+      formDataToSend.append('longitude', formData.value.longitude.toString());
+      formDataToSend.append('handicapped', formData.value.handicapped.toString());
+      formDataToSend.append('changingstation', formData.value.changingstation.toString());
+      formDataToSend.append('free', formData.value.free.toString());
+      
+      if (formData.value.image instanceof File) {
+        formDataToSend.append('image', formData.value.image);
+        console.log("imagen cargada: ",formData.value.image)
+      }
             
       // Realiza una solicitud POST a la API para enviar los datos del formulario con la imagen
       const response = await fetch('http://localhost:3000/flush', {
@@ -227,11 +238,7 @@ form {
   flex-direction: column;
   justify-content: center; 
   align-items: center;
-
-/*   height: 50vh; */
-
   margin-top: 10%;
-
 }
 
 .relleno{
@@ -331,12 +338,6 @@ form {
   
 }
 
-.rating{
-  position: relative;
-  right: 3dvw;
-}
-
-
 .btn {
  position: relative;
  font-size: 16px;
@@ -372,6 +373,8 @@ form {
 }
 
 .rating{
+  position: relative;
+  right: 3dvw;
   margin-bottom: 6px;
 }
  

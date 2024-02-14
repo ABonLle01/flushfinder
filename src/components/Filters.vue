@@ -36,7 +36,6 @@ import { useFilterStore } from '@/store/piniaStore';
 import { useStore } from 'vuex';
 
 const store = useStore();
-
 const filtersStore = useFilterStore();
 
 const filtros: Ref<Filters> = ref({

@@ -11,6 +11,9 @@ import { Geolocation } from '@ionic-native/geolocation';
 
 import ToastPlugin from 'vue-toast-notification';
 
+import { addIcons } from 'ionicons';
+import { closeCircleOutline } from 'ionicons/icons';
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
 
@@ -30,6 +33,10 @@ import '@ionic/vue/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+
+addIcons({
+  'toast-error': closeCircleOutline
+});
 
 const app = createApp(App)
   .use(IonicVue)

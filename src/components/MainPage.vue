@@ -56,7 +56,6 @@ const applyFilters = (filtros) => {
   });
 };
 
-
 watch(() => filtersStore.filters, () => {
     applyFilters(filtersStore.filters)
   }, { deep: true }
