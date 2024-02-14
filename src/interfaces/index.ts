@@ -22,7 +22,7 @@ interface FormData {
     free: boolean;
   }
 
-interface MapInstance {
+  interface MapInstance {
     getMarkerById(id: any): any;
     getLayer(name: string): any;
 }
@@ -34,8 +34,9 @@ interface IToast {
     cssClass: string;
   }
 
-export type {
-    Filters, Coordinates, FormData, MapInstance,IToast
+
+export type{
+    Filters, Coordinates, MapInstance,IToast, FormData
 }
 
 

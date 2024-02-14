@@ -1,6 +1,6 @@
 <template>
   <div class="register">
-    <form @submit.prevent="submitForm">
+    <form enctype="multipart/form-data" @submit.prevent="submitForm" id="register-form" :class="{ 'register': true, 'form': true }">
 
       <div class="relleno">
         <img src="/favicon.png" alt="logo">
@@ -24,27 +24,29 @@
         </ion-item>
       </div>
 
+        <input type="hidden" name="latitude" v-model="formData.latitude"> <!-- Campo oculto para almacenar la latitud del marcador -->
+        <input type="hidden" name="longitude" v-model="formData.longitude"> <!-- Campo oculto para almacenar la longitud del marcador -->
       <div class="wrapper">
 
-        <label for="status">Estado del baño</label>
-        <div class="rating">
-          <input value="5" name="rate" id="star5" type="radio" @click="rating">
-          <label title="text" for="star5"></label>
-          <input value="4" name="rate" id="star4" type="radio" @click="rating">
-          <label title="text" for="star4"></label>
-          <input value="3" name="rate" id="star3" type="radio" @click="rating">
-          <label title="text" for="star3"></label>
-          <input value="2" name="rate" id="star2" type="radio" @click="rating">
-          <label title="text" for="star2"></label>
-          <input value="1" name="rate" id="star1" type="radio" @click="rating">
-          <label title="text" for="star1"></label>
-        </div>
-        
-        <label for="handicapped">Discapacitados</label>
-        <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
+      <label for="status">Estado del baño</label>
+      <div class="rating">
+        <input value="5" name="rate" id="star5" type="radio" @click="rating">
+        <label title="text" for="star5"></label>
+        <input value="4" name="rate" id="star4" type="radio" @click="rating">
+        <label title="text" for="star4"></label>
+        <input value="3" name="rate" id="star3" type="radio" @click="rating">
+        <label title="text" for="star3"></label>
+        <input value="2" name="rate" id="star2" type="radio" @click="rating">
+        <label title="text" for="star2"></label>
+        <input value="1" name="rate" id="star1" type="radio" @click="rating">
+        <label title="text" for="star1"></label>
+      </div>
+      
+      <label for="handicapped">Discapacitados</label>
+      <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
 
-        <label for="changingstation">Sala de lactancia</label>
-        <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
+      <label for="changingstation">Sala de lactancia</label>
+      <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
 
         <label for="free">Acceso gratuito</label>
         <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
@@ -58,9 +60,16 @@
     </form>
   </div>
 </template>
- 
 
 <script setup lang="ts">
+
+import { IonItem, IonToggle, IonInput  } from '@ionic/vue';
+import { ref } from 'vue';
+import { useStore } from 'vuex'; 
+import L from 'leaflet';
+import { FormData as datos } from '../interfaces'; 
+import { locationService } from '@/services/DataService';
+import badWords from 'bad-words';
 
 import Toaster from "./Toaster.vue";
 import useToasterStore from "../store/useToasterStore";
@@ -73,31 +82,24 @@ const errorToast = (errorMessage: string) => {
   toasterStore.error({ text: errorMessage });
 };
 
+// Declaración de variables reactivas y funciones
+const map = ref<L.Map | null>(null); // Referencia al mapa Leaflet
+const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
+const store = useStore(); // Acceso al store Vuex
 
-import { Preferences } from '@capacitor/preferences';
-import { IonItem, IonToggle, IonInput  } from '@ionic/vue';
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-
-import badWords from 'bad-words';
-
-import { FormData as datos } from '@/interfaces';
-
-const errors = ref<string[]>([]);
-
-const store = useStore();
 
 const formData = ref<datos>({
   name: '',
   image: null,
   score: '',
-  latitude: 1,
-  longitude: 1,
+  latitude: 0,
+  longitude: 0,
   handicapped: false,
   changingstation: false,
-  free: false 
+    free: false
 });
-
+ 
+//Imagen
 const handleImageChange = (event) => {
   const fileInput = event.target;
   const file = fileInput.files[0];
@@ -110,7 +112,7 @@ const handleImageChange = (event) => {
 const handleToggleChange = (toggleName: keyof FormData | string) => {
   formData.value[toggleName] = !formData.value[toggleName];
 };
-
+ 
 const toggleShowList = () => {
   store.dispatch('toggleShowList');
 };
@@ -119,7 +121,7 @@ const rating = (event: Event) => {
   const selectedRating = (event.target as HTMLInputElement).value;
   formData.value.score = selectedRating;
   console.log("Puntuación seleccionada:", selectedRating);
-}
+};
 
 function filterBadWords(name: string): string {
   const filter = new badWords();
@@ -149,9 +151,6 @@ function validateBathroomName(name: string): boolean {
 }
 
 const submitForm = async() => {
-  console.log("SubmitForm()");
-  console.log(formData);
-
   errors.value = [];
 
   const validatedName = validateBathroomName(formData.value.name);
@@ -162,12 +161,28 @@ const submitForm = async() => {
       errors.value.push('El nombre no puede contener palabras malsonantes.');
     } else formData.value.name=formData.value.name.toUpperCase();
   }
-
+ 
   if(!formData.value.score){
     errorToast('Selecciona una puntuacion.');
     errors.value.push('Selecciona una puntuacion.')
   }
 
+  const savedLatitude = locationService.state.latitude.value
+  const savedLongitude = locationService.state.longitude.value
+
+  // Comprobar si las coordenadas se guardaron correctamente
+  if (savedLatitude!=null && savedLongitude!=null) {
+    // Asignar las coordenadas al formulario
+    formData.value.latitude = savedLatitude;
+    formData.value.longitude = savedLongitude;
+
+  } else {
+    // Si las coordenadas son 0,0, muestra un error y no envía el formulario
+    errors.value.push('Por favor, haz clic en el mapa para seleccionar la ubicación del baño.');
+    return;
+  }
+
+  // Si no hay errores en el formulario
   if(!formData.value.image || formData.value.image==null){
     errorToast('Selecciona una imagen.');
     errors.value.push('Selecciona una imagen.');
@@ -178,16 +193,6 @@ const submitForm = async() => {
 
     try {
       // Obtiene la última ubicación del usuario
-      const { value } = await Preferences.get({ key: 'userLastLocation' }); 
-
-      if (value) {
-        const locationData = JSON.parse(value);
-        formData.value.latitude = locationData.latitude; 
-        formData.value.longitude = locationData.longitude;
-      } else {
-        console.warn('No se encontraron datos de ubicación guardados.'); 
-      }
-
       const formDataToSend = new FormData();
       formDataToSend.append('name', formData.value.name);
       formDataToSend.append('score', formData.value.score);
@@ -223,13 +228,18 @@ const submitForm = async() => {
     console.log(formData.value);
     console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
 
-    console.log("Flush added");
+    locationService.state.latitude.value=null;
+    locationService.state.longitude.value=null;
+
+    // Oculta la lista de baños
     toggleShowList();
   }
 
 };
+
+
 </script>
- 
+
 
 <style scoped>
 form {
