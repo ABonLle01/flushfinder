@@ -20,10 +20,11 @@ interface FormData {
     free: boolean;
   }
 
-interface MapInstance {
+  interface MapInstance {
     getMarkerById(id: any): any;
     getLayer(name: string): any;
 }
+
 
 export type{
     Filters, Coordinates, MapInstance, FormData

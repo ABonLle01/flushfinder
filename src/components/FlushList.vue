@@ -58,7 +58,7 @@
     </ion-card>
   </ion-list>
 </template>
-  
+ 
 <script setup lang="ts">
 
 import { IonList, IonCard, IonRow, IonCol, IonThumbnail, IonTitle } from '@ionic/vue';
@@ -140,6 +140,8 @@ const calcularDistancia = (latitude: number, longitude: number) => {
   return result;
 };
 
+const emit = defineEmits(['setLocation'])
+ 
 const setLocation = (args) => {
   emit('setLocation', args)
 }
@@ -183,6 +185,7 @@ const condition = (x: number): string => {
 };
 
 </script>
+ 
 
 
 
@@ -196,12 +199,12 @@ const condition = (x: number): string => {
   
   height: 9rem;
 }
-
+ 
 .bath {
   margin: auto;
   margin-left: 10px;
 }
-
+ 
 .bath img {
   height: 120px;
   width: 120px;
@@ -225,24 +228,24 @@ const condition = (x: number): string => {
   align-items: center;
   justify-content: center;
 }
-
+ 
 .filters {
   display: flex;
   justify-content: center;
   gap: 15px;
 }
-
+ 
 .filters img {
   height: 35px;
   width: 35px;
 }
-
+ 
 .name {
   margin: 0;
   font-size: 1.2rem;
   width: 100%;
 }
-
+ 
 .data {
   display: flex;
   flex-direction: row;
@@ -284,4 +287,4 @@ const condition = (x: number): string => {
   
 }
 </style>
-  
+ 
