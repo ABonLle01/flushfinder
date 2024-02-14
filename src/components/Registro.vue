@@ -69,8 +69,6 @@ import { ref } from 'vue';
 import { useStore } from 'vuex';
 import badWords from 'bad-words';
 
-import badWords from 'bad-words';
-
 import { FormData as datos } from '@/interfaces';
 
 const errors = ref<string[]>([]);
@@ -89,16 +87,6 @@ const formData = ref<datos>({
 });
  
 //Imagen
-const handleImageChange = (event) => {
-  const fileInput = event.target;
-  const file = fileInput.files[0];
-
-  if (file) {
-    console.log("Imagen seleccionada:", file);
-    formData.value.image = file;
-  }
-};
-
 const handleImageChange = (event) => {
   const fileInput = event.target;
   const file = fileInput.files[0];
