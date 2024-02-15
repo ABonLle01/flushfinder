@@ -1,11 +1,11 @@
 <template>
   <ion-list>
-    <ion-card v-for="(flush, index) in flushList" :key="index" class="card" :style="{ 'background-color': selectedCardName  === flush.name ? '#ea358c2a' : '' }"
+    <ion-card v-for="(flush, index) in flushList" :key="index" class="card" :style="{ 'background-color': store.state.selectedCardName === flush.name ? '#ea358c2a' : '' }"
               v-bind:data-id="index" @click="setLocaltionAndHighlight(index, flush.name)">
 
       <ion-col size="4" class="col">
         <div class="bath">
-<!--           <img alt="BathLogo" v-bind:src="flush.image" /> -->
+<!--      <img alt="BathLogo" v-bind:src="flush.image" /> -->
           <img alt="BathLogo" :src="getCompleteImageUrl(flush.image)" />
         </div>
       </ion-col>
@@ -67,10 +67,8 @@ import { haversineDistance } from '@/store/index';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Coordinates } from '@/interfaces';
 import { useStore } from 'vuex';
-import ApprovalButton from "../components/ApprovalButtons.vue"
 
 const store = useStore();
-const selectedCardName = ref<string | null>(null);
 
 const props = defineProps({
   flushList: {
@@ -159,8 +157,8 @@ const setLocaltionAndHighlight = (index:number, name:string) => {
     latitude: Number(props.flushList[index].latitude),
     longitude: Number(props.flushList[index].longitude)
   });
-  selectedCardName.value = name;
-  store.commit('setSelectedFlushName', name);
+  store.state.selectedCardName = name;
+
 }
 
 const condition = (x: number): string => {
@@ -198,6 +196,7 @@ const condition = (x: number): string => {
 
 
 <style scoped>
+
 .card {
   display: flex;
   justify-content:center;

@@ -33,15 +33,10 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
-import { getFlushList } from '@/services'
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
 const flushList = ref([]);
 
-
-/* onMounted(async () => {
-  flushList.value = await getFlushList(false);
-}) */
 </script>
 
 <style scoped>

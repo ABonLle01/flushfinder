@@ -17,8 +17,8 @@ import markerIcon from '../images/mapMarker.png';
 import { useStore } from 'vuex';
 import { locationService } from "../services/DataService";
 
+
 const store = useStore();
-const selectedFlushName = computed(() => store.state.selectedFlushName);
 const map = ref<L.Map | null>(null);
 const userMarker = ref<L.Marker | null>(null);
 const isInitialPosSet = ref(false);
@@ -32,7 +32,6 @@ const props = withDefaults(defineProps<{
   longitude: 0,
   mapId: 'map',
 });
-
 
 const initializeMap = async () => {
   try {
@@ -65,14 +64,9 @@ const initializeMap = async () => {
         );
 
         marker.on('click',()=>{
-          store.commit('setSelectedFlushName', flush.name); 
-
-          if (flush.name === selectedFlushName.value) {
-            flush.isSelected = true;
-          }
+          store.state.selectedCardName = flush.name;
         });
 
-        flush.isSelected = flush.name === selectedFlushName.value;
       }
     })
 
@@ -145,6 +139,8 @@ onMounted(() => {
   }
 
   watchUserLocation();
+
+
 });
 
 watch(props, () => {
@@ -193,18 +189,18 @@ const addMarker = (coordinates: L.LatLng) => {
 
 
 
-
 watchEffect(() => {
   map.value?.on('click', (event: L.LeafletMouseEvent) => {
     if(!store.state.showList) addMarker(event.latlng);
     else{
-      console.log("no se esta mostrando el formulario");
       map.value.removeLayer(currentMarker);
     } 
   });
 });
 
+
 </script>
+
 
 
 <style scoped>

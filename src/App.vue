@@ -43,7 +43,6 @@
     
     <!-- mapa + lista -->
     <ion-content class="ion-padding"> 
-      <!-- :updatedList="updatedList" -->
       <router-view ></router-view>
     </ion-content>
   </ion-page>
@@ -137,6 +136,7 @@ ion-menu::part(container) {
 
   box-shadow: 4px 0px 16px rgba(157, 255, 0, 0.397);
 }  */
+
 
 
 .header{

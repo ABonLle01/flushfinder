@@ -9,8 +9,11 @@
         <div class="list" v-if="showList">
           <FlushList v-if="currentLocation" :flushList="flushList" :initialLocation="currentLocation" @setLocation="setLocation" />
         </div>
- 
-        <router-view class="form"></router-view>
+
+        <div class="form" v-cloak v-show="!showList">
+          <router-view class="form"></router-view>
+        </div>
+        
       </div>
     </ion-content>
   </ion-page>
@@ -133,7 +136,6 @@ const setLocation = ({ latitude, longitude }) => {
   right: 0;
   width: 100%;
 }
- 
  
  
 @media screen and (min-width: 1100px) {
