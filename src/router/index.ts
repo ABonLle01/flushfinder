@@ -9,7 +9,7 @@ const routes: Array<RouteRecordRaw> = [
     component: MainPage,
     children: [
       {
-        path: 'registro',
+        path: '/',
         component: Registro,
         meta: { showRegistro: true },
       }

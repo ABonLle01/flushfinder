@@ -9,7 +9,7 @@
           <img alt="BathLogo" :src="getCompleteImageUrl(flush.image)" />
         </div>
       </ion-col>
-
+      
       <ion-col size="8" class="col info">
 
         <div class="properties">
@@ -67,6 +67,7 @@ import { haversineDistance } from '@/store/index';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Coordinates } from '@/interfaces';
 import { useStore } from 'vuex';
+import ApprovalButton from "../components/ApprovalButtons.vue"
 
 const store = useStore();
 const selectedCardName = ref<string | null>(null);

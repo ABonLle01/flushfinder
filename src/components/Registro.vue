@@ -288,7 +288,7 @@ form {
     align-items: center;
     
     margin-bottom: 70px;
-    width: 100%;
+    width: 80%;
     gap: 40px;
   
     color: white;

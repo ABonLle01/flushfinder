@@ -33,6 +33,7 @@ const props = withDefaults(defineProps<{
   mapId: 'map',
 });
 
+
 const initializeMap = async () => {
   try {
     const response = await fetch('https://api.flushfinder.es/flush');
@@ -190,9 +191,16 @@ const addMarker = (coordinates: L.LatLng) => {
   }
 };
 
+
+
+
 watchEffect(() => {
   map.value?.on('click', (event: L.LeafletMouseEvent) => {
-    addMarker(event.latlng);
+    if(!store.state.showList) addMarker(event.latlng);
+    else{
+      console.log("no se esta mostrando el formulario");
+      map.value.removeLayer(currentMarker);
+    } 
   });
 });
 
