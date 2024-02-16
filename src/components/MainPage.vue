@@ -21,7 +21,7 @@
     </ion-content>
   </ion-page>
 </template>
- 
+
  
 <script setup lang="ts">
 import { IonContent, IonPage } from '@ionic/vue';
@@ -126,7 +126,7 @@ p{
   justify-content: center;
   align-items: center;
   z-index: -1;
-  width: 100%;
+  width: 60%;
   height: 25%;
   font-size: x-large;
   font-weight: bolder;
