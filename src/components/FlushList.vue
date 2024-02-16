@@ -85,7 +85,8 @@ const props = defineProps({
 
 const getCompleteImageUrl = (imageName: string) => {
 /*return `${process.env.VUE_APP_API_URL}/uploads/${imageName}`; */
-  return `http://localhost:3000/uploads/${imageName}`;
+  /* return `http://localhost:3000/uploads/${imageName}`; */
+  return `https://api.flushfinder.es/uploads/${imageName}`;
 };
 
 const currentLocation = ref({ 
@@ -186,9 +187,6 @@ const condition = (x: number): string => {
 
 </script>
  
-
-
-
 <style scoped>
 .card {
   display: flex;
@@ -276,8 +274,6 @@ const condition = (x: number): string => {
   margin-left: 2px;
   padding-bottom: 1px;
 }
-
-
 
 @media screen and (min-width: 1100px) {
 

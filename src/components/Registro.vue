@@ -108,7 +108,6 @@ const toggleShowList = () => {
   store.dispatch('toggleShowList');
 };
 
-
 // Función para manejar el evento de selección de puntuación
 const rating = (event: Event) => {
   const selectedRating = (event.target as HTMLInputElement).value;
@@ -196,7 +195,9 @@ const submitForm = async() => {
         }
             
       // Realiza una solicitud POST a la API para enviar los datos del formulario con la imagen
-      const response = await fetch('http://localhost:3000/flush', {
+   
+      const response = await fetch('https://api.flushfinder.es/flush', {
+      /* const response = await fetch('http://localhost:3000/flush', { */
         method: 'POST',
         body: formDataToSend
       });

@@ -112,9 +112,6 @@ const setLocation = ({ latitude, longitude }) => {
  
 </script>
  
- 
- 
- 
 <style scoped>
 .map {
   height: 40vh;
@@ -136,7 +133,6 @@ const setLocation = ({ latitude, longitude }) => {
   right: 0;
   width: 100%;
 }
- 
  
  
 @media screen and (min-width: 1100px) {
@@ -162,7 +158,6 @@ const setLocation = ({ latitude, longitude }) => {
   }
  
 }
- 
  
 </style>
  

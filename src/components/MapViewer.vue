@@ -81,17 +81,6 @@ const initializeMap = async () => {
           });
           marker.bindPopup(divPopup);
 
-          /*marker.bindPopup(
-            `
-            <h3>${flush.name}</h3>
-            <p>Puntuacion: ${flush.score}</p>
-            <p>Estado: ${condition(flush.score)}</p>
-            <button onclick="updateScore(flush._id, true)">Incrementar Puntuación</button>
-            <button onclick="${hola()}">Disminuir Puntuación</button>
-            `
-            ${updateScore(flush._id, false)}
-          );*/
-
           marker.on('click',()=>{
             store.commit('setSelectedFlushName', flush.name); 
 
@@ -104,12 +93,6 @@ const initializeMap = async () => {
 
         }
       });
-/*     flushList.forEach((flush) => {
-      const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
-      if (map.value) {
-        L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value as L.Map);
-      }
-    }); */
 
     map.value.on('moveend', () => {
       map.value.closePopup();
@@ -152,7 +135,8 @@ const condition = (x: number): string => {
 
 function updateScore(flushId, shouldIncrement) {
 
-  fetch(`http://localhost:3000/flush/${flushId}`, {
+  fetch(`https://api.flushfinder.es/flush/${flushId}`, {
+/*   fetch(`http://localhost:3000/flush/${flushId}`, { */
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -178,31 +162,6 @@ function updateScore(flushId, shouldIncrement) {
       console.error('Error al actualizar la puntuación', error);
     });
 }
-
-
-
-/* function updateScore(flushId, shouldIncrement) {
-  console.log("Flush id updateScore: "+flushId)
-  console.log("Flush id updateScore: "+shouldIncrement)
-
-  fetch(`http://localhost:3000/flush/${flushId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ increment: shouldIncrement }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Manejar la respuesta, actualizar el estado local si es necesario
-      console.log('Actualización exitosa', data);
-    })
-    .catch(error => {
-      console.error('Error al actualizar la puntuación', error);
-    });
-    console.log("Shouldincrement:"+shouldIncrement)
-} */
-
 
 const watchUserLocation = () => {
   const watchOptions = {
@@ -285,23 +244,7 @@ const registerFormHandler = (latitude: number, longitude: number) => {
   }
 }; 
 
-
 const isMarkerAdded = ref(false); // Nuevo estado para rastrear si se ha agregado un marcador
-
-// Define la función para agregar un marcador al mapa y verifica si no se ha agregado ya un marcador
-/* const addMarker = (coordinates: L.LatLng) => {
-  if (map.value && !isMarkerAdded.value) { 
-    // Crea un nuevo marcador en las coordenadas dadas
-    
-    const marker = L.marker(coordinates).addTo(map.value as L.Map);
-
-    // Agrega el marcador al formulario o realiza otras acciones necesarias
-    registerFormHandler(coordinates.lat, coordinates.lng);
-
-    isMarkerAdded.value = true; // Marca que se ha agregado un marcador
-  }
-};
- */
 
  let currentMarker: L.Marker | null = null;
 
