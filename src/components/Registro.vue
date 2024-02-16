@@ -211,7 +211,7 @@ const submitForm = async() => {
       }
             
       // Realiza una solicitud POST a la API para enviar los datos del formulario con la imagen
-      const response = await fetch('http://localhost:3000/flush', {
+      const response = await fetch('https://api.flushfinder.es/flush', {
         method: 'POST',
         body: formDataToSend
       });

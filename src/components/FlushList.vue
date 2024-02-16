@@ -89,9 +89,10 @@ const getCompleteImageUrl = (imageName: string) => {
   if(!imageName.includes("flush")){
     url = "https://picsum.photos/100/100";
   }else{
-    url =  `http://localhost:3000/uploads/${imageName}`;
+    url =  `https://api.flushfinder.es/uploads/${imageName}`;
   }
 
+  console.log(url)
   return url;
   
 };

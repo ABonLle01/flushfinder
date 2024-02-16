@@ -67,7 +67,7 @@ const initializeMap = async () => {
             <h3>${flush.name}</h3>
             <p>Puntuacion: ${flush.score}</p>
             <p>Estado: ${condition(flush.score)}</p>
-            <p>Estado: ${flush.rating}</p>
+            <p>Valoraciones: ${flush.rating}</p>
             <button class="inc">Incrementar Puntuación</button>
             <button class="dec">Disminuir Puntuación</button>
             `;
@@ -141,7 +141,7 @@ const condition = (x: number): string => {
 
 function updateScore(flushId, shouldIncrement) {
 
-  fetch(`http://localhost:3000/flush/${flushId}`, {
+  fetch(`https://api.flushfinder.es/flush/${flushId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

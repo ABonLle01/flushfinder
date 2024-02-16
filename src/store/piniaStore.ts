@@ -1,7 +1,7 @@
 import { defineStore } from "pinia"
 import { Ref, ref } from "vue"
 import { Filters } from "@/interfaces"
-import ToastPlugin from "vue-toast-notification"
+
 
 
 export const useFilterStore = defineStore('filters', () => {
