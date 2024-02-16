@@ -1,7 +1,10 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
+
       <div class="container">
+        <p>No hay conexion a Internet</p>
+        
         <div class="map">
           <MapViewer v-if="currentLocation" :latitude="currentLocation.latitude" :longitude="currentLocation.longitude" />
         </div>
@@ -116,13 +119,26 @@ const setLocation = ({ latitude, longitude }) => {
  
  
 <style scoped>
+
+p{
+  position:absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+  width: 100%;
+  height: 25%;
+  font-size: x-large;
+  font-weight: bolder;
+}
+
 .map {
   height: 40vh;
   position: sticky;
   top: 0;
   z-index: 9;
 }
- 
+
 .list {
   height: 100%;
   overflow-y: auto;
@@ -130,6 +146,7 @@ const setLocation = ({ latitude, longitude }) => {
 }
  
 .container {
+  position: relative;
   text-align: center;
   position: absolute;
   left: 0;
@@ -160,6 +177,11 @@ const setLocation = ({ latitude, longitude }) => {
     position: sticky
   }
  
+  p{
+    height: 95%;
+    font-size: xx-large;
+  }
+
 }
  
  
