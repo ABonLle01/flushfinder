@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, watchEffect, computed } from 'vue';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import L, { divIcon } from 'leaflet';
 import { IonPage, IonContent } from '@ionic/vue';
 import { Preferences } from '@capacitor/preferences';
 import currentMarkerIcon from '../images/marklocation.png';
@@ -21,6 +21,11 @@ const selectedFlushName = computed(() => store.state.selectedFlushName);
 const map = ref<L.Map | null>(null);
 const userMarker = ref<L.Marker | null>(null);
 const isInitialPosSet = ref(false);
+
+function hola() {
+  console.log("hola");
+  return "hola";
+}
 
 const props = withDefaults(defineProps<{
   latitude: number;
@@ -53,13 +58,39 @@ const initializeMap = async () => {
         if (map.value) {
           const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value as L.Map);
             
-          marker.bindPopup(
+
+          let divPopup = document.createElement("div");
+          divPopup.innerHTML =             
+          `
+            <h3>${flush.name}</h3>
+            <p>Puntuacion: ${flush.score}</p>
+            <p>Estado: ${condition(flush.score)}</p>
+            <p>Estado: ${flush.rating}</p>
+            <button class="inc">Incrementar Puntuación</button>
+            <button class="dec">Disminuir Puntuación</button>
+            `;
+          divPopup.querySelector("button.inc").addEventListener("click",()=>{
+            console.log("Like");
+            console.log(flush);
+            updateScore(flush._id, true)
+          });
+          divPopup.querySelector("button.dec").addEventListener("click",()=>{
+            console.log("Dislike");
+            console.log(flush);
+            updateScore(flush._id, false)
+          });
+          marker.bindPopup(divPopup);
+
+          /*marker.bindPopup(
             `
             <h3>${flush.name}</h3>
             <p>Puntuacion: ${flush.score}</p>
-            <p>Estado: ${flush.condition}</p>
+            <p>Estado: ${condition(flush.score)}</p>
+            <button onclick="updateScore(flush._id, true)">Incrementar Puntuación</button>
+            <button onclick="${hola()}">Disminuir Puntuación</button>
             `
-          );
+            ${updateScore(flush._id, false)}
+          );*/
 
           marker.on('click',()=>{
             store.commit('setSelectedFlushName', flush.name); 
@@ -90,6 +121,88 @@ const initializeMap = async () => {
     console.error('Error fetching flush list:', error);
   }
 };
+
+const condition = (x: number): string => {
+  let result: string;
+
+  switch (true) {
+    case x < 0:
+      console.log("Negative number!!");
+      break;
+    case x >= 4:
+      result = "Excelente";
+      break;
+    case x >= 3:
+      result = "Bueno";
+      break;
+    case x >= 2:
+      result = "Aceptable";
+      break;
+    case x >= 1:
+      result = "Sucio";
+      break;
+    case x<1:
+      result = "Muy sucio";
+      break;
+    default:
+      result = "undefined";
+  }
+  return result;
+};
+
+function updateScore(flushId, shouldIncrement) {
+
+  fetch(`http://localhost:3000/flush/${flushId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ increment: shouldIncrement }),
+  })
+    .then(response => {
+      if (response.status === 410) {
+        return { message: 'Objeto eliminado' };
+      } else if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.message) {
+        console.log(data.message);
+      } else {
+        console.log('Actualización exitosa', data);
+      }
+    })
+    .catch(error => {
+      console.error('Error al actualizar la puntuación', error);
+    });
+}
+
+
+
+/* function updateScore(flushId, shouldIncrement) {
+  console.log("Flush id updateScore: "+flushId)
+  console.log("Flush id updateScore: "+shouldIncrement)
+
+  fetch(`http://localhost:3000/flush/${flushId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ increment: shouldIncrement }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Manejar la respuesta, actualizar el estado local si es necesario
+      console.log('Actualización exitosa', data);
+    })
+    .catch(error => {
+      console.error('Error al actualizar la puntuación', error);
+    });
+    console.log("Shouldincrement:"+shouldIncrement)
+} */
+
 
 const watchUserLocation = () => {
   const watchOptions = {

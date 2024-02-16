@@ -98,7 +98,7 @@ const actualizarRuta = () => {
  
   if (currentRoute) {
     const folderId = currentRoute.params.id ? `/${currentRoute.params.id}` : '/';
-    const newPath = showList.value ? folderId : '/registro';
+    const newPath = showList.value ? folderId : '/';
     router.push({ path: newPath });
   }
 };
