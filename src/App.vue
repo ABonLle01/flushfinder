@@ -120,6 +120,7 @@ const store = useStore();
 
 const toggleShowList = () => {
   store.dispatch('toggleShowList');
+  
 };
 
 </script>
