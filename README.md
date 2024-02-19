@@ -75,3 +75,20 @@ se utiliza la aplicación, posteriormente pedirá acceso a la ubicación precisa
 
 - **Mapa personalizado:**
     - Leaflet.js
+
+- **Servicio de hosting online**
+
+- **Instalación de servidor de Ubuntu y MongoDB:**
+    - Ejecución mediante Node.js
+    - Se utliza Compass para acceder a MongoDB
+
+- **Adquisición del dominio para la versión web**
+  
+- **Acceso remoto al servidor:**
+  - Se utiliza PuTTY "api.flushfinder.es"
+
+- **Gestión de Frontend:**
+  - Acceso al dominio "server.flushfinder.es"
+  - Se transpila el proyecto con Express
+  - Se sube
+  - A traves del index se ejecuta todo el proyecto
