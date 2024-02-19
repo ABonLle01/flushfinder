@@ -92,7 +92,7 @@ const getCompleteImageUrl = (imageName: string) => {
     url =  `https://api.flushfinder.es/uploads/${imageName}`;
   }
 
-  console.log(url)
+  /* console.log(url) */
   return url;
   
 };

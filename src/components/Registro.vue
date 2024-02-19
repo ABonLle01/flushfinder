@@ -44,23 +44,23 @@
         
         <label for="handicapped">Discapacitados</label>
         <div class="sContainer">
-          <input class="switch" type="checkbox"  id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')">
+          <input class="switch" type="checkbox"  id="handicapped" value="handicapped" v-model="formData.handicapped" label-placement="start" @click="handleToggleChange('handicapped')">
         </div>
 
         <label for="changingstation">Sala de lactancia</label>
         <div class="sContainer">
-          <input class="switch" type="checkbox" id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')">
+          <input class="switch" type="checkbox" id="changingstation" value="changingstation" v-model="formData.changingstation" label-placement="start" @click="handleToggleChange('changingstation')">
         </div>        
 
         <label for="free">Acceso gratuito</label>
         <div class="sContainer">
-          <input class="switch" type="checkbox" id="free" value="free"  label-placement="start" @click="handleToggleChange('free')">
+          <input class="switch" type="checkbox" id="free" value="free" v-model="formData.free" label-placement="start" @click="handleToggleChange('free')">
         </div>
 
         <Toaster/>
 
         <button class="btn" id="add" type="submit">Añadir</button>
-        <button class="btn" id="cancel" type="button" @click="toggleShowList()">Cancelar</button>
+        <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
       </div>
     </form>
   </div>
@@ -68,10 +68,9 @@
 
 <script setup lang="ts">
 
-import { IonItem, IonToggle, IonInput  } from '@ionic/vue';
+import { IonItem, IonInput  } from '@ionic/vue';
 import { ref } from 'vue';
 import { useStore } from 'vuex'; 
-import L from 'leaflet';
 import { FormData as datos } from '../interfaces'; 
 import { locationService } from '@/services/DataService';
 import badWords from 'bad-words';
@@ -85,8 +84,11 @@ const errorToast = (errorMessage: string) => {
   toasterStore.error({ text: errorMessage });
 };
 
+const successToast = (successMessage: string) => {
+  toasterStore.success({ text: successMessage });
+};
+
 // Declaración de variables reactivas y funciones
-const map = ref<L.Map | null>(null); // Referencia al mapa Leaflet
 const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
 const store = useStore(); // Acceso al store Vuex
 
@@ -98,7 +100,7 @@ const formData = ref<datos>({
   longitude: 0,
   handicapped: false,
   changingstation: false,
-    free: false
+  free: false
 });
  
 //Imagen
@@ -150,6 +152,19 @@ function validateBathroomName(name: string): boolean {
   }
 
   return regex.test(name);
+}
+
+const cancel = () => {
+  formData.value.name="";
+  formData.value.image= null;
+  formData.value.score= '',
+  formData.value.latitude= 0,
+  formData.value.longitude= 0;
+  formData.value.handicapped = false;
+  formData.value.changingstation = false;
+  formData.value.free = false;
+
+  toggleShowList();
 }
 
 const submitForm = async() => {
@@ -209,7 +224,7 @@ const submitForm = async() => {
         formDataToSend.append('image', formData.value.image);
         console.log("imagen cargada: ",formData.value.image)
       }
-            
+
       // Realiza una solicitud POST a la API para enviar los datos del formulario con la imagen
       const response = await fetch('https://api.flushfinder.es/flush', {
         method: 'POST',
@@ -235,6 +250,9 @@ const submitForm = async() => {
     locationService.state.longitude.value=null;
 
     toggleShowList();
+
+    successToast("Baño insertado correctamente")
+    successToast("Recargue la app para ver el contenido!")
   }
 };
 

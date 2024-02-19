@@ -2,6 +2,7 @@
   <ion-page>
     <ion-content>
       <div :id="mapId"></div>
+      <Toaster/>
     </ion-content>
   </ion-page>
 </template>
@@ -9,24 +10,28 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, watchEffect, computed } from 'vue';
 import 'leaflet/dist/leaflet.css';
-import L, { divIcon } from 'leaflet';
+import L from 'leaflet';
 import { IonPage, IonContent } from '@ionic/vue';
 import { Preferences } from '@capacitor/preferences';
 import currentMarkerIcon from '../images/marklocation.png';
 import markerIcon from '../images/mapMarker.png';
 import { useStore } from 'vuex';
 import { locationService } from "../services/DataService";
+import Toaster from "./Toaster.vue";
+import useToasterStore from "../store/useToasterStore";
 
+const toasterStore = useToasterStore();
+
+const successToast = (successMessage: string) => {
+  toasterStore.success({ text: successMessage });
+};
 
 const store = useStore();
 const map = ref<L.Map | null>(null);
 const userMarker = ref<L.Marker | null>(null);
 const isInitialPosSet = ref(false);
 
-function hola() {
-  console.log("hola");
-  return "hola";
-}
+
 
 const props = withDefaults(defineProps<{
   latitude: number;
@@ -75,11 +80,13 @@ const initializeMap = async () => {
             console.log("Like");
             console.log(flush);
             updateScore(flush._id, true)
+            successToast("Voto hecho correctamente")
           });
           divPopup.querySelector("button.dec").addEventListener("click",()=>{
             console.log("Dislike");
             console.log(flush);
             updateScore(flush._id, false)
+            successToast("Voto hecho correctamente")
           });
           marker.bindPopup(divPopup);
 
