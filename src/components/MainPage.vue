@@ -1,7 +1,10 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
+
       <div class="container">
+        <p>No hay conexion a Internet</p>
+        
         <div class="map">
           <MapViewer v-if="currentLocation" :latitude="currentLocation.latitude" :longitude="currentLocation.longitude" />
         </div>
@@ -9,35 +12,32 @@
         <div class="list" v-if="showList">
           <FlushList v-if="currentLocation" :flushList="flushList" :initialLocation="currentLocation" @setLocation="setLocation" />
         </div>
- 
-        <router-view class="form"></router-view>
+
+        <div class="form" v-cloak v-show="!showList">
+          <router-view class="form"></router-view>
+        </div>
+        
       </div>
     </ion-content>
   </ion-page>
 </template>
- 
+
  
 <script setup lang="ts">
 import { IonContent, IonPage } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
- 
 import { getFlushList } from '@/services';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { useStore } from 'vuex';
- 
 import { getCurrentLocation } from '@/store';
 import { useLocationStore, useFilterStore } from '@/store/piniaStore';
 import { Preferences } from '@capacitor/preferences';
 
-let flushcounter = ref(0);
-
 const filtersStore = useFilterStore();
- 
 const store = useStore();
 const showList = ref(store.state.showList);
- 
 const router = useRouter();
 const flushList = ref([]);
 const currentLocation = ref();
@@ -116,11 +116,18 @@ const setLocation = ({ latitude, longitude }) => {
  
 <style scoped>
 
-/* .map-container{
-  position: relative;
-  width: 100vh;
-  height: 50vh;
-} */
+p{
+  position:absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+  width: 60%;
+  height: 25%;
+  font-size: x-large;
+  font-weight: bolder;
+}
+
 .map {
   height: 40vh;
   position: sticky;
@@ -128,7 +135,6 @@ const setLocation = ({ latitude, longitude }) => {
   z-index: 9;
 }
 
- 
 .list {
   height: 100%;
   overflow-y: auto;
@@ -136,13 +142,13 @@ const setLocation = ({ latitude, longitude }) => {
 }
  
 .container {
+  position: relative;
   text-align: center;
   position: absolute;
   left: 0;
   right: 0;
   width: 100%;
 }
- 
  
  
 @media screen and (min-width: 1100px) {
@@ -167,6 +173,11 @@ const setLocation = ({ latitude, longitude }) => {
     position: sticky
   }
  
+  p{
+    height: 95%;
+    font-size: xx-large;
+  }
+
 }
  
  

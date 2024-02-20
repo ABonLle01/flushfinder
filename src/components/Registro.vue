@@ -28,6 +28,7 @@
     
       <div class="wrapper">
         <label for="status">Estado del baño</label>
+
         <div class="rating">
           <input value="5" name="rate" id="star5" type="radio" @click="rating">
           <label title="text" for="star5"></label>
@@ -42,16 +43,24 @@
         </div>
         
         <label for="handicapped">Discapacitados</label>
-        <ion-toggle id="handicapped" value="handicapped"  label-placement="start" @click="handleToggleChange('handicapped')"></ion-toggle>
+        <div class="sContainer">
+          <input class="switch" type="checkbox"  id="handicapped" value="handicapped" v-model="formData.handicapped" label-placement="start" @click="handleToggleChange('handicapped')">
+        </div>
 
         <label for="changingstation">Sala de lactancia</label>
-        <ion-toggle id="changingstation" value="changingstation"  label-placement="start" @click="handleToggleChange('changingstation')"></ion-toggle>
+        <div class="sContainer">
+          <input class="switch" type="checkbox" id="changingstation" value="changingstation" v-model="formData.changingstation" label-placement="start" @click="handleToggleChange('changingstation')">
+        </div>        
 
         <label for="free">Acceso gratuito</label>
-        <ion-toggle id="free" value="free"  label-placement="start" @click="handleToggleChange('free')"></ion-toggle>
+        <div class="sContainer">
+          <input class="switch" type="checkbox" id="free" value="free" v-model="formData.free" label-placement="start" @click="handleToggleChange('free')">
+        </div>
+
         <Toaster/>
+
         <button class="btn" id="add" type="submit">Añadir</button>
-        <button class="btn" id="cancel" type="button" @click="toggleShowList()">Cancelar</button>
+        <button class="btn" id="cancel" type="button" @click="cancel()">Cancelar</button>
       </div>
     </form>
   </div>
@@ -59,16 +68,18 @@
 
 <script setup lang="ts">
 
-import { IonItem, IonToggle, IonInput  } from '@ionic/vue';
+import { IonItem, IonInput  } from '@ionic/vue';
 import { ref } from 'vue';
 import { useStore } from 'vuex'; 
-import L from 'leaflet';
 import { FormData as datos } from '../interfaces'; 
 import { locationService } from '@/services/DataService';
 import badWords from 'bad-words';
-
 import Toaster from "./Toaster.vue";
 import useToasterStore from "../store/useToasterStore";
+
+// Declaración de variables reactivas y funciones
+const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
+const store = useStore(); // Acceso al store Vuex
 
 const toasterStore = useToasterStore();
 
@@ -76,10 +87,9 @@ const errorToast = (errorMessage: string) => {
   toasterStore.error({ text: errorMessage });
 };
 
-// Declaración de variables reactivas y funciones
-const map = ref<L.Map | null>(null); // Referencia al mapa Leaflet
-const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
-const store = useStore(); // Acceso al store Vuex
+const successToast = (successMessage: string) => {
+  toasterStore.success({ text: successMessage });
+};
 
 const formData = ref<datos>({
   name: '',
@@ -89,7 +99,7 @@ const formData = ref<datos>({
   longitude: 0,
   handicapped: false,
   changingstation: false,
-    free: false
+  free: false
 });
  
 //Imagen
@@ -141,6 +151,19 @@ function validateBathroomName(name: string): boolean {
   }
 
   return regex.test(name);
+}
+
+const cancel = () => {
+  formData.value.name="";
+  formData.value.image= null;
+  formData.value.score= '',
+  formData.value.latitude= 0,
+  formData.value.longitude= 0;
+  formData.value.handicapped = false;
+  formData.value.changingstation = false;
+  formData.value.free = false;
+
+  toggleShowList();
 }
 
 const submitForm = async() => {
@@ -200,9 +223,9 @@ const submitForm = async() => {
         formDataToSend.append('image', formData.value.image);
         console.log("imagen cargada: ",formData.value.image)
       }
-            
+
       // Realiza una solicitud POST a la API para enviar los datos del formulario con la imagen
-      const response = await fetch('http://localhost:3000/flush', {
+      const response = await fetch('https://api.flushfinder.es/flush', {
         method: 'POST',
         body: formDataToSend
       });
@@ -226,6 +249,9 @@ const submitForm = async() => {
     locationService.state.longitude.value=null;
 
     toggleShowList();
+
+    successToast("Baño insertado correctamente")
+    successToast("Recargue la app para ver el contenido!")
   }
 };
 
@@ -233,6 +259,56 @@ const submitForm = async() => {
 
 
 <style scoped>
+.sContainer{
+  width: 100%;
+  justify-content: center;
+}
+
+.switch {
+  position: relative;
+  height: 1rem;
+  width: 2rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 9999px;
+  background-color: rgba(100, 116, 139, 0.377);
+  transition: all .3s ease;
+}
+
+.switch:checked {
+  background-color: rgba(236, 72, 153, 1);
+}
+
+.switch::before {
+  position: absolute;
+  content: "";
+  left: calc(0.9rem - 1rem);
+  top: calc(0.9rem - 1rem);
+  display: block;
+  height: 1rem;
+  width: 1rem;
+  cursor: pointer;
+  border: 1px solid rgba(100, 116, 139, 0.527);
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 3px 10px rgba(100, 116, 139, 0.327);
+  transition: all .3s ease;
+}
+
+.switch:hover::before {
+  box-shadow: 0 0 0px 8px rgba(0, 0, 0, .15)
+}
+
+.switch:checked:hover::before {
+  box-shadow: 0 0 0px 8px rgba(236, 72, 153, .15)
+}
+
+.switch:checked:before {
+  transform: translateX(100%);
+  border-color: rgba(236, 72, 153, 1);
+}
+
 form {
   --background-color: rgba(140, 0, 255, 0.205);
   display: flex;
@@ -251,8 +327,122 @@ form {
   flex-direction: column;
 }
 
+.wrapper{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  grid-auto-rows: minmax(fit-content, auto);
+
+  margin-top: 1.5rem;
+  justify-content: left;
+  align-items: center;
+}
+
+.wrapper>label{
+  display: flex;
+  justify-content: left;
+  padding-bottom: 6px;
+}
+
+.toggle{
+  display: flex;
+  justify-content: left;
+}
+
+.btn {
+ position: relative;
+ font-size: 16px;
+ text-transform: uppercase;
+ text-decoration: none;
+ padding: 1em 1em;
+ display: inline-block;
+ border-radius: 6em;
+ transition: all .2s;
+ border: none;
+ font-family: inherit;
+ background-color: #EA358C;
+ color: white;
+ font-weight: bold;
+}
+
+.btn:active {
+ transform: translateY(-1px);
+ box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn::after {
+ content: "";
+ display: inline-block;
+ height: 100%;
+ width: 100%;
+ border-radius: 100px;
+ position: absolute;
+ top: 0;
+ left: 0;
+ z-index: -1;
+ transition: all .4s;
+}
+
+.rating{
+  position: relative;
+  margin-bottom: 6px;
+
+  display: ruby;
+  justify-content: center;
+}
+ 
+.rating:not(:checked) > input {
+  position: absolute;
+  appearance: none;
+}
+ 
+.rating:not(:checked) > label {
+  float: right;
+  cursor: pointer;
+  font-size: 30px;
+  color: #666;
+}
+ 
+.rating:not(:checked) > label:before {
+  content: '★';
+}
+ 
+.rating > input:checked + label:hover,
+.rating > input:checked + label:hover ~ label,
+.rating > input:checked ~ label:hover,
+.rating > input:checked ~ label:hover ~ label,
+.rating > label:hover ~ input:checked ~ label {
+  color: #EA358C;
+}
+ 
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+  color: #EA358C;
+}
+ 
+.rating > input:checked ~ label {
+  color: #EA358C;
+}
+
 
 @media screen and (min-width: 1100px) {
+
+  .rating:not(:checked) > label {
+    font-size: 40px;
+  }
+
+  .switch{
+    height: 2rem;
+    width: 4rem;
+  }
+
+  .switch::before{
+    left: calc(1rem - 1.1rem);
+    top: calc(1rem - 1.1rem);
+    height: 2rem;
+    width: 2rem;
+  }
+
   .register{
     display: flex;
     justify-content: center;
@@ -326,89 +516,4 @@ form {
 }
 
 
-.wrapper{
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 20px;
-  grid-auto-rows: minmax(fit-content, auto);
-
-  margin-top: 1.5rem;
-
-  align-items: center;
-  
-}
-
-.btn {
- position: relative;
- font-size: 16px;
- text-transform: uppercase;
- text-decoration: none;
- padding: 1em 1em;
- display: inline-block;
- border-radius: 6em;
- transition: all .2s;
- border: none;
- font-family: inherit;
- background-color: #EA358C;
- color: white;
- font-weight: bold;
-}
-
-.btn:active {
- transform: translateY(-1px);
- box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-}
-
-.btn::after {
- content: "";
- display: inline-block;
- height: 100%;
- width: 100%;
- border-radius: 100px;
- position: absolute;
- top: 0;
- left: 0;
- z-index: -1;
- transition: all .4s;
-}
-
-.rating{
-  position: relative;
-  right: 3dvw;
-  margin-bottom: 6px;
-}
- 
-.rating:not(:checked) > input {
-  position: absolute;
-  appearance: none;
-}
- 
-.rating:not(:checked) > label {
-  float: right;
-  cursor: pointer;
-  font-size: 30px;
-  color: #666;
-}
- 
-.rating:not(:checked) > label:before {
-  content: '★';
-}
- 
-.rating > input:checked + label:hover,
-.rating > input:checked + label:hover ~ label,
-.rating > input:checked ~ label:hover,
-.rating > input:checked ~ label:hover ~ label,
-.rating > label:hover ~ input:checked ~ label {
-  color: #EA358C;
-}
- 
-.rating:not(:checked) > label:hover,
-.rating:not(:checked) > label:hover ~ label {
-  color: #EA358C;
-}
- 
-.rating > input:checked ~ label {
-  color: #EA358C;
-}
- 
 </style>

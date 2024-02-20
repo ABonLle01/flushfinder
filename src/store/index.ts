@@ -18,6 +18,7 @@ const store = createStore({
     },
     setSelectedFlushName(state, name) { 
       state.selectedFlushName = name;
+      console.warn("flush selected: "+name)
     },
   },
   actions: {
@@ -73,7 +74,5 @@ export const getClickedCoord = (map) =>{
   map.value?.on('click', (event: L.LeafletMouseEvent) => {
     const clickedLat = event.latlng.lat;
     const clickedLong = event.latlng.lng;
-  
-  
   });
 }

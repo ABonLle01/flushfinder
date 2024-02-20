@@ -65,7 +65,7 @@ const toastStore = useToasterStore();
 }
 
 .toast-error {
-  background-color: rgb(255, 0, 0);
+  background-color: red;
   color: white;
 }
 

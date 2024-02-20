@@ -1,7 +1,7 @@
 {
   "name": "flushfinder",
   "private": true,
-  "version": "BETA 0.5.0",
+  "version": "RC 1",
   "type": "module",
   "scripts": {
     "dev": "vite",

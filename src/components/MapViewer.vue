@@ -1,11 +1,8 @@
 <template>
   <ion-page>
     <ion-content>
-    
-       
-      <div :id="mapId">
-        <!-- <button @click="goToCurrentLocation" >BOTOOOOOOON</button> -->
-      </div>
+      <div :id="mapId"></div>
+      <Toaster/>
     </ion-content>
   </ion-page>
 </template>
@@ -20,9 +17,10 @@ import currentMarkerIcon from '../images/marklocation.png';
 import markerIcon from '../images/mapMarker.png';
 import { useStore } from 'vuex';
 import { locationService } from "../services/DataService";
+import Toaster from "./Toaster.vue";
+import useToasterStore from "../store/useToasterStore";
 
 const store = useStore();
-const selectedFlushName = computed(() => store.state.selectedFlushName);
 const map = ref<L.Map | null>(null);
 const userMarker = ref<L.Marker | null>(null);
 const isInitialPosSet = ref(false);
@@ -37,11 +35,10 @@ const props = withDefaults(defineProps<{
   mapId: 'map',
 });
 
-const goToCurrentLocation = () => {
-  if (map.value && userMarker.value) {
-    const userLatLng = userMarker.value.getLatLng();
-    map.value.setView(userLatLng, 13);
-  }
+const toasterStore = useToasterStore();
+
+const successToast = (successMessage: string) => {
+  toasterStore.success({ text: successMessage });
 };
 
 const initializeMap = async () => {
@@ -61,28 +58,41 @@ const initializeMap = async () => {
       popupAnchor: [0, -32],
     });
 
-    flushList.forEach((flush) => {
-      const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
-      if (map.value) {
-        const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value as L.Map);
-        
-        marker.bindPopup(
+      flushList.forEach((flush) => {
+        const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
+        if (map.value) {
+          const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value as L.Map);
+            
+          let divPopup = document.createElement("div");
+          divPopup.innerHTML =             
           `
-          <h3>${flush.name}</h3>
-          <p>Puntuacion: ${flush.score}</p>
-          <p>Estado: ${flush.condition}</p>
-          `
-        );
+            <h3>${flush.name}</h3>
+            <p>Puntuacion: ${flush.score}</p>
+            <p>Estado: ${condition(flush.score)}</p>
+            <p>Valoraciones: ${flush.rating}</p>
+            <button class="inc">Incrementar Puntuación</button>
+            <button class="dec">Disminuir Puntuación</button>
+            `;
 
-        marker.on('click',()=>{
-          store.commit('setSelectedFlushName', flush.name); 
+          divPopup.querySelector("button.inc").addEventListener("click",()=>{
+            console.log("Like");
+            console.log(flush);
+            updateScore(flush._id, true)
+            successToast("Voto hecho correctamente")
+          });
 
-          if (flush.name === selectedFlushName.value) {
-            flush.isSelected = true;
-          }
-        });
+          divPopup.querySelector("button.dec").addEventListener("click",()=>{
+            console.log("Dislike");
+            console.log(flush);
+            updateScore(flush._id, false)
+            successToast("Voto hecho correctamente")
+          });
 
-        flush.isSelected = flush.name === selectedFlushName.value;
+          marker.bindPopup(divPopup);
+
+          marker.on('click',()=>{
+            store.state.selectedCardName = flush.name;
+          });
       }
     })
 
@@ -95,6 +105,65 @@ const initializeMap = async () => {
     console.error('Error fetching flush list:', error);
   }
 };
+
+const condition = (x: number): string => {
+  let result: string;
+
+  switch (true) {
+    case x < 0:
+      console.log("Negative number!!");
+      break;
+    case x >= 4:
+      result = "Excelente";
+      break;
+    case x >= 3:
+      result = "Bueno";
+      break;
+    case x >= 2:
+      result = "Aceptable";
+      break;
+    case x >= 1:
+      result = "Sucio";
+      break;
+    case x<1:
+      result = "Muy sucio";
+      break;
+    default:
+      result = "undefined";
+  }
+  return result;
+};
+
+function updateScore(flushId, shouldIncrement) {
+
+  fetch(`https://api.flushfinder.es/flush/${flushId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ increment: shouldIncrement }),
+  })
+    .then(response => {
+      if (response.status === 410) {
+        return { message: 'Objeto eliminado' };
+      } else if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.message) {
+        console.log(data.message);
+      } else {
+        console.log('Actualización exitosa', data);
+      }
+    })
+    .catch(error => {
+      console.error('Error al actualizar la puntuación', error);
+    });
+}
+
+
 
 const watchUserLocation = () => {
   const watchOptions = {
@@ -161,6 +230,8 @@ onMounted(() => {
   }
 
   watchUserLocation();
+
+
 });
 
 watch(props, () => {
@@ -209,18 +280,18 @@ const addMarker = (coordinates: L.LatLng) => {
 
 
 
-
 watchEffect(() => {
   map.value?.on('click', (event: L.LeafletMouseEvent) => {
     if(!store.state.showList) addMarker(event.latlng);
     else{
-      console.log("no se esta mostrando el formulario");
       map.value.removeLayer(currentMarker);
     } 
   });
 });
 
+
 </script>
+
 
 
 <style scoped>
