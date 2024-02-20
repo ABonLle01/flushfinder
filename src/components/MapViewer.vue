@@ -1,7 +1,11 @@
 <template>
   <ion-page>
     <ion-content>
-      <div :id="mapId"></div>
+    
+       
+      <div :id="mapId">
+        <!-- <button @click="goToCurrentLocation" >BOTOOOOOOON</button> -->
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -10,7 +14,7 @@
 import { ref, onMounted, watch, watchEffect, computed } from 'vue';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { IonPage, IonContent } from '@ionic/vue';
+import { IonPage, IonContent, IonIcon } from '@ionic/vue';
 import { Preferences } from '@capacitor/preferences';
 import currentMarkerIcon from '../images/marklocation.png';
 import markerIcon from '../images/mapMarker.png';
@@ -33,6 +37,12 @@ const props = withDefaults(defineProps<{
   mapId: 'map',
 });
 
+const goToCurrentLocation = () => {
+  if (map.value && userMarker.value) {
+    const userLatLng = userMarker.value.getLatLng();
+    map.value.setView(userLatLng, 13);
+  }
+};
 
 const initializeMap = async () => {
   try {
@@ -117,9 +127,15 @@ const watchUserLocation = () => {
   const onError = (error: GeolocationPositionError) => {
     console.error('Error getting location:', error);
   };
-  
+
   // Inicia el seguimiento de la ubicación del usuario
   navigator.geolocation.watchPosition(onLocationUpdate, onError, watchOptions);
+
+  // Llama a goToCurrentLocation cuando se hace clic en el botón de ubicación actual
+  const currentLocationButton = document.querySelector('.current-location-button');
+  if (currentLocationButton) {
+    currentLocationButton.addEventListener('click', goToCurrentLocation);
+  }
 };
 
 onMounted(() => {
@@ -168,7 +184,7 @@ const registerFormHandler = (latitude: number, longitude: number) => {
 }; 
 
 
-const isMarkerAdded = ref(false); // Nuevo estado para rastrear si se ha agregado un marcador
+
 
 let currentMarker: L.Marker | null = null;
 
@@ -212,4 +228,11 @@ watchEffect(() => {
   width: 100%;
   height: 100%;
 }
+.locationbutton {
+  position: fixed; /* Posición fija para que el botón esté fuera del flujo normal del documento */
+  z-index: 999; /* Valor alto para asegurarse de que esté por encima del mapa */
+  top: 20px; /* Ajusta la distancia desde la parte superior */
+  left: 20px; /* Ajusta la distancia desde la izquierda */
+}
+
 </style>

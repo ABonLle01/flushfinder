@@ -27,6 +27,7 @@
     "cordova-plugin-geolocation": "^5.0.0",
     "ionicons": "^7.0.0",
     "leaflet": "^1.9.4",
+    "leaflet-search": "^4.0.0",
     "pinia": "^2.1.7",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
