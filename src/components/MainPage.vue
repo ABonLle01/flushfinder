@@ -27,23 +27,17 @@
 import { IonContent, IonPage } from '@ionic/vue';
 import FlushList from '@/components/FlushList.vue';
 import MapViewer from '@/components/MapViewer.vue';
- 
 import { getFlushList } from '@/services';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { useStore } from 'vuex';
- 
 import { getCurrentLocation } from '@/store';
 import { useLocationStore, useFilterStore } from '@/store/piniaStore';
 import { Preferences } from '@capacitor/preferences';
 
-let flushcounter = ref(0);
-
 const filtersStore = useFilterStore();
- 
 const store = useStore();
 const showList = ref(store.state.showList);
- 
 const router = useRouter();
 const flushList = ref([]);
 const currentLocation = ref();

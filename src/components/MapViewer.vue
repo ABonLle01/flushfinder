@@ -20,18 +20,10 @@ import { locationService } from "../services/DataService";
 import Toaster from "./Toaster.vue";
 import useToasterStore from "../store/useToasterStore";
 
-const toasterStore = useToasterStore();
-
-const successToast = (successMessage: string) => {
-  toasterStore.success({ text: successMessage });
-};
-
 const store = useStore();
 const map = ref<L.Map | null>(null);
 const userMarker = ref<L.Marker | null>(null);
 const isInitialPosSet = ref(false);
-
-
 
 const props = withDefaults(defineProps<{
   latitude: number;
@@ -42,6 +34,12 @@ const props = withDefaults(defineProps<{
   longitude: 0,
   mapId: 'map',
 });
+
+const toasterStore = useToasterStore();
+
+const successToast = (successMessage: string) => {
+  toasterStore.success({ text: successMessage });
+};
 
 const initializeMap = async () => {
   try {
@@ -65,7 +63,6 @@ const initializeMap = async () => {
         if (map.value) {
           const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value as L.Map);
             
-
           let divPopup = document.createElement("div");
           divPopup.innerHTML =             
           `
@@ -76,35 +73,26 @@ const initializeMap = async () => {
             <button class="inc">Incrementar Puntuación</button>
             <button class="dec">Disminuir Puntuación</button>
             `;
+
           divPopup.querySelector("button.inc").addEventListener("click",()=>{
             console.log("Like");
             console.log(flush);
             updateScore(flush._id, true)
             successToast("Voto hecho correctamente")
           });
+
           divPopup.querySelector("button.dec").addEventListener("click",()=>{
             console.log("Dislike");
             console.log(flush);
             updateScore(flush._id, false)
             successToast("Voto hecho correctamente")
           });
+
           marker.bindPopup(divPopup);
 
-          /*marker.bindPopup(
-            `
-            <h3>${flush.name}</h3>
-            <p>Puntuacion: ${flush.score}</p>
-            <p>Estado: ${condition(flush.score)}</p>
-            <button onclick="updateScore(flush._id, true)">Incrementar Puntuación</button>
-            <button onclick="${hola()}">Disminuir Puntuación</button>
-            `
-            ${updateScore(flush._id, false)}
-          );*/
-
-        marker.on('click',()=>{
-          store.state.selectedCardName = flush.name;
-        });
-
+          marker.on('click',()=>{
+            store.state.selectedCardName = flush.name;
+          });
       }
     })
 
@@ -175,29 +163,6 @@ function updateScore(flushId, shouldIncrement) {
     });
 }
 
-
-
-/* function updateScore(flushId, shouldIncrement) {
-  console.log("Flush id updateScore: "+flushId)
-  console.log("Flush id updateScore: "+shouldIncrement)
-
-  fetch(`http://localhost:3000/flush/${flushId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ increment: shouldIncrement }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Manejar la respuesta, actualizar el estado local si es necesario
-      console.log('Actualización exitosa', data);
-    })
-    .catch(error => {
-      console.error('Error al actualizar la puntuación', error);
-    });
-    console.log("Shouldincrement:"+shouldIncrement)
-} */
 
 
 const watchUserLocation = () => {

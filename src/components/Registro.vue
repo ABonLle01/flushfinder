@@ -74,9 +74,12 @@ import { useStore } from 'vuex';
 import { FormData as datos } from '../interfaces'; 
 import { locationService } from '@/services/DataService';
 import badWords from 'bad-words';
-
 import Toaster from "./Toaster.vue";
 import useToasterStore from "../store/useToasterStore";
+
+// Declaración de variables reactivas y funciones
+const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
+const store = useStore(); // Acceso al store Vuex
 
 const toasterStore = useToasterStore();
 
@@ -87,10 +90,6 @@ const errorToast = (errorMessage: string) => {
 const successToast = (successMessage: string) => {
   toasterStore.success({ text: successMessage });
 };
-
-// Declaración de variables reactivas y funciones
-const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
-const store = useStore(); // Acceso al store Vuex
 
 const formData = ref<datos>({
   name: '',
