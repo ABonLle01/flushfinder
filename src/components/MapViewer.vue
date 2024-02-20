@@ -11,7 +11,7 @@
 import { ref, onMounted, watch, watchEffect, computed } from 'vue';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { IonPage, IonContent, IonIcon } from '@ionic/vue';
+import { IonPage, IonContent } from '@ionic/vue';
 import { Preferences } from '@capacitor/preferences';
 import currentMarkerIcon from '../images/marklocation.png';
 import markerIcon from '../images/mapMarker.png';
@@ -19,6 +19,7 @@ import { useStore } from 'vuex';
 import { locationService } from "../services/DataService";
 import Toaster from "./Toaster.vue";
 import useToasterStore from "../store/useToasterStore";
+import blueMarker from '../images/blueMarker.png';
 
 const store = useStore();
 const map = ref<L.Map | null>(null);
@@ -43,7 +44,7 @@ const successToast = (successMessage: string) => {
 
 const initializeMap = async () => {
   try {
-    const response = await fetch('https://api.flushfinder.es/flush');
+    const response = await fetch('https://api.flushfinder.es/flush?latitude=${latitude}&longitude=${longitude}');
     const flushList = await response.json();
 
     const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
@@ -57,6 +58,8 @@ const initializeMap = async () => {
       iconAnchor: [16, 51],
       popupAnchor: [0, -32],
     });
+
+  
 
       flushList.forEach((flush) => {
         const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
@@ -196,15 +199,9 @@ const watchUserLocation = () => {
   const onError = (error: GeolocationPositionError) => {
     console.error('Error getting location:', error);
   };
-
+  
   // Inicia el seguimiento de la ubicación del usuario
   navigator.geolocation.watchPosition(onLocationUpdate, onError, watchOptions);
-
-  // Llama a goToCurrentLocation cuando se hace clic en el botón de ubicación actual
-  const currentLocationButton = document.querySelector('.current-location-button');
-  if (currentLocationButton) {
-    currentLocationButton.addEventListener('click', goToCurrentLocation);
-  }
 };
 
 onMounted(() => {
@@ -255,7 +252,7 @@ const registerFormHandler = (latitude: number, longitude: number) => {
 }; 
 
 
-
+const isMarkerAdded = ref(false); // Nuevo estado para rastrear si se ha agregado un marcador
 
 let currentMarker: L.Marker | null = null;
 
@@ -266,17 +263,24 @@ const addMarker = (coordinates: L.LatLng) => {
       map.value.removeLayer(currentMarker); // Elimina el marcador actual del mapa
       currentMarker = null; // Actualiza la referencia al marcador actual
     }
-    
-    // Crea un nuevo marcador en las coordenadas dadas
-    const marker = L.marker(coordinates).addTo(map.value as L.Map);
+  
+    const onclickMarker = L.icon({
+      iconUrl: blueMarker,
+      iconSize: [32, 51],
+      iconAnchor: [16, 51],
+      popupAnchor: [0, -32],
+    });
+
+    const marker = L.marker(coordinates, { icon: onclickMarker }).addTo(map.value as L.Map);
 
     // Actualiza la referencia al marcador actual
-    currentMarker = marker;
+    currentMarker = marker; 
 
     // Agrega el marcador al formulario o realiza otras acciones necesarias
     registerFormHandler(coordinates.lat, coordinates.lng);
   }
 };
+
 
 
 
@@ -299,11 +303,4 @@ watchEffect(() => {
   width: 100%;
   height: 100%;
 }
-.locationbutton {
-  position: fixed; /* Posición fija para que el botón esté fuera del flujo normal del documento */
-  z-index: 999; /* Valor alto para asegurarse de que esté por encima del mapa */
-  top: 20px; /* Ajusta la distancia desde la parte superior */
-  left: 20px; /* Ajusta la distancia desde la izquierda */
-}
-
 </style>

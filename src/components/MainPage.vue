@@ -42,8 +42,6 @@ const router = useRouter();
 const flushList = ref([]);
 const currentLocation = ref();
 const currentLocationStore = useLocationStore();
-
-
  
 const applyFilters = (filtros) => {
   getFlushList(filtros.handicapped, filtros.changingstation, filtros.free,currentLocation.value.latitude, currentLocation.value.longitude)
