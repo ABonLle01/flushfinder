@@ -2,6 +2,13 @@
 La aplicación se trata, básicamente de un mapa interactivo que permita al usuario encontrar los baños públicos cercanos con respecto a su ubicación actual.<br/>
 El público objetivo son personas con necesidades especiales a la hora de buscar un baño, por ello se dispone de unos filtros para personas discapacitadas, que los baños tengan sala de lactancia o que los aseos sean de pago.
 
+### Imágenes de la aplicación
+
+<div align="center">
+    <img src="imagenesMD/imagen1Flushfinder.png" alt="Imagen1" width="320" height="620"> <img src="imagenesMD/imagen2Flushfinder.png" alt="Imagen2" width="320" height="620"> <img src="imagenesMD/imagen3Flushfinder.png"         alt="Imagen3" width="320" height="620">
+</div>
+
+
 ## Acceso a la aplicación
 La aplicación tiene dos versiones: una versión web que funciona en cualquier navegador, y una versión movil que solamente funciona en dispositivos Android. Si tienes un dispositivo IOS recomendamos usar la web.<br/>
 [Enlace para la versión web](http:flushfinder.es) <br/>
@@ -87,8 +94,9 @@ se utiliza la aplicación, posteriormente pedirá acceso a la ubicación precisa
 - **Acceso remoto al servidor:**
   - Se utiliza PuTTY "api.flushfinder.es"
 
-- **Gestión de Frontend:**
-  - Acceso al dominio "server.flushfinder.es"
-  - Se transpila el proyecto con Express
-  - Se sube
-  - A traves del index se ejecuta todo el proyecto
+### Gestión de Frontend
+1. **Acceso al dominio "server.flushfinder.es"**
+2. **Se transpila el proyecto con Express**
+3. **Se sube**
+4. **A traves del index se ejecuta todo el proyecto**
+
