@@ -183,8 +183,8 @@ const submitForm = async() => {
     errors.value.push('Selecciona una puntuacion.')
   }
 
-  const savedLatitude = locationService.state.latitude.value
-  const savedLongitude = locationService.state.longitude.value
+  const savedLatitude = locationService.state.latitude
+  const savedLongitude = locationService.state.longitude
 
   // Comprobar si las coordenadas se guardaron correctamente
   if (savedLatitude!=null && savedLongitude!=null) {
@@ -245,8 +245,8 @@ const submitForm = async() => {
     console.log(formData.value);
     console.log('Formulario válido, datos:',  JSON.stringify(formData.value));
 
-    locationService.state.latitude.value=null;
-    locationService.state.longitude.value=null;
+    locationService.state.latitude=null;
+    locationService.state.longitude=null;
 
     toggleShowList();
 

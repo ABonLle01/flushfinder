@@ -6,7 +6,7 @@
       <ion-col size="4" class="col">
         <div class="bath">
 <!--      <img alt="BathLogo" v-bind:src="flush.image" /> -->
-          <img alt="BathLogo" :src="getCompleteImageUrl(flush.image)" />
+          <img alt="BathLogo" :src="getCompleteImageUrl(flush.image)" style="background-image:url(https://picsum.photos/100); background-size:cover;" />
         </div>
       </ion-col>
       
@@ -86,14 +86,14 @@ const getCompleteImageUrl = (imageName: string) => {
 /*return `${process.env.VUE_APP_API_URL}/uploads/${imageName}`; */
   let url:string="";
 
+  return `https://api.flushfinder.es/uploads/${imageName}`;
+
   if(!imageName.includes("flush")){
     url = "https://picsum.photos/100/100";
   }else{
     url =  `https://api.flushfinder.es/uploads/${imageName}`;
   }
 
-  /* console.log(url) */
-  return url;
   
 };
 
@@ -166,9 +166,6 @@ const condition = (x: number): string => {
   let result: string;
 
   switch (true) {
-    case x < 0:
-      console.log("Negative number!!");
-      break;
     case x >= 4:
       result = "Excelente";
       break;

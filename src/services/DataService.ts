@@ -1,15 +1,19 @@
-import { ref, Ref } from 'vue';
  
 export interface LocationState {
-    latitude: Ref<number | null>;
-    longitude: Ref<number | null>;
+    latitude: number | null;
+    longitude: number | null;
   }
    
   const state: LocationState = {
-    latitude: ref(null),
-    longitude: ref(null),
+    latitude: null,
+    longitude: null,
   };
-   
+  
+  const mapLocation: LocationState = {
+    latitude: null,
+    longitude:null,
+  }
+
   export const locationService = {
-    state,
+    state, mapLocation,
   };

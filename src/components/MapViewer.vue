@@ -8,17 +8,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, watchEffect, computed } from 'vue';
+import { ref, onMounted, watch, watchEffect } from 'vue';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { IonPage, IonContent } from '@ionic/vue';
 import { Preferences } from '@capacitor/preferences';
 import currentMarkerIcon from '../images/marklocation.png';
 import markerIcon from '../images/mapMarker.png';
+import blueMarker from '../images/blueMarker.png';
 import { useStore } from 'vuex';
 import { locationService } from "../services/DataService";
 import Toaster from "./Toaster.vue";
 import useToasterStore from "../store/useToasterStore";
+
 
 const store = useStore();
 const map = ref<L.Map | null>(null);
@@ -41,9 +43,16 @@ const successToast = (successMessage: string) => {
   toasterStore.success({ text: successMessage });
 };
 
+
+let c1 = locationService.mapLocation.latitude;
+let c2 = locationService.mapLocation.longitude;
+let url = `https://api.flushfinder.es/flush?latitude=${c1}&longitude=${c2}`;
+
 const initializeMap = async () => {
+
   try {
-    const response = await fetch('https://api.flushfinder.es/flush');
+
+    const response = await fetch(url);
     const flushList = await response.json();
 
     const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
@@ -58,41 +67,43 @@ const initializeMap = async () => {
       popupAnchor: [0, -32],
     });
 
-      flushList.forEach((flush) => {
-        const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
-        if (map.value) {
-          const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value as L.Map);
-            
-          let divPopup = document.createElement("div");
-          divPopup.innerHTML =             
-          `
-            <h3>${flush.name}</h3>
-            <p>Puntuacion: ${flush.score}</p>
-            <p>Estado: ${condition(flush.score)}</p>
-            <p>Valoraciones: ${flush.rating}</p>
-            <button class="inc">Incrementar Puntuación</button>
-            <button class="dec">Disminuir Puntuación</button>
-            `;
+    flushList.forEach((flush) => {
+      const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
+      if (map.value) {
+        const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value as L.Map);
+          
+        let divPopup = document.createElement("div");
+        divPopup.innerHTML =             
+        `
+          <h3>${flush.name}</h3>
+          <p>Puntuacion: ${flush.score}</p>
+          <p>Estado: ${condition(flush.score)}</p>
+          <p>Valoraciones: ${flush.rating}</p>
+          <button class="inc">Incrementar Puntuación</button>
+          <button class="dec">Disminuir Puntuación</button>
+          `;
 
-          divPopup.querySelector("button.inc").addEventListener("click",()=>{
-            console.log("Like");
-            console.log(flush);
-            updateScore(flush._id, true)
-            successToast("Voto hecho correctamente")
-          });
+        divPopup.querySelector("button.inc").addEventListener("click",()=>{
+          console.log("Like");
+          console.log(flush);
+          updateScore(flush._id, true)
+          successToast("Voto hecho correctamente")
+        });
 
-          divPopup.querySelector("button.dec").addEventListener("click",()=>{
-            console.log("Dislike");
-            console.log(flush);
-            updateScore(flush._id, false)
-            successToast("Voto hecho correctamente")
-          });
+        divPopup.querySelector("button.dec").addEventListener("click",()=>{
+          console.log("Dislike");
+          console.log(flush);
+          updateScore(flush._id, false)
+          successToast("Voto hecho correctamente")
+        });
 
-          marker.bindPopup(divPopup);
+        marker.bindPopup(divPopup);
 
-          marker.on('click',()=>{
-            store.state.selectedCardName = flush.name;
-          });
+        marker.on('click',()=>{
+          store.state.selectedCardName = flush.name;
+        });
+
+        console.log(flush);
       }
     })
 
@@ -110,9 +121,6 @@ const condition = (x: number): string => {
   let result: string;
 
   switch (true) {
-    case x < 0:
-      console.log("Negative number!!");
-      break;
     case x >= 4:
       result = "Excelente";
       break;
@@ -135,6 +143,8 @@ const condition = (x: number): string => {
 };
 
 function updateScore(flushId, shouldIncrement) {
+
+
 
   fetch(`https://api.flushfinder.es/flush/${flushId}`, {
     method: 'PUT',
@@ -225,7 +235,6 @@ onMounted(() => {
 
   watchUserLocation();
 
-
 });
 
 watch(props, () => {
@@ -236,8 +245,8 @@ watch(props, () => {
 // Función para llamar a la función del formulario de registro con las coordenadas del marcador
 const registerFormHandler = (latitude: number, longitude: number) => {
 
-  locationService.state.latitude=ref(latitude);
-  locationService.state.longitude=ref(longitude);
+  locationService.state.latitude=latitude;
+  locationService.state.longitude=longitude;
 
   const registerForm = document.getElementById('register-form');
   if (registerForm) {
@@ -254,19 +263,25 @@ const isMarkerAdded = ref(false); // Nuevo estado para rastrear si se ha agregad
 let currentMarker: L.Marker | null = null;
 
 const addMarker = (coordinates: L.LatLng) => {
-  if (map.value) { 
+  if (map.value) {
     // Elimina el marcador actual si existe
     if (currentMarker) {
       map.value.removeLayer(currentMarker); // Elimina el marcador actual del mapa
       currentMarker = null; // Actualiza la referencia al marcador actual
     }
-    
-    // Crea un nuevo marcador en las coordenadas dadas
-    const marker = L.marker(coordinates).addTo(map.value as L.Map);
-
+ 
+    const onclickMarker = L.icon({
+      iconUrl: blueMarker,
+      iconSize: [29, 45],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32],
+    });
+ 
+    const marker = L.marker(coordinates, { icon: onclickMarker }).addTo(map.value as L.Map);
+ 
     // Actualiza la referencia al marcador actual
     currentMarker = marker;
-
+ 
     // Agrega el marcador al formulario o realiza otras acciones necesarias
     registerFormHandler(coordinates.lat, coordinates.lng);
   }
