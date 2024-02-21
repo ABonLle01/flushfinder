@@ -12,7 +12,7 @@ El público objetivo son personas con necesidades especiales a la hora de buscar
 ## Acceso a la aplicación
 La aplicación tiene dos versiones: una versión web que funciona en cualquier navegador, y una versión movil que solamente funciona en dispositivos Android. Si tienes un dispositivo IOS recomendamos usar la web.<br/>
 [Enlace para la versión web](http:flushfinder.es) <br/>
-[Enlace para la APK Android](https://drive.google.com/file/d/14uqGTuqb5NH88gAEwTMYIKzKNrMy04bh/view?usp=sharing)
+[Enlace para la APK Android](https://drive.google.com/file/d/1MiTsMvBIVW7MBn7LvNZbajjgm47_dys9/view?usp=sharing)
 
 ## Instalación
 Una vez descargado el APK, hay que instalarlo. Para ello nos vamos al apartado “Mis Archivos” o en su defecto, el lugar en el que se encuentran los archivos de tu dispositivo móvil.  <br/>
