@@ -53,8 +53,9 @@ let url = `${VUE_APP_API_URL}flush?latitude=${c1}&longitude=${c2}`;
 const initializeMap = async () => {
 
   try {
-    const response = await fetch(url); // Obtiene los datos de los marcadores desde la API
-    const flushList = await response.json(); // Convierte la respuesta a formato JSON
+    // Obtiene los datos de los marcadores desde la API
+    const response = await fetch(url); 
+    const flushList = await response.json(); 
 
     // Establece las coordenadas iniciales del mapa
     const initialCoordinates: L.LatLngTuple = [props.latitude, props.longitude];
@@ -311,7 +312,7 @@ const addMarker = (coordinates: L.LatLng) => {
   }
 };
 
-// Observa el evento de clic en el mapa y agrega o elimina un marcador según el estado de 'showList' en el almacenamiento
+// Observa el evento de clic en el mapa y agrega o elimina un marcador
 watchEffect(() => {
   map.value?.on('click', (event: L.LeafletMouseEvent) => {
     // Si 'showList' es falso, agrega un marcador en las coordenadas pulsadas
