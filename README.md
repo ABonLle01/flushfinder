@@ -5,7 +5,7 @@ El público objetivo son personas con necesidades especiales a la hora de buscar
 ### Imágenes de la aplicación
 
 <div align="center">
-    <img src="imagenesMD/imagen1Flushfinder.png" alt="Imagen1" width="320" height="620"> <img src="imagenesMD/imagen2Flushfinder.png" alt="Imagen2" width="320" height="620"> <img src="imagenesMD/imagen3Flushfinder.png"         alt="Imagen3" width="320" height="620">
+    <img src="imagenesMD/imagen1Flushfinder.png" alt="Imagen1" width="300" height="620"> <img src="imagenesMD/imagen2Flushfinder.png" alt="Imagen2" width="300" height="620"> <img src="imagenesMD/imagen3Flushfinder.png"         alt="Imagen3" width="300" height="620">
 </div>
 
 
