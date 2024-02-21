@@ -17,7 +17,12 @@
       <img alt="Free" src="../images/filters/free.png" />
       <ion-checkbox label-placement="end" justify="start"  id="free" value="free" v-model="filtros.free">De pago</ion-checkbox>
     </div>
+
+    <div class="counter item">
+      <p> Número de baños: <span>{{ store.state.flushcounter }}</span>  </p>
+    </div>
   </div>
+
 </template>
 
 
@@ -26,17 +31,24 @@ import { IonCheckbox } from '@ionic/vue';
 import { ref, Ref, watch } from 'vue';
 import { Filters } from '@/interfaces';
 import { useFilterStore } from '@/store/piniaStore';
+import { useStore } from 'vuex';
 
+// Se utiliza la función useStore para obtener el estado global de la aplicación
+const store = useStore();
+// Se utiliza la función useFilterStore para obtener el estado de los filtros
 const filtersStore = useFilterStore();
 
+// Declaración de un objeto ref para contener los filtros
 const filtros: Ref<Filters> = ref({
   handicapped: false,
   changingstation: false,
   free: false,
 });
 
+// Observa los cambios en el objeto de filtros y realiza acciones cuando cambia
 watch(filtros.value, () => {
   filtersStore.setFilters(filtros.value);
+  console.log("Flush counter: " + store.state.flushcounter + " (Filters)");
 })
 
 </script>
@@ -74,6 +86,12 @@ img{
 
 .item:last-child{
   border-bottom: none;
+}
+
+
+.counter p span{
+  font-weight: bold;
+  color: #EA358C;
 }
 
 </style>

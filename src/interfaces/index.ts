@@ -1,3 +1,6 @@
+import { TToastStatus } from "@/store/useToasterStore";
+
+//Interfaces utilizadas en el resto del código
 interface Filters {
     handicapped: boolean,
     changingstation: boolean,
@@ -11,17 +14,30 @@ interface Coordinates{
 
 interface FormData {
     name: string;
-    image: string;
+    image: File | null;
     score: string;
     latitude: number;
     longitude: number;
     handicapped: boolean;
     changingstation: boolean;
     free: boolean;
-  }
+}
 
-export type {
-    Filters, Coordinates, FormData
+interface MapInstance {
+    getMarkerById(id: any): any;
+    getLayer(name: string): any;
+}
+
+interface IToast {
+    text: string;
+    status: TToastStatus;
+    id: number;
+    cssClass: string;
+}
+
+
+export type{
+    Filters, Coordinates, MapInstance,IToast, FormData
 }
 
 

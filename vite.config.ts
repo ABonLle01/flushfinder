@@ -14,6 +14,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      external: ['vue-toast-notification/dist/index.css'],
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom'
