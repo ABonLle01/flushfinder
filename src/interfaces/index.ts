@@ -1,5 +1,6 @@
 import { TToastStatus } from "@/store/useToasterStore";
 
+//Interfaces utilizadas en el resto del código
 interface Filters {
     handicapped: boolean,
     changingstation: boolean,
@@ -20,9 +21,9 @@ interface FormData {
     handicapped: boolean;
     changingstation: boolean;
     free: boolean;
-  }
+}
 
-  interface MapInstance {
+interface MapInstance {
     getMarkerById(id: any): any;
     getLayer(name: string): any;
 }
@@ -32,7 +33,7 @@ interface IToast {
     status: TToastStatus;
     id: number;
     cssClass: string;
-  }
+}
 
 
 export type{

@@ -35,19 +35,19 @@ import { getCurrentLocation } from '@/store';
 import { useLocationStore, useFilterStore } from '@/store/piniaStore';
 import { Preferences } from '@capacitor/preferences';
 
-const filtersStore = useFilterStore();
-const store = useStore();
-const showList = ref(store.state.showList);
-const router = useRouter();
-const flushList = ref([]);
-const currentLocation = ref();
-const currentLocationStore = useLocationStore();
+const filtersStore = useFilterStore(); // Uso de useFilterStore para obtener el estado de los filtros
+const store = useStore(); // Uso de useStore para obtener el estado global de la aplicación
+const showList = ref(store.state.showList); // Referencia reactiva para mostrar la lista de elementos
+const router = useRouter(); // Uso de useRouter para obtener el router actual
+const flushList = ref([]); // Referencia reactiva para la lista de objetos flushList
+const currentLocation = ref(); // Referencia reactiva para la ubicación actual
+const currentLocationStore = useLocationStore(); // Uso de useLocationStore para obtener el estado de la ubicación actual
  
+// Función para aplicar los filtros y obtener la lista actualizada
 const applyFilters = (filtros) => {
   getFlushList(filtros.handicapped, filtros.changingstation, filtros.free,currentLocation.value.latitude, currentLocation.value.longitude)
   .then((updatedList) => {
     flushList.value = updatedList;
-
     store.state.flushcounter=flushList.value.length;
     console.log("Store state: "+ store.state.flushcounter + " (MainPage)")
   })
@@ -56,43 +56,57 @@ const applyFilters = (filtros) => {
   });
 };
 
+// Observa los cambios en los filtros y aplica los filtros cuando cambian
 watch(() => filtersStore.filters, () => {
     applyFilters(filtersStore.filters)
-  }, { deep: true }
+  }, { deep: true }// Establece la opción deep como true para observar cambios profundos en los filtros
 )
 
+// Función que se ejecuta cuando el componente se monta en el DOM
 onMounted(async () => {
   try {
+    // Obtiene la última ubicación del usuario
     let { value }: any = await Preferences.get({ key: 'userLastLocation' });
     value = JSON.parse(value);
 
+    // Establece la ubicación actual con la última ubicación conocida o con valores predeterminados
     currentLocation.value = {
         latitude: value ? value.latitude : 36,
         longitude: value ? value.longitude : -4
     };
 
+    // Obtiene la lista inicial de objetos flushList
     const initialList = await getFlushList(false, false, false, currentLocation.value.latitude, currentLocation.value.longitude);
 
+    // Actualiza la lista de objetos flushList con la lista inicial
     flushList.value = initialList;
     
+    // Actualiza el estado de la ubicación actual en la tienda de ubicaciones
     currentLocationStore.setCurrentLocation(currentLocation.value);
+    // Obtiene la ubicación actual del dispositivo
     getCurrentLocation();
 
   } catch (error) {
+    // Manejo de errores en caso de falla al obtener la ubicación
       console.error(error);
   }
 });
  
- 
+// Función que se ejecuta cuando el componente se monta en el DOM
 onMounted(() => {
-  store.watch(() => store.state.showList, (newValue) => {
-    showList.value = newValue;
+  // Observa los cambios en el estado de la lista para mostrarla y actualizar la ruta
+  store.watch(() => store.state.showList, (value) => {
+    // Actualiza el valor de mostrar lista
+    showList.value = value;
+    
     actualizarRuta();
   });
 });
  
- 
+// Función para actualizar la ruta según el estado de mostrar lista
 const actualizarRuta = () => {
+  //La variable currentRoute se declara con un tipo que puede ser RouteLocationNormalizedLoaded (si la ruta está cargada) o undefined (si la ruta no está definida o cargada). 
+  //Esto se hace para manejar el caso en el que la ruta actual puede no estar disponible en un momento dado. 
   const currentRoute: RouteLocationNormalizedLoaded | undefined = router.currentRoute.value;
  
   if (currentRoute) {
@@ -102,6 +116,7 @@ const actualizarRuta = () => {
   }
 };
  
+// Función para establecer la ubicación actual
 const setLocation = ({ latitude, longitude }) => {
   console.log({ latitude, longitude })
   currentLocation.value = { latitude, longitude };

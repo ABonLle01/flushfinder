@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 import { IToast } from "@/interfaces";
 
-// Status will define toast color and icon
-export type TToastStatus = "success" | "warning" | "error";
+export type TToastStatus = "success" | "warning" | "error"; // Definición de los posibles estados de los toasts
 
-type ToastPayload = { timeout?: number; text: string };
+type ToastPayload = { timeout?: number; text: string }; // Definición del tipo de carga útil para los toasts
 
-const defaultTimeout = 3000;
+const defaultTimeout = 3000; // Tiempo de espera predeterminado para los toasts
 
+// Función para crear un objeto de toast con el texto y el estado proporcionados
 const createToast = (text: string, status: TToastStatus): IToast => ({
     text,
     status,
@@ -16,23 +16,26 @@ const createToast = (text: string, status: TToastStatus): IToast => ({
     cssClass: `toast-${status}`,
 });
 
+// Definición del almacenamiento Vuex para manejar los toasts
 export default defineStore("toaster-store", {
     state: (): { toasts: IToast[] } => ({
-        toasts: [],
+        toasts: [], // Inicialmente no hay toasts
     }),
     actions: {
+        // Acción para actualizar el estado del almacenamiento con un nuevo toast
         updateState(payload: ToastPayload, status: TToastStatus) {
-            // Get text and timeout from payload
+            // Obtener el texto y el tiempo de espera del payload
             const { text, timeout } = payload;
-            // We create the toast with function above
+            // Creamos el toast utilizando la función anterior
             const toast = createToast(text, status);
-            // We push toasts to the state
+            // Agregamos el toast al estado de los toasts
             this.toasts.push(toast);
-            // We create a delay to delete toast after its provided timeout is over
+            // Creamos un retraso para eliminar el toast después de que su tiempo de espera proporcionado haya terminado
             setTimeout(() => {
                 this.toasts = this.toasts.filter((t) => t.id !== toast.id);
-            }, timeout ?? defaultTimeout);
+            }, timeout ?? defaultTimeout); // Si no se proporciona un tiempo de espera se utiliza el tiempo de espera predeterminado
         },
+        // Acciones para mostrar diferentes tipos de toast
         success(payload: ToastPayload) {
             this.updateState(payload, "success");
         },

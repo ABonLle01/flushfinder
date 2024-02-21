@@ -14,10 +14,11 @@
 import useToasterStore, { TToastStatus } from "@/store/useToasterStore";
 import { IonIcon } from "@ionic/vue";
 
+// Asigna un ícono específico a cada estado de notificación
 const toastIconMap: Record<TToastStatus, string> = {
-  error: "toast-error",
-  warning: "toast-warning",
-  success: "toast-success",
+  error: "toast-error",     // Notificaciones de error
+  warning: "toast-warning", // Notificaciones de advertencia
+  success: "toast-success", // Notificaciones de éxito
 };
 
 const toastStore = useToasterStore();

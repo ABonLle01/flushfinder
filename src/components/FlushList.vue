@@ -73,7 +73,7 @@ import { VUE_APP_API_URL } from '@/services/index';
 // Uso de la función useStore para obtener el estado global de la aplicación
 const store = useStore();
 
-// Definición de las propiedades esperadas
+// Definición de las propiedades esperadas utilizando defineProps para declarar las propiedades esperadas en un componente Vue.
 const props = defineProps({
   flushList: {
     type: Array<any>
@@ -145,12 +145,14 @@ const calcularDistancia = (latitude: number, longitude: number) => {
   return result;
 };
 
+// Emisión de eventos definidos utilizando defineEmits para declarar los eventos personalizados que un componente Vue puede emitir.
 const emit = defineEmits(['setLocation'])
  
 const setLocation = (args) => {
   emit('setLocation', args)
 }
 
+// Función para establecer la ubicación y resaltarla
 const setLocaltionAndHighlight = (index:number, name:string) => {
   setLocation({
     latitude: Number(props.flushList[index].latitude),
@@ -160,6 +162,7 @@ const setLocaltionAndHighlight = (index:number, name:string) => {
 
 }
 
+// Función para definir el estado de limpieza basado en un valor numérico
 const condition = (x: number): string => {
   let result: string;
 

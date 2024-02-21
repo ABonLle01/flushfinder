@@ -77,12 +77,13 @@ import badWords from 'bad-words';
 import Toaster from "./Toaster.vue";
 import useToasterStore from "../store/useToasterStore";
 
-// Declaración de variables reactivas y funciones
+
 const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
 const store = useStore(); // Acceso al store Vuex
 
 const toasterStore = useToasterStore();
 
+// Funciones para mostrar notificaciones de éxito y error
 const errorToast = (errorMessage: string) => {
   toasterStore.error({ text: errorMessage });
 };
@@ -91,6 +92,7 @@ const successToast = (successMessage: string) => {
   toasterStore.success({ text: successMessage });
 };
 
+// Objeto FormData reactivo para almacenar los datos del formulario
 const formData = ref<datos>({
   name: '',
   image: null,
@@ -102,7 +104,7 @@ const formData = ref<datos>({
   free: false
 });
  
-//Imagen
+// Función para manejar el cambio de imagen en el formulario
 const handleImageChange = (event) => {
   const fileInput = event.target;
   const file = fileInput.files[0];
@@ -112,25 +114,30 @@ const handleImageChange = (event) => {
   }
 };
 
+// Función para manejar el cambio de estado de los toggles en el formulario
 const handleToggleChange = (toggleName: keyof FormData | string) => {
   formData.value[toggleName] = !formData.value[toggleName];
 };
  
+// Función para alternar la visibilidad de la lista de baños en el mapa
 const toggleShowList = () => {
   store.dispatch('toggleShowList');
 };
 
+// Función para manejar la selección de la puntuación del baño en el formulario
 const rating = (event: Event) => {
   const selectedRating = (event.target as HTMLInputElement).value;
   formData.value.score = selectedRating;
   console.log("Puntuación seleccionada:", selectedRating);
 };
 
+// Función para filtrar palabras malsonantes en el nombre del baño
 function filterBadWords(name: string): string {
   const filter = new badWords();
   return filter.clean(name);
 }
  
+// Función para validar el nombre del baño
 function validateBathroomName(name: string): boolean {
   // Expresión regular que coincide con cadenas que contienen solo letras, números, espacios y ciertos caracteres especiales comunes,
   // y no permite varios caracteres especiales seguidos
@@ -140,6 +147,7 @@ function validateBathroomName(name: string): boolean {
   // y false si contiene algún otro tipo de caracter
 
   if (!regex.test(name)) {
+    // Si el nombre no pasa la validación, muestra un mensaje de error y agrega el error al array de errores
     if (name.trim() === '') {
       errorToast('El nombre no puede estar vacio.');
       errors.value.push('El nombre no puede estar vacío.');
@@ -150,10 +158,12 @@ function validateBathroomName(name: string): boolean {
     return false; // Retorna false para indicar que la validación ha fallado
   }
 
-  return regex.test(name);
+  return regex.test(name); // Retorna true si la validación es exitosa
 }
 
+// Función para limpiar los datos del formulario al cancelar la inserción de un baño
 const cancel = () => {
+  // Restablece todos los valores del formulario a su estado inicial
   formData.value.name="";
   formData.value.image= null;
   formData.value.score= '',
@@ -163,9 +173,10 @@ const cancel = () => {
   formData.value.changingstation = false;
   formData.value.free = false;
 
-  toggleShowList();
+  toggleShowList(); // Oculta la lista de baños en el mapa
 }
 
+// Función para enviar el formulario de inserción de datos del baño
 const submitForm = async() => {
   errors.value = [];
 
@@ -183,6 +194,7 @@ const submitForm = async() => {
     errors.value.push('Selecciona una puntuacion.')
   }
 
+  // Obtiene las coordenadas de la ubicación del baño guardadas previamente
   const savedLatitude = locationService.state.latitude
   const savedLongitude = locationService.state.longitude
 
@@ -199,7 +211,7 @@ const submitForm = async() => {
     return;
   }
 
-  // Si no hay errores en el formulario
+  // Verifica si se seleccionó una imagen para el baño
   if(!formData.value.image || formData.value.image==null){
     errorToast('Selecciona una imagen.');
     errors.value.push('Selecciona una imagen.');
@@ -209,7 +221,7 @@ const submitForm = async() => {
   if (errors.value.length === 0) {  
 
     try {
-      // Obtiene la última ubicación del usuario
+      // Crea un objeto FormData con los datos del formulario
       const formDataToSend = new FormData();
       formDataToSend.append('name', formData.value.name);
       formDataToSend.append('score', formData.value.score);
@@ -220,7 +232,7 @@ const submitForm = async() => {
       formDataToSend.append('free', formData.value.free.toString());
       
       if (formData.value.image instanceof File) {
-        formDataToSend.append('image', formData.value.image);
+        formDataToSend.append('image', formData.value.image); // Agrega la imagen al objeto FormData
         console.log("imagen cargada: ",formData.value.image)
       }
 
@@ -247,6 +259,7 @@ const submitForm = async() => {
 
     locationService.state.latitude=null;
     locationService.state.longitude=null;
+    formData.value.image= null;
 
     toggleShowList();
 
