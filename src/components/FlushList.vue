@@ -6,10 +6,10 @@
       <ion-col size="4" class="col">
         <div class="bath">
 <!--      <img alt="BathLogo" v-bind:src="flush.image" /> -->
-          <img alt="BathLogo" :src="getCompleteImageUrl(flush.image)" style="background-image:url(https://picsum.photos/100); background-size:cover;" />
+          <img alt="" :src="getCompleteImageUrl(flush.image)"/>
         </div>
       </ion-col>
-      
+    
       <ion-col size="8" class="col info">
 
         <div class="properties">
@@ -68,7 +68,6 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { Coordinates } from '@/interfaces';
 import { useStore } from 'vuex';
 import { VUE_APP_API_URL } from '@/services/index';
-
 
 // Uso de la función useStore para obtener el estado global de la aplicación
 const store = useStore();
@@ -215,6 +214,8 @@ const condition = (x: number): string => {
   height: 120px;
   width: 120px;
   border-radius: 15px;
+  background-image:url("../icon1024square.png"); 
+  background-size:cover;
 }
 .bath img{
   max-height: 100px;
