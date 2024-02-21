@@ -2,14 +2,15 @@ import { ref } from "vue";
 import { locationService } from "./DataService";
 import store from "@/store";
 
+export const VUE_APP_API_URL='https://api.flushfinder.es/';
+
 const getFlushList = async (handicapped: boolean, changingstation: boolean, free: boolean, latitude: number, longitude: number) => {
 
     locationService.mapLocation.latitude=latitude;
     locationService.mapLocation.longitude=longitude;
 
     try {
-        let url = `https://api.flushfinder.es/flush?latitude=${latitude}&longitude=${longitude}`;
-        /* let url = `http://localhost:3000/flush?latitude=${latitude}&longitude=${longitude}`; */
+        let url = `${VUE_APP_API_URL}flush?latitude=${latitude}&longitude=${longitude}`;
  
         if (handicapped) {
             url += '&handicapped=true';

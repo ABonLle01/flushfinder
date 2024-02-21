@@ -20,7 +20,7 @@ import { useStore } from 'vuex';
 import { locationService } from "../services/DataService";
 import Toaster from "./Toaster.vue";
 import useToasterStore from "../store/useToasterStore";
-
+import { VUE_APP_API_URL } from '@/services/index';
 
 const store = useStore();
 const map = ref<L.Map | null>(null);
@@ -46,7 +46,7 @@ const successToast = (successMessage: string) => {
 
 let c1 = locationService.mapLocation.latitude;
 let c2 = locationService.mapLocation.longitude;
-let url = `https://api.flushfinder.es/flush?latitude=${c1}&longitude=${c2}`;
+let url = `${VUE_APP_API_URL}flush?latitude=${c1}&longitude=${c2}`;
 
 const initializeMap = async () => {
 
@@ -146,7 +146,7 @@ function updateScore(flushId, shouldIncrement) {
 
 
 
-  fetch(`https://api.flushfinder.es/flush/${flushId}`, {
+  fetch(`${VUE_APP_API_URL}flush/${flushId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

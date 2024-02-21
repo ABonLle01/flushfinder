@@ -65,8 +65,8 @@ import {archiveOutline, archiveSharp, heartOutline, heartSharp, mailOutline, mai
    warningOutline, warningSharp} from 'ionicons/icons';
 
 import { useStore } from 'vuex';
-
 import { useRouter } from 'vue-router';
+
 
 const router = useRouter();
 
@@ -122,6 +122,8 @@ const toggleShowList = () => {
   store.dispatch('toggleShowList');
   
 };
+
+
 
 </script>
 

@@ -67,9 +67,13 @@ import { haversineDistance } from '@/store/index';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Coordinates } from '@/interfaces';
 import { useStore } from 'vuex';
+import { VUE_APP_API_URL } from '@/services/index';
 
+
+// Uso de la función useStore para obtener el estado global de la aplicación
 const store = useStore();
 
+// Definición de las propiedades esperadas
 const props = defineProps({
   flushList: {
     type: Array<any>
@@ -82,21 +86,13 @@ const props = defineProps({
   }
 })
 
+// Función para obtener la URL completa de una imagen
 const getCompleteImageUrl = (imageName: string) => {
-/*return `${process.env.VUE_APP_API_URL}/uploads/${imageName}`; */
-  let url:string="";
-
-  return `https://api.flushfinder.es/uploads/${imageName}`;
-
-  if(!imageName.includes("flush")){
-    url = "https://picsum.photos/100/100";
-  }else{
-    url =  `https://api.flushfinder.es/uploads/${imageName}`;
-  }
-
-  
+return `${VUE_APP_API_URL}uploads/${imageName}`;
+/*   return `https://api.flushfinder.es/uploads/${imageName}`; */
 };
 
+// Referencia para la ubicación actual
 const currentLocation = ref({ 
   latitude: props.initialLocation.latitude ? props.initialLocation.latitude : 0, 
   longitude: props.initialLocation.longitude ? props.initialLocation.longitude : 0
@@ -105,6 +101,7 @@ const currentLocation = ref({
 let lat:number = 0;
 let long:number = 0;
 
+// Obtención de la posición actual del dispositivo
 Geolocation.getCurrentPosition().then((resp) => {
   currentLocation.value = {
     latitude: resp.coords.latitude,
@@ -120,6 +117,7 @@ Geolocation.getCurrentPosition().then((resp) => {
   console.error('Error getting location', error);
 });
 
+// Función para calcular la distancia entre dos puntos
 const calcularDistancia = (latitude: number, longitude: number) => {
   const puntoA: Coordinates = {
     latitude: currentLocation.value.latitude,
@@ -134,7 +132,7 @@ const calcularDistancia = (latitude: number, longitude: number) => {
   let distancia = haversineDistance(puntoA, puntoB);
   let result = "";
   
-  //si la distancia es menor a 1 km
+  // Formateo del resultado en metros o kilómetros dependiendo de la distancia
   if(distancia<1){
     distancia=distancia * 1000;
     distancia=parseFloat(distancia.toFixed(0));
