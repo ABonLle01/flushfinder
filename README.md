@@ -1,6 +1,6 @@
 # Flushfinder 
 La aplicación se trata, básicamente de un mapa interactivo que permita al usuario encontrar los baños públicos cercanos con respecto a su ubicación actual.<br/>
-El público objetivo son personas con necesidades especiales a la hora de buscar un baño, por ello se dispone de unos filtros para personas discapacitadas, que los baños tengan sala de lactancia o que los aseos sean de pago.
+El público objetivo son personas con necesidades especiales a la hora de buscar un baño, por ello se dispone de unos filtros con los que el usuario puede interactuar según sus necesidades.
 
 ### Imágenes de la aplicación
 
@@ -16,8 +16,8 @@ La aplicación tiene dos versiones: una versión web que funciona en cualquier n
 
 ## Instalación
 Una vez descargado el APK, hay que instalarlo. Para ello nos vamos al apartado “Mis Archivos” o en su defecto, el lugar en el que se encuentran los archivos de tu dispositivo móvil.  <br/>
-Una vez dentro, nos vamos al apartado “APK” y buscamos el archivo “app-debug.apk”. Pulsamos sobre él e instalamos. La primera vez que se ejecuta la APK, se debe conceder el permiso de conocer tu ubicación mientras
-se utiliza la aplicación, posteriormente pedirá acceso a la ubicación precisa.
+Una vez dentro, nos vamos al apartado “APK” y buscamos el archivo “FlushFinderRC.apk”, pulsamos sobre él e instalamos. <br/>
+La primera vez que se ejecuta la APK, se debe conceder el permiso de conocer tu ubicación mientras se utiliza la aplicación, posteriormente pedirá acceso a la ubicación precisa.
 
 ### Comandos utilizados
 
