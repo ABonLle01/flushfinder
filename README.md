@@ -1,4 +1,4 @@
-# Flushfinder 
+# Documentación sobre Flushfinder 
 La aplicación se trata, básicamente de un mapa interactivo que permita al usuario encontrar los baños públicos cercanos con respecto a su ubicación actual.<br/>
 El público objetivo son personas con necesidades especiales a la hora de buscar un baño, por ello se dispone de unos filtros con los que el usuario puede interactuar según sus necesidades.
 
