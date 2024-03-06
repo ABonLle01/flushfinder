@@ -16,7 +16,7 @@
           <ion-row class="data line">
             <ion-col class="infoCol">
               <div class="score">
-                <p>{{ flush.score }}</p>
+                <p>{{ score(flush.score) }}</p>
                 <img src="../images/star.png" alt="yellow star">
               </div>
               
@@ -68,6 +68,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { Coordinates } from '@/interfaces';
 import { useStore } from 'vuex';
 import { VUE_APP_API_URL } from '@/services/index';
+import { score, condition } from '../store/piniaStore';
 
 // Uso de la función useStore para obtener el estado global de la aplicación
 const store = useStore();
@@ -160,33 +161,6 @@ const setLocaltionAndHighlight = (index:number, name:string) => {
   store.state.selectedCardName = name;
 
 }
-
-// Función para definir el estado de limpieza basado en un valor numérico
-const condition = (x: number): string => {
-  let result: string;
-
-  switch (true) {
-    case x >= 4:
-      result = "Excelente";
-      break;
-    case x >= 3:
-      result = "Bueno";
-      break;
-    case x >= 2:
-      result = "Aceptable";
-      break;
-    case x >= 1:
-      result = "Sucio";
-      break;
-    case x<1:
-      result = "Muy sucio";
-      break;
-    default:
-      result = "undefined";
-  }
-
-  return result;
-};
 
 </script>
  

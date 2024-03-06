@@ -77,7 +77,6 @@ import badWords from 'bad-words';
 import Toaster from "./Toaster.vue";
 import useToasterStore from "../store/useToasterStore";
 
-
 const errors = ref<string[]>([]); // Array reativo para almacenar errores de validación del formulario
 const store = useStore(); // Acceso al store Vuex
 
@@ -172,7 +171,7 @@ const cancel = () => {
   formData.value.handicapped = false;
   formData.value.changingstation = false;
   formData.value.free = false;
-
+  
   toggleShowList(); // Oculta la lista de baños en el mapa
 }
 
@@ -260,6 +259,7 @@ const submitForm = async() => {
     locationService.state.latitude=null;
     locationService.state.longitude=null;
     formData.value.image= null;
+    store.state.currentMarker=null;
 
     toggleShowList();
 
@@ -460,8 +460,7 @@ form {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50vw;
-
+    width: 35vw;
     height: fit-content;
   }
 

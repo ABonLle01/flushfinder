@@ -2,6 +2,7 @@ import { createStore, createLogger } from 'vuex';
 import { Geolocation } from '@ionic-native/geolocation';
 import { ref } from 'vue';
 import { Coordinates } from '@/interfaces';
+import L from 'leaflet';
 
 // Definición del almacenamiento Vuex para manejar el estado global de la aplicación
 const store = createStore({
@@ -9,6 +10,7 @@ const store = createStore({
     showList: true, // Estado para controlar la visualización de la lista de flushes
     flushcounter: 20, // Contador de flushes
     selectedFlushName: null, // Nombre del flush seleccionado
+    currentMarker: null,
   },
   mutations: {
     // Mutación para establecer el estado de visualización de la lista de flushes
@@ -80,4 +82,4 @@ export const getClickedCoord = (map) =>{
     const clickedLat = event.latlng.lat;
     const clickedLong = event.latlng.lng;
   });
-}
+};

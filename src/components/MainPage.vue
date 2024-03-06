@@ -71,8 +71,8 @@ onMounted(async () => {
 
     // Establece la ubicación actual con la última ubicación conocida o con valores predeterminados
     currentLocation.value = {
-        latitude: value ? value.latitude : 36,
-        longitude: value ? value.longitude : -4
+        latitude: value ? value.latitude : 36.72454430,
+        longitude: value ? value.longitude : -4.423861795
     };
 
     // Obtiene la lista inicial de objetos flushList
@@ -173,13 +173,13 @@ p{
   }
  
   .map {
-    width: 50vw;
+    width: 65vw;
     height: 100%;
     position: sticky;
   }
  
   .list {
-    width: 50vw;
+    width: 35vw;
   }
  
   .form {

@@ -21,6 +21,7 @@ import { locationService } from "../services/DataService";
 import Toaster from "./Toaster.vue";
 import useToasterStore from "../store/useToasterStore";
 import { VUE_APP_API_URL } from '@/services/index';
+import {score, condition} from '../store/piniaStore';
 
 const store = useStore(); // Uso de useStore para obtener el estado global de la aplicación
 const map = ref<L.Map | null>(null); // Referencia reactiva para el mapa Leaflet
@@ -78,28 +79,50 @@ const initializeMap = async () => {
       const markerCoordinates: L.LatLngTuple = [flush.latitude, flush.longitude];
       if (map.value) {
         const marker = L.marker(markerCoordinates, { icon: mapMarker }).addTo(map.value as L.Map);
-        
+
         // Crea el contenido del popup para cada marcador con información detallada y botones de interacción
         let divPopup = document.createElement("div");
         divPopup.innerHTML =             
         `
-          <h3>${flush.name}</h3>
-          <p>Puntuacion: ${flush.score}</p>
-          <p>Estado: ${condition(flush.score)}</p>
-          <p>Valoraciones: ${flush.rating}</p>
-          <button class="inc">Incrementar Puntuación</button>
-          <button class="dec">Disminuir Puntuación</button>
-          `;
+          <div class="popup">
+            <h3>${flush.name}</h3>
+
+            <div class="puntuacion">
+              <p>Puntuacion: ${score(flush.score)}</p>
+              <p>${condition(flush.score)}</p>
+            </div>
+            
+            <p>Valoraciones totales: ${flush.rating}</p>
+
+            <div class="botones">
+              <label class="container">
+                <input type="checkbox" name="voto" class="like">
+                <svg class="like" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <path d="M29.845,17.099l-2.489,8.725C26.989,27.105,25.804,28,24.473,28H11c-0.553,0-1-0.448-1-1V13  c0-0.215,0.069-0.425,0.198-0.597l5.392-7.24C16.188,4.414,17.05,4,17.974,4C19.643,4,21,5.357,21,7.026V12h5.002  c1.265,0,2.427,0.579,3.188,1.589C29.954,14.601,30.192,15.88,29.845,17.099z" id="XMLID_254_"></path><path d="M7,12H3c-0.553,0-1,0.448-1,1v14c0,0.552,0.447,1,1,1h4c0.553,0,1-0.448,1-1V13C8,12.448,7.553,12,7,12z   M5,25.5c-0.828,0-1.5-0.672-1.5-1.5c0-0.828,0.672-1.5,1.5-1.5c0.828,0,1.5,0.672,1.5,1.5C6.5,24.828,5.828,25.5,5,25.5z" id="XMLID_256_"></path>
+                </svg>
+              </label>
+
+              <label class="container">
+                <input type="checkbox" name="voto" class="dislike">
+                <svg class="dislike" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <path d="M2.156,14.901l2.489-8.725C5.012,4.895,6.197,4,7.528,4h13.473C21.554,4,22,4.448,22,5v14  c0,0.215-0.068,0.425-0.197,0.597l-5.392,7.24C15.813,27.586,14.951,28,14.027,28c-1.669,0-3.026-1.357-3.026-3.026V20H5.999  c-1.265,0-2.427-0.579-3.188-1.589C2.047,17.399,1.809,16.12,2.156,14.901z" id="XMLID_259_"></path><path d="M25.001,20h4C29.554,20,30,19.552,30,19V5c0-0.552-0.446-1-0.999-1h-4c-0.553,0-1,0.448-1,1v14  C24.001,19.552,24.448,20,25.001,20z M27.001,6.5c0.828,0,1.5,0.672,1.5,1.5c0,0.828-0.672,1.5-1.5,1.5c-0.828,0-1.5-0.672-1.5-1.5  C25.501,7.172,26.173,6.5,27.001,6.5z" id="XMLID_260_"></path>
+                </svg>
+              </label>              
+            </div>
+
+          </div>
+        `;
+
 
         // Añade eventos de clic a los botones del popup para incrementar o disminuir la puntuación del marcador
-        divPopup.querySelector("button.inc").addEventListener("click",()=>{
+        divPopup.querySelector(".container input.like").addEventListener("click",()=>{
           console.log("Like");
           console.log(flush);
           updateScore(flush._id, true)
           successToast("Voto hecho correctamente")
         });
 
-        divPopup.querySelector("button.dec").addEventListener("click",()=>{
+        divPopup.querySelector(".container input.dislike").addEventListener("click",()=>{
           console.log("Dislike");
           console.log(flush);
           updateScore(flush._id, false)
@@ -127,31 +150,6 @@ const initializeMap = async () => {
   }
 };
 
-// Función que devuelve el estado de limpieza según una puntuación
-const condition = (x: number): string => {
-  let result: string;
-
-  switch (true) {
-    case x >= 4:
-      result = "Excelente";
-      break;
-    case x >= 3:
-      result = "Bueno";
-      break;
-    case x >= 2:
-      result = "Aceptable";
-      break;
-    case x >= 1:
-      result = "Sucio";
-      break;
-    case x<1:
-      result = "Muy sucio";
-      break;
-    default:
-      result = "undefined";
-  }
-  return result;
-};
 
 // Función para actualizar la puntuación de un marcador
 function updateScore(flushId, shouldIncrement) {
@@ -281,17 +279,13 @@ const registerFormHandler = (latitude: number, longitude: number) => {
   }
 }; 
 
-
-const isMarkerAdded = ref(false); // Nuevo estado para rastrear si se ha agregado un marcador
-
-let currentMarker: L.Marker | null = null; // Variable para rastrear el marcador actual en el mapa
-
+// Variable para rastrear el marcador actual en el mapa
 const addMarker = (coordinates: L.LatLng) => {
   if (map.value) {
     // Elimina el marcador actual si existe
-    if (currentMarker) {
-      map.value.removeLayer(currentMarker); // Elimina el marcador actual del mapa
-      currentMarker = null; // Actualiza la referencia al marcador actual
+    if (store.state.currentMarker!=null) {
+      map.value.removeLayer(store.state.currentMarker); // Elimina el marcador actual del mapa
+      store.state.currentMarker = null; // Actualiza la referencia al marcador actual
     }
  
     // Define el ícono y sus propiedades para el nuevo marcador
@@ -305,33 +299,84 @@ const addMarker = (coordinates: L.LatLng) => {
     // Crea un nuevo marcador en las coordenadas especificadas con el ícono definido
     const marker = L.marker(coordinates, { icon: onclickMarker }).addTo(map.value as L.Map);
  
-    currentMarker = marker; // Actualiza la referencia al marcador actual
+    store.state.currentMarker = marker; // Actualiza la referencia al marcador actual
  
     // Agrega el marcador al formulario o realiza otras acciones necesarias
     registerFormHandler(coordinates.lat, coordinates.lng);
   }
 };
 
-// Observa el evento de clic en el mapa y agrega o elimina un marcador
-watchEffect(() => {
-  map.value?.on('click', (event: L.LeafletMouseEvent) => {
+// Observa el estado de la lista y agrega o elimina un marcador
+watch(()=>store.state.showList,()=>{
+  //Si se está mostrando la lista, el marcador se elimina
+  if(store.state.showList) map.value.removeLayer(store.state.currentMarker);
+  else{
+    map.value?.on('click', (event: L.LeafletMouseEvent) => {
     // Si 'showList' es falso, agrega un marcador en las coordenadas pulsadas
     if(!store.state.showList) addMarker(event.latlng);
     else{
       // Elimina el marcador actual del mapa
-      map.value.removeLayer(currentMarker);
+      map.value.removeLayer(store.state.currentMarker);
     } 
   });
-});
+  }
+})
+
+
+
+
 
 
 </script>
 
 
 
-<style scoped>
+<style>
 #map {
   width: 100%;
   height: 100%;
 }
+
+.popup .botones,.puntuacion{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.puntuacion{
+  gap: 10px;
+}
+
+.popup .container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.popup .container {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+svg {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 30px;
+  width: 30px;
+  transition: all 0.3s;
+}
+
+svg.like{
+  fill: #00b809;
+}
+
+svg.dislike{
+  fill: rgb(185, 51, 51);
+}
+
 </style>
