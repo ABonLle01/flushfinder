@@ -4,10 +4,6 @@
     <ion-menu content-id="main-content">
       <ion-header>
         <ion-toolbar color="undefined">
-          <div class="header">
-            <img class="logo" alt="Imagen 3" src="/favicon.png" />
-            <ion-title color="dark">FlushFinder</ion-title>
-          </div>
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
@@ -30,26 +26,15 @@
           <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
           </ion-buttons>
-          
-          <!-- barra de navegacion -->
-          <!-- <div class="bar">
-            <ion-searchbar class="searchBar" v-model="searchTerm" @ionChange="onSearchChange"></ion-searchbar>
-          </div> -->
-          
-
         </ion-toolbar>
       </ion-header>
 
-    
     <!-- mapa + lista -->
     <ion-content class="ion-padding"> 
       <router-view ></router-view>
     </ion-content>
   </ion-page>
   </ion-app>
-
-
-
 </template>
 
 
@@ -57,70 +42,15 @@
 <script setup lang="ts">
 import Filters from './components/Filters.vue';
 import { add } from 'ionicons/icons';
-import {IonApp, IonHeader, IonContent, IonIcon, IonMenu, IonFab, IonFabButton, IonToolbar, IonButtons, IonMenuButton, IonSearchbar, IonPage, IonTitle} from '@ionic/vue';
-import { ref } from 'vue';
-
-import {archiveOutline, archiveSharp, heartOutline, heartSharp, mailOutline, mailSharp,
-   paperPlaneOutline, paperPlaneSharp, trashOutline, trashSharp, 
-   warningOutline, warningSharp} from 'ionicons/icons';
-
+import { IonApp, IonHeader, IonContent, IonIcon, IonMenu, IonFab, IonFabButton, IonToolbar, IonButtons, IonMenuButton, IonSearchbar, IonPage, IonTitle} from '@ionic/vue';
 import { useStore } from 'vuex';
-
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-
-const selectedIndex = ref(0);
-const appPages = [
-  {
-    title: 'Inbox',
-    url: '/folder/Inbox',
-    iosIcon: mailOutline,
-    mdIcon: mailSharp,
-  },
-  {
-    title: 'Outbox',
-    url: '/folder/Outbox',
-    iosIcon: paperPlaneOutline,
-    mdIcon: paperPlaneSharp,
-  },
-  {
-    title: 'Favorites',
-    url: '/folder/Favorites',
-    iosIcon: heartOutline,
-    mdIcon: heartSharp,
-  },
-  {
-    title: 'Archived',
-    url: '/folder/Archived',
-    iosIcon: archiveOutline,
-    mdIcon: archiveSharp,
-  },
-  {
-    title: 'Trash',
-    url: '/folder/Trash',
-    iosIcon: trashOutline,
-    mdIcon: trashSharp,
-  },
-  {
-    title: 'Spam',
-    url: '/folder/Spam',
-    iosIcon: warningOutline,
-    mdIcon: warningSharp,
-  },
-];
-const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-
-const path = window.location.pathname.split('folder/')[1];
-if (path !== undefined) {
-  selectedIndex.value = appPages.findIndex((page) => page.title.toLowerCase() === path.toLowerCase());
-}
 
 const store = useStore();
 
 const toggleShowList = () => {
+  // Se activa una mutación correspondiente en el almacén Vuex que actualiza el estado de showList. 
+  // El resultado es que la lista se muestra o se oculta según el estado actual de showList.
   store.dispatch('toggleShowList');
-  
 };
 
 </script>
@@ -128,15 +58,14 @@ const toggleShowList = () => {
 <style scoped>
 
 /* Darle color a la parte principal cuando se despliega el menu */
-/*   ion-menu::part(backdrop) {
-    background-color: rgba(47, 253, 20, 0.5);
-  }
+ion-menu::part(backdrop) {
+  background-color: rgb(0, 0, 0);
+}
 
 ion-menu::part(container) {
   border-radius: 0 20px 20px 0;
-
-  box-shadow: 4px 0px 16px rgba(157, 255, 0, 0.397);
-}  */
+  box-shadow: 4px 0px 16px rgba(0, 0, 0, 0.637);
+} 
 
 .header{
   display: flex;

@@ -6,17 +6,17 @@
       <ion-col size="4" class="col">
         <div class="bath">
 <!--      <img alt="BathLogo" v-bind:src="flush.image" /> -->
-          <img alt="BathLogo" :src="getCompleteImageUrl(flush.image)" />
+          <img alt="" :src="getCompleteImageUrl(flush.image)"/>
         </div>
       </ion-col>
-      
+    
       <ion-col size="8" class="col info">
 
         <div class="properties">
           <ion-row class="data line">
             <ion-col class="infoCol">
               <div class="score">
-                <p>{{ flush.score }}</p>
+                <p>{{ score(flush.score) }}</p>
                 <img src="../images/star.png" alt="yellow star">
               </div>
               
@@ -67,9 +67,13 @@ import { haversineDistance } from '@/store/index';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Coordinates } from '@/interfaces';
 import { useStore } from 'vuex';
+import { VUE_APP_API_URL } from '@/services/index';
+import { score, condition } from '../store/piniaStore';
 
+// Uso de la función useStore para obtener el estado global de la aplicación
 const store = useStore();
 
+// Definición de las propiedades esperadas utilizando defineProps para declarar las propiedades esperadas en un componente Vue.
 const props = defineProps({
   flushList: {
     type: Array<any>
@@ -82,21 +86,13 @@ const props = defineProps({
   }
 })
 
+// Función para obtener la URL completa de una imagen
 const getCompleteImageUrl = (imageName: string) => {
-/*return `${process.env.VUE_APP_API_URL}/uploads/${imageName}`; */
-  let url:string="";
-
-  if(!imageName.includes("flush")){
-    url = "https://picsum.photos/100/100";
-  }else{
-    url =  `https://api.flushfinder.es/uploads/${imageName}`;
-  }
-
-  /* console.log(url) */
-  return url;
-  
+return `${VUE_APP_API_URL}uploads/${imageName}`;
+/*   return `https://api.flushfinder.es/uploads/${imageName}`; */
 };
 
+// Referencia para la ubicación actual
 const currentLocation = ref({ 
   latitude: props.initialLocation.latitude ? props.initialLocation.latitude : 0, 
   longitude: props.initialLocation.longitude ? props.initialLocation.longitude : 0
@@ -105,6 +101,7 @@ const currentLocation = ref({
 let lat:number = 0;
 let long:number = 0;
 
+// Obtención de la posición actual del dispositivo
 Geolocation.getCurrentPosition().then((resp) => {
   currentLocation.value = {
     latitude: resp.coords.latitude,
@@ -120,6 +117,7 @@ Geolocation.getCurrentPosition().then((resp) => {
   console.error('Error getting location', error);
 });
 
+// Función para calcular la distancia entre dos puntos
 const calcularDistancia = (latitude: number, longitude: number) => {
   const puntoA: Coordinates = {
     latitude: currentLocation.value.latitude,
@@ -134,7 +132,7 @@ const calcularDistancia = (latitude: number, longitude: number) => {
   let distancia = haversineDistance(puntoA, puntoB);
   let result = "";
   
-  //si la distancia es menor a 1 km
+  // Formateo del resultado en metros o kilómetros dependiendo de la distancia
   if(distancia<1){
     distancia=distancia * 1000;
     distancia=parseFloat(distancia.toFixed(0));
@@ -147,12 +145,14 @@ const calcularDistancia = (latitude: number, longitude: number) => {
   return result;
 };
 
+// Emisión de eventos definidos utilizando defineEmits para declarar los eventos personalizados que un componente Vue puede emitir.
 const emit = defineEmits(['setLocation'])
  
 const setLocation = (args) => {
   emit('setLocation', args)
 }
 
+// Función para establecer la ubicación y resaltarla
 const setLocaltionAndHighlight = (index:number, name:string) => {
   setLocation({
     latitude: Number(props.flushList[index].latitude),
@@ -161,35 +161,6 @@ const setLocaltionAndHighlight = (index:number, name:string) => {
   store.state.selectedCardName = name;
 
 }
-
-const condition = (x: number): string => {
-  let result: string;
-
-  switch (true) {
-    case x < 0:
-      console.log("Negative number!!");
-      break;
-    case x >= 4:
-      result = "Excelente";
-      break;
-    case x >= 3:
-      result = "Bueno";
-      break;
-    case x >= 2:
-      result = "Aceptable";
-      break;
-    case x >= 1:
-      result = "Sucio";
-      break;
-    case x<1:
-      result = "Muy sucio";
-      break;
-    default:
-      result = "undefined";
-  }
-
-  return result;
-};
 
 </script>
  
@@ -217,6 +188,8 @@ const condition = (x: number): string => {
   height: 120px;
   width: 120px;
   border-radius: 15px;
+  background-image:url("../icon1024square.png"); 
+  background-size:cover;
 }
 .bath img{
   max-height: 100px;
