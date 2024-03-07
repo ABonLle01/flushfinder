@@ -57,7 +57,7 @@ export const useToastStore = defineStore('toast', {
 
 // Función que redondea la puntuación a un decimal
 export const score = (x:number):string=>{
-  return x.toFixed(2);
+  return x.toFixed(1);
 };
 
 // Función que devuelve el estado de limpieza según una puntuación
