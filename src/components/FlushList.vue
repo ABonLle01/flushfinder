@@ -5,7 +5,6 @@
 
       <ion-col size="4" class="col">
         <div class="bath">
-<!--      <img alt="BathLogo" v-bind:src="flush.image" /> -->
           <img alt="" :src="getCompleteImageUrl(flush.image)"/>
         </div>
       </ion-col>
@@ -63,7 +62,7 @@
 
 import { IonList, IonCard, IonRow, IonCol, IonThumbnail, IonTitle } from '@ionic/vue';
 import { ref } from 'vue';
-import { haversineDistance } from '@/store/index';
+import { haversineDistance } from '@/store/piniaStore';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Coordinates } from '@/interfaces';
 import { useStore } from 'vuex';
@@ -88,8 +87,7 @@ const props = defineProps({
 
 // Función para obtener la URL completa de una imagen
 const getCompleteImageUrl = (imageName: string) => {
-return `${VUE_APP_API_URL}uploads/${imageName}`;
-/*   return `https://api.flushfinder.es/uploads/${imageName}`; */
+  return `${VUE_APP_API_URL}uploads/${imageName}`;
 };
 
 // Referencia para la ubicación actual

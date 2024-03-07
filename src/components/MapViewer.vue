@@ -322,11 +322,6 @@ watch(()=>store.state.showList,()=>{
   }
 })
 
-
-
-
-
-
 </script>
 
 
@@ -368,7 +363,6 @@ svg {
   left: 0;
   height: 30px;
   width: 30px;
-  transition: all 0.3s;
 }
 
 svg.like{

@@ -31,7 +31,7 @@ import { getFlushList } from '@/services';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { useStore } from 'vuex';
-import { getCurrentLocation } from '@/store';
+import { getCurrentLocation } from '@/store/piniaStore';
 import { useLocationStore, useFilterStore } from '@/store/piniaStore';
 import { Preferences } from '@capacitor/preferences';
 

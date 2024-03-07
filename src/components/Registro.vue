@@ -140,19 +140,29 @@ function filterBadWords(name: string): string {
 function validateBathroomName(name: string): boolean {
   // Expresión regular que coincide con cadenas que contienen solo letras, números, espacios y ciertos caracteres especiales comunes,
   // y no permite varios caracteres especiales seguidos
-  const regex = /^[A-Za-záéíóúüÜñÑ]+(?: [A-Za-záéíóúüÜñÑ]+)*$/;
+  
+  /* const regex = /^[0-9A-Za-záéíóúüÜñÑ]+( ?: [A-Za-záéíóúüÜñÑ]+)*$/;  */
+  /* 
+    const regex = /^(?=.*[a-zA-ZáéíóúüÜñÑ]{4})[0-9A-Za-záéíóúüÜñÑ]{1,16}$|^(?=.*[a-zA-ZáéíóúüÜñÑ]{4})[0-9A-Za-záéíóúüÜñÑ]+(?: [A-Za-záéíóúüÜñÑ]+){0,15}$/;
+  */
+
+  /* const regex = /(?=.*[a-zA-ZáéíóúüÜñÑ]{4})[0-9A-Za-záéíóúüÜñÑ]+(?: [A-Za-záéíóúüÜñÑ]+[0-9]){0,15}/; */
+
+  const regex = /(?=.*[a-zA-ZáéíóúüÜñÑ]{4})[0-9A-Za-záéíóúüÜñÑ]{0,3}[0-9A-Za-záéíóúüÜñÑ]+(?: [A-Za-záéíóúüÜñÑ]+[0-9]){0,15}/;
 
   // La función test() de la expresión regular devuelve true si la cadena contiene solo letras, 
   // y false si contiene algún otro tipo de caracter
-
   if (!regex.test(name)) {
     // Si el nombre no pasa la validación, muestra un mensaje de error y agrega el error al array de errores
     if (name.trim() === '') {
       errorToast('El nombre no puede estar vacio.');
       errors.value.push('El nombre no puede estar vacío.');
+    } else if (name.length > 16) {
+      errorToast('El nombre no puede tener más de 16 caracteres.');
+      errors.value.push('El nombre no puede tener más de 16 caracteres.');
     } else {
-      errorToast('El nombre debe contener solo letras y un único espacio.');
-      errors.value.push('El nombre debe contener solo letras y un único espacio.');
+      errorToast('Formato de nombre no válido.');
+      errors.value.push('Formato de nombre no válido.');
     }
     return false; // Retorna false para indicar que la validación ha fallado
   }
@@ -185,7 +195,7 @@ const submitForm = async() => {
     if (filterBadWords(formData.value.name).includes("*")) {
       errorToast('El nombre no puede contener palabras malsonantes.');
       errors.value.push('El nombre no puede contener palabras malsonantes.');
-    } else formData.value.name=formData.value.name.toUpperCase();
+    }
   }
  
   if(!formData.value.score){
@@ -218,6 +228,8 @@ const submitForm = async() => {
 
   // Verifica si no hay errores en el formulario
   if (errors.value.length === 0) {  
+
+    formData.value.name=formData.value.name.toUpperCase();
 
     try {
       // Crea un objeto FormData con los datos del formulario
