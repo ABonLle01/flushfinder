@@ -94,7 +94,6 @@ const toggleShowList = () => {
   store.dispatch('toggleShowList');
 };
 
-
 const showTutorial = ref(false);
 const showOpening = ref(false);
 
@@ -113,11 +112,11 @@ const closeOpening = () => {
 };
 
 onMounted(() => {
-  if (localStorage.getItem('tutorialCompleted') !== 'false') {
+  if (localStorage.getItem('tutorialCompleted') !== 'true') {
     showTutorial.value = true;
   }
   // Verificar si el tutorial ya se ha completado previamente
-  if (localStorage.getItem('openingCompleted') !== 'false') {
+  if (localStorage.getItem('openingCompleted') !== 'true') {
     showOpening.value = true;
   }
 });
